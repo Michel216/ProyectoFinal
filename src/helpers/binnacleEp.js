@@ -1,0 +1,18 @@
+const Binnacle = require("../models/binnacleEp.js")
+
+const binnacleHelper = {
+    // valida que exista el Id en la base de datos
+    validateId: async (id) => {
+        let existsId = await Binnacle.findById(id)
+        if (!existsId) {
+            throw new Error("La bitácora no existe en la base de datos")
+        }
+    },
+    // valida que el número de la bitácora sea de 1 a 12
+    validateNumber: (number) => {
+        if (number < 1 || number > 12) {
+            throw new Error("El número de la bitácora debe ser de 1 a 12")
+        }
+    }
+}
+module.exports = binnacleHelper ;
