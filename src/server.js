@@ -6,6 +6,7 @@ class Server {
     constructor() {
         this.app = express();
         this.port = process.env.PORT || 4040;
+        this.MONGO_URI = process.env.MONGO_URI
         this.paths = {
             apprentice: '/api/apprentice',
             assignment: '/api/assignment',
@@ -34,7 +35,7 @@ class Server {
     listen() {
         this.app.listen(this.port, () => {
             console.log(`El servidor está funcionando en el puerto ${this.port}`);
-            mongoose.connect('mongodb://127.0.0.1:27017/EtapaProductiva').then(() => console.log('Connected!'))
+            mongoose.connect(this.MONGO_URI).then(() => console.log('Connected!'))
         });
     }
 }
