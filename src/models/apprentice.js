@@ -74,7 +74,10 @@ const apprenticeSchema = new mongoose.Schema({
 }, { 
     timestamps: true // Añade automáticamente createdAt y updatedAt
 });
-
+// Índices únicos
+apprenticeSchema.index({ numDocument: 1 }, { unique: true });
+apprenticeSchema.index({ phone: 1 }, { unique: true });
+apprenticeSchema.index({ email: 1 }, { unique: true });
 // Middleware para evitar la modificación manual de createdAt
 apprenticeSchema.pre('save', function(next) {
     if (!this.isNew) {
