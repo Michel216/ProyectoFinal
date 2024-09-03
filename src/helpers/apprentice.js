@@ -31,7 +31,15 @@ const apprenticeHelper = {
         if (!/^\d{8,10}$/.test(cedula)){
             throw new Error("La cédula debe tener entre 8 y 10 números")
         }
-    }
+    },
+     // Valida que el email tenga la estructura correcta
+    validateEmail: async (email) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            throw new Error("Formato de correo electrónico inválido");
+        }
+    },
+
     // validateApprentice: async (idInstructor) => {
     //     // Valida que el instructor exista en la base de datos
     //     let existInstructor = await Instructor.findOne({ _id: idInstructor });
