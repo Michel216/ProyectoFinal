@@ -40,9 +40,24 @@ function validateUpdateRegister(data) {
     return { valid: true };
 }
 
+const registerExists = async (id) => {
+    try {
+        const exist = await Register.findById(id);
+
+        if (!exist) {
+            throw new Error(`El ID: ${id} no está registrado`);
+        }
+
+        return exist;
+    } catch (error) {
+        throw new Error(`Error al verificar el ID: ${error.message}`);
+    }
+};
+
 module.exports = {
     validateDateRange,
     validateCreateRegister,
-    validateUpdateRegister
+    validateUpdateRegister,
+    registerExists
 
 };

@@ -2,13 +2,20 @@ const { body } = require('express-validator');
 const Assignment = require('../models/assignment.js')
 
 const assigmentHelper = {
-    validateAssignment: async (id) => {
-        // Valida que exista el Id del aprendiz en la base de datos
-        let existAssignment = await Assignment.findById(id);
-        if (!existAssignment) {
-            throw new Error("La asignación no existe");
+     existsAssignmentID: async (id) => {
+        try {
+            const exists = await Assignment.findById(id);
+    
+            if (!exists) {
+                throw new Error(`No se encontró la asignación con el ID ${id}`);
+            }
+    
+            return exists;
+        } catch (error) {
+            throw new Error(`Error al buscar la asignación por ID: ${error.message}`);
         }
     },
+    
     validateAtLeastOneInstructor: () => {
         return body().custom((value, { req }) => {
             const { followInstructor, technicalInstructor, proyectInstructor } = req.body;
