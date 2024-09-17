@@ -12,6 +12,16 @@ const binnacleHelper = {
     validateNumber: (number) => {
         if (number < 1 || number > 12) {
             throw new Error("El número de la bitácora debe ser de 1 a 12")
+        } else {
+            return true
+        }
+    },
+    // valida que el tipo de la bitácora sea de 1 a 4. Programado: 1, Ejecutado: 2, Pendiente: 3, Verificado: 4
+    validateStatus: (status) => {
+        if (status < 1 || status > 4) {
+            throw new Error("El número de la bitácora debe ser de 1 a 4")
+        } else {
+            return true
         }
     }
 }

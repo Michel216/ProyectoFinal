@@ -6,7 +6,7 @@ const { validateJWT } = require('./../middlewares/validateJWT.js');
 const { check } = require('express-validator');
 
 const binnacleRoutes = express.Router()
- 
+
 // listar todas las bitácoras
 binnacleRoutes.get("/listallbinnacles", [
     validateJWT,
@@ -22,29 +22,29 @@ binnacleRoutes.get("/listbinnaclesbyid/:id", [
 ], binnacleController.getListBinnacleById)
 
 // listar bitácoras por asignación 
-binnacleRoutes.get("/listbinnaclesbyassignment/:idAssignment", [
+binnacleRoutes.get("/listbinnaclesbyassignment/:assignment", [
     validateJWT,
-    check('idAssignment', 'El id es obligatorio y debe ser un ID de MongoDB válido').notEmpty().isMongoId(),
+    check('assignment', 'El id es obligatorio y debe ser un ID de MongoDB válido').notEmpty().isMongoId(),
     validateFields
 ], binnacleController.getListBinnaclesByAssignment)
 
 // listar bitácoras por instructor 
-binnacleRoutes.get("/listbinnaclesbyinstructor/:idInstructor", [
+binnacleRoutes.get("/listbinnaclesbyinstructor/:instructor", [
     validateJWT,
-    check('idInstructor', 'El id es obligatorio y debe ser un ID de MongoDB válido').notEmpty().isMongoId(),
+    check('instructor', 'El id es obligatorio y debe ser un ID de MongoDB válido').notEmpty().isMongoId(),
     validateFields
 ], binnacleController.getListBinnaclesByInstructor)
 
 // crear bitácoras
 binnacleRoutes.post("/addbinnacles", [
     validateJWT,
-    check('idAssignment', 'La asignación es obligatoria y debe ser un ID de MongoDB válido').notEmpty().isMongoId(),
-    check('idInstructor', 'El instructor es obligatorio y debe ser un ID de MongoDB válido').notEmpty().isMongoId(),
-    check('number', 'El número debe ser obligatorio y debe ser string').notEmpty(),
+    check('assignment', 'La asignación es obligatoria y debe ser un ID de MongoDB válido').notEmpty().isMongoId(),
+    check('instructor', 'El instructor es obligatorio y debe ser un ID de MongoDB válido').notEmpty().isMongoId(),
+    check('number', 'El número es obligatorio y debe ser un número').isNumeric(),
     check('number').custom(binnacleHelper.validateNumber),
+    check('status').optional().custom(binnacleHelper.validateStatus),
     check('document', 'El documento es obligatorio').notEmpty(),
     check('observations', 'Las observaciones son obligatorias').notEmpty(),
-    check('users', 'Los usuarios son obligatorios').notEmpty(),
     validateFields
 ], binnacleController.postAddBinnacle)
 
@@ -53,26 +53,20 @@ binnacleRoutes.put("/updatebinnaclebyid/:id", [
     validateJWT,
     check('id', 'El id es obligatorio y debe ser un ID de MongoDB válido').notEmpty().isMongoId(),
     check('id').custom(binnacleHelper.validateId),
-    check('idAssignment', 'La asignación debe ser un ID de MongoDB válido').optional().isMongoId(),
-    check('idInstructor', 'El instructor debe ser un ID de MongoDB válido').optional().isMongoId(),
-    check('number').custom(binnacleHelper.validateNumber),
+    check('assignment', 'La asignación debe ser un ID de MongoDB válido').optional().isMongoId(),
+    check('instructor', 'El instructor debe ser un ID de MongoDB válido').optional().isMongoId(),
+    check('number', 'El número debe ser obligatorio y debe ser string').optional().isNumeric(),
+    check('number').optional().custom(binnacleHelper.validateNumber),
+    check('status').optional().custom(binnacleHelper.validateStatus),
     validateFields
 ], binnacleController.putUpdateBinnacle)
 
-// activar bitácoras
-binnacleRoutes.put("/enablebinnaclebyid/:id", [
+binnacleRoutes.put("/updatestatus/:id/:status", [
     validateJWT,
     check('id', 'El id es obligatorio y debe ser un ID de MongoDB válido').notEmpty().isMongoId(),
     check('id').custom(binnacleHelper.validateId),
+    check('status').custom(binnacleHelper.validateStatus),
     validateFields
-], binnacleController.putEnableBinnacle)
-
-// desactivar bitácoras
-binnacleRoutes.put("/disablebinnaclebyid/:id", [
-    validateJWT,
-    check('id', 'El id es obligatorio y debe ser un ID de MongoDB válido').notEmpty().isMongoId(),
-    check('id').custom(binnacleHelper.validateId),
-    validateFields
-], binnacleController.putDisableBinnacle)
+], binnacleController.putUpdateStatus)
 
 module.exports = binnacleRoutes

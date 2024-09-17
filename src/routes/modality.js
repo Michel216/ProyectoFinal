@@ -25,9 +25,9 @@ modalityRoutes.get("/listmodalitybyid/:id", [
 modalityRoutes.post("/addmodality", [
     validateJWT,
     check('name', 'El nombre es obligatorio').notEmpty(),
-    check('hourinstructorfollow', 'Las horas del instructor de seguimiento son obligatorias').optional().isNumeric(),
-    check('hourinstructortechnical', 'Las horas del instructor técnico son obligatorias').optional().isNumeric(),
-    check('hourinstructorproject', 'Las horas del instructor de proyecto son obligatorias').optional().isNumeric(),
+    check('hourInstructorFollow', 'Las horas del instructor de seguimiento son obligatorias').optional().isNumeric(),
+    check('hourInstructorTechnical', 'Las horas del instructor técnico son obligatorias').optional().isNumeric(),
+    check('hourInstructorProject', 'Las horas del instructor de proyecto son obligatorias').optional().isNumeric(),
     modalityHelper.validateAtLeastOneInstructorHour(), // valida al menos la hora de un instructor
     validateFields
 ], modalityController.postAddModality)
