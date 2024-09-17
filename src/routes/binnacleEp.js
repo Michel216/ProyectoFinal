@@ -37,7 +37,7 @@ binnacleRoutes.get("/listbinnaclesbyinstructor/:instructor", [
 
 // crear bitácoras
 binnacleRoutes.post("/addbinnacles", [
-    validateJWT,
+    // validateJWT,
     check('assignment', 'La asignación es obligatoria y debe ser un ID de MongoDB válido').notEmpty().isMongoId(),
     check('instructor', 'El instructor es obligatorio y debe ser un ID de MongoDB válido').notEmpty().isMongoId(),
     check('number', 'El número es obligatorio y debe ser un número').isNumeric(),
@@ -45,6 +45,8 @@ binnacleRoutes.post("/addbinnacles", [
     check('status').optional().custom(binnacleHelper.validateStatus),
     check('document', 'El documento es obligatorio').notEmpty(),
     check('observations', 'Las observaciones son obligatorias').notEmpty(),
+    check('observations.*.observation', 'Cada observación es obligatoria y debe tener al menos 3 caracteres').isString().isLength({ min: 3 }),
+    check('observations.*.user', 'El usuario en cada observación es obligatorio y debe ser un ID de MongoDB válido').notEmpty().isMongoId(),
     validateFields
 ], binnacleController.postAddBinnacle)
 
