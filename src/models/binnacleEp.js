@@ -4,9 +4,9 @@ const mongoose = require('mongoose');
 const binnacleSchema = new mongoose.Schema({
     assignment: { type: mongoose.Schema.Types.ObjectId, ref: 'Assignment' },
     instructor: { type: mongoose.Schema.Types.ObjectId, ref: 'Instructor' },
-    number: { type: Number, required: true },
+    number: { type: Number, required: true, enum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] },
     document: { type: String, required: true },
-    status: { type: Number, default: 1 },
+    status: { type: Number, default: 1, enum: [1, 2, 3, 4]},
     observations: [{
         observation: { type: String, required: true },
         user: { type: mongoose.Schema.Types.ObjectId, ref: 'UserEp' },
