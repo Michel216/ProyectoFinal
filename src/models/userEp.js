@@ -6,8 +6,6 @@ const userEpSchema = new mongoose.Schema({
     role: { type: String, required: true },
     password: { type: String, required: true },
     status: {type: Number, default: 1},
-    // createdAt: { type: String, require: true },
-    // updatedAt: { type: String, require: true }
 }, { timestamps: true })
 
 

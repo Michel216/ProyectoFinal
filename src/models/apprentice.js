@@ -17,7 +17,7 @@
 const mongoose = require('mongoose');
 
 // Importa los helpers para validaciones
-const { validateEmail, validatePhone, validateDocument } = require('../helpers/validationHelpers');
+// const { validateEmail, validatePhone, validateDocument } = require('../helpers/validationHelpers');
 
 const apprenticeSchema = new mongoose.Schema({
     tpdocument: { 

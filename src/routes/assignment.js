@@ -1,7 +1,7 @@
 const express = require('express');
 const { check } = require('express-validator');
 const assigmentHelper = require('../helpers/assignment.js');
-const { registerExists } = require('../helpers/register.js');
+const registerHelper = require('../helpers/register.js');
 const { validateJWT } = require('./../middlewares/validateJWT.js');
 const assignmentController = require('../controllers/assignment.js');
 const { validateFields } = require('./../middlewares/validate-fields.js');
@@ -10,13 +10,13 @@ const assignmentRoute = express.Router();
 
 // Obtener todas las asignaciones
 assignmentRoute.get('/listallassignment', [
-    validateJWT,
+    // validateJWT,
     validateFields
 ], assignmentController.getListAssignment);
 
 // Obtener asignación por ID
 assignmentRoute.get('/listassignmentbyid/:id', [
-    validateJWT,
+    // validateJWT,
     check('id', 'El id no es válido').isMongoId(),
     check('id').custom(assigmentHelper.assignmentIdExists),
     validateFields
@@ -26,7 +26,7 @@ assignmentRoute.get('/listassignmentbyid/:id', [
 assignmentRoute.get('/listassignmentbyregister/:idregister', [
     validateJWT,
     check('idregister', 'El idregister no es válido').isMongoId(),
-    check('idregister').custom(assigmentHelper.registerExists),
+    check('idregister').custom(registerHelper.registerExists),
     validateFields
 ], assignmentController.getListAssignmentByRegister);
 
@@ -54,7 +54,7 @@ assignmentRoute.get('/listprojectinstructor/:idinstructor', [
 // Agregar una nueva asignación
 assignmentRoute.post('/addassignment', [
     // validateJWT,
-    check('register', 'El idregister no es válido').isMongoId(),
+    check('idregister', 'El idregister no es válido').isMongoId(),
     check('idregister').custom(assigmentHelper.registerExists),
     check('certificationdoc', 'El certificationdoc es obligatorio').not().isEmpty(),
     check('judymenthphoto', 'El judymenthphoto debe ser un string').isString(),
@@ -65,6 +65,11 @@ assignmentRoute.post('/addassignment', [
     assigmentHelper.validateAtLeastOneInstructor(),
     validateFields
 ], assignmentController.postAddAssignment);
+
+assignmentRoute.post('/sendEmail', [
+    // validateJWT,
+    validateFields
+], assignmentController.postSendEmail)
 
 // Actualizar asignación por ID
 assignmentRoute.put('/updateassignmentbyid/:id', [

@@ -9,8 +9,6 @@ const assignmentShema = new mongoose.Schema({
     judymenthphoto: { type: String, default: true },
     observation: { type: String, require: true },
     status: { type: Number, default: 1 },
-    // createdAt: { type: String, require: true },
-    // updatedAt: { type: String, require: true }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Assignment', assignmentShema)

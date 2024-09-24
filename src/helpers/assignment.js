@@ -2,7 +2,7 @@ const { body } = require('express-validator');
 const Assignment = require('../models/assignment.js')
 
 const assigmentHelper = {
-     existsAssignmentID: async (id) => {
+    assignmentIdExists: async (id) => {
         try {
             const exists = await Assignment.findById(id);
     
