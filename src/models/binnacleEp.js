@@ -1,15 +1,17 @@
 const mongoose = require('mongoose');
+// import { Schema, model } from 'mongoose';
 
 const binnacleSchema = new mongoose.Schema({
-   assignament: { type: mongoose.Schema.Types.ObjectId, ref: 'Assignment' },
-    // instructor: { type: mongoose.Schema.Types.ObjectId, ref: 'Instructor' },
-    number: { type: Number, required: true },
+    assignment: { type: mongoose.Schema.Types.ObjectId, ref: 'Assignment', required: true },
+    instructor: { type: mongoose.Schema.Types.ObjectId, ref: 'Instructor', required: true },
+    number: { type: Number, required: true, enum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] },
     document: { type: String, required: true },
-    status: { type: Number, default: 1 },
-    observations: { type: String, required: true },
-    users: { type: String, required: true },
-    // createdAt: { type: String, require: true },
-    // updatedAt: { type: String, require: true }
+    status: { type: Number, default: 1, enum: [1, 2, 3, 4]},
+    observations: [{
+        observation: { type: String, required: true },
+        user: { type: mongoose.Schema.Types.ObjectId, ref: 'UserEp', required: true },
+        observationDate: { type: Date, required: true }
+    }]
 }, { timestamps: true })
 
 module.exports = mongoose.model("Binnacle", binnacleSchema)

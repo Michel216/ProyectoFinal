@@ -73,6 +73,7 @@ const assignmentController = {
     getListProjectInstructorById: async (req, res) => {
         const { id } = req.params;
 
+
         try {
             const assignments = await Assignment.find({ proyectInstructor: id })
                 .populate('proyectInstructor', 'name email')

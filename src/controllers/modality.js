@@ -25,8 +25,8 @@ const modalityController = {
     // crear modalidades
     postAddModality: async (req, res) => {
         try {
-            const { name, hourinstructorfollow, hourinstructortechnical, hourinstructorproject} = req.body
-            const newModality = new Modality({ name, hourinstructorfollow, hourinstructortechnical, hourinstructorproject})
+            const { name, hourInstructorFollow, hourInstructorTechnical, hourInstructorProject} = req.body
+            const newModality = new Modality({ name, hourInstructorFollow, hourInstructorTechnical, hourInstructorProject})
             await newModality.save()
             res.json({ newModality })
         } catch (error) {

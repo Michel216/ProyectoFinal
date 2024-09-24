@@ -5,9 +5,7 @@ const modalitySchema = new mongoose.Schema({
     hourInstructorFollow: { type: Number },
     hourInstructorTechnical: { type: Number },
     hourInstructorProject: { type: Number },
-    status: { type: Number, default: 1 },
-    // createdAt: { type: String, require: true },
-    // updatedAt: { type: String, require: true }
+    status: { type: Number, default: 1 }
 }, { timestamps: true })
 
 module.exports = mongoose.model("Modality", modalitySchema)

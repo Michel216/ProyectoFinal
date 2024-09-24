@@ -7,7 +7,7 @@ const { createBackupDb } = require('./utils/backup');
 class Server {
     constructor() {
         this.app = express();
-        this.port = process.env.PORT || 4040;
+        this.port = process?.env?.PORT || 4040;
         this.MONGO_URI = process.env.MONGO_URI
         this.paths = {
             apprentice: '/api/apprentice',
@@ -16,7 +16,8 @@ class Server {
             followup: '/api/followup',
             log: '/api/logs',
             modality: '/api/modality',
-            register: '/api/register'
+            register: '/api/register',
+            userEp: '/api/userEp'
         };
         this.middlewares();
         this.routes();
@@ -33,6 +34,7 @@ class Server {
         this.app.use(this.paths.log, require('./routes/log.js'));
         this.app.use(this.paths.modality, require('./routes/modality.js'));
         this.app.use(this.paths.register, require('./routes/register.js'));
+        this.app.use(this.paths.userEp, require('./routes/userEp.js'));
     }
     listen() {
         this.app.listen(this.port, () => {

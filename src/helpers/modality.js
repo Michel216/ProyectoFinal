@@ -1,5 +1,6 @@
-const Modality = require("./../models/modality.js")
 const { body } = require('express-validator');
+const Modality = require("./../models/modality.js")
+
 
 const modalityHelper = {
     // valida que exista el Id en la base de datos
@@ -12,8 +13,8 @@ const modalityHelper = {
     // valida al menos la hora de un instructor
     validateAtLeastOneInstructorHour: () => {
         return body().custom((value, { req }) => {
-            const { hourinstructorfollow, hourinstructortechnical, hourinstructorproject } = req.body;
-            if (!hourinstructorfollow && !hourinstructortechnical && !hourinstructorproject) {
+            const { hourInstructorFollow, hourInstructorTechnical, hourInstructorProject } = req.body;
+            if (!hourInstructorFollow && !hourInstructorTechnical && !hourInstructorProject) {
                 throw new Error('Debe asignar al menos la hora un instructor.');
             }
             return true;
