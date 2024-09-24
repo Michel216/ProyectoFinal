@@ -1,33 +1,26 @@
+const Assignment = require("../models/assignment.js")
+const Followup = require("../models/followup.js")
+// const Instructor = require("../models/instructor.js")
+const followUpHelper = {
+    validateId:async(id) => {
+        let existsId = await Followup.findById(id)
+        if(!existsId){
+            throw new Error("El seguimiento no existe en la base de datos")
+        }
+    },
 
-// // Validación de campos obligatorios para la creación
-// function validateCreateFollowup(data) {
-//     const { createdAt, updatedAt } = data;
-
-//     if (!createdAt || !updatedAt) {
-//         return {
-//             valid: false,
-//             message: 'Los campos createdAt y updatedAt son obligatorios.'
-//         };
-//     }
-
-//     return { valid: true };
-// }
-
-// // Validación de campos obligatorios para la actualización
-// function validateUpdateFollowup(data) {
-//     const { updatedAt } = data;
-
-//     if (!updatedAt) {
-//         return {
-//             valid: false,
-//             message: 'El campo updatedAt es obligatorio al actualizar.'
-//         };
-//     }
-
-//     return { valid: true };
-// }
-
-// module.exports = {
-//     validateCreateFollowup,
-//     validateUpdateFollowup
-// };
+    validateAssignment: async(idassignment) =>{
+        let existAssignment = await Assignment.findById(idassignment)
+        if(!existAssignment){
+            throw new Error("El id de asignación no existe ")
+        }
+    },
+    
+    // validateInstrustor: async(idinstructor) => {
+    //     let existInstructor = await Instructor.findById(idinstructor)
+    //     if(!existInstructor){
+    //         throw new Error ("El id de instructor no existe")
+    //     }
+    // },
+}
+module.exports = followUpHelper;
