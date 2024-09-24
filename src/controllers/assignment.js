@@ -71,12 +71,12 @@ const assignmentController = {
     // Obtener asignaciones para un instructor de proyecto por ID
     getListProjectInstructorById: async (req, res) => {
         const { id } = req.params;
-    
+
         try {
             const assignments = await Assignment.find({ proyectInstructor: id })
                 .populate('proyectInstructor', 'name email') 
                 .populate('register', 'name createdAt'); 
-    
+
             res.json(assignments);
         } catch (error) {
             console.error('Error al listar las asignaciones para el instructor de proyecto por ID', error);
