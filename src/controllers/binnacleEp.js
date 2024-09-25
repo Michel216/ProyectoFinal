@@ -93,4 +93,4 @@ const binnacleController = {
         }
     }
 }
-module.exports = binnacleController 
+module.exports = binnacleController

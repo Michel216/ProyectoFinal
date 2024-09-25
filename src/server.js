@@ -1,6 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const cron = require('node-cron');
+const { createBackupDb } = require('./utils/backup');
 
 class Server {
     constructor() {
@@ -38,6 +40,17 @@ class Server {
         this.app.listen(this.port, () => {
             console.log(`El servidor está funcionando en el puerto ${this.port}`);
             mongoose.connect(this.MONGO_URI).then(() => console.log('Connected!'))
+        });
+    }
+    scheduleBackup() {
+        cron.schedule('0 2 * * *', async () => {
+            console.log('Iniciando copia de seguridad');
+            const success = await createBackupDb();
+            if (success) {
+                console.log('Copia de seguridad completada con éxito');
+            } else {
+                console.log('Error al realizar la copia de seguridad');
+            }
         });
     }
 }

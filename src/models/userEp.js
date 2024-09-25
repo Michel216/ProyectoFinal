@@ -5,7 +5,7 @@ const userEpSchema = new mongoose.Schema({
     email: { type: String, required: true },
     role: { type: String, required: true },
     password: { type: String, required: true },
-    status: {type: Number, default: 1}
+    status: {type: Number, default: 1},
 }, { timestamps: true })
 
 

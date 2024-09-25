@@ -1,4 +1,5 @@
 const Apprentice = require("../models/apprentice.js");
+const { validateStatus } = require("./binnacleEp.js");
 // Suponiendo que tienes un modelo de Instructor, lo importarías así
 // const Instructor = require("../models/instructor.js");
 
@@ -10,43 +11,45 @@ const apprenticeHelper = {
             throw new Error("El aprendiz no existe en la base de datos");
         }
     },
-    // Valida que el estado sea válido (1 o 0)
-    validateStatus: async (status) => {
-        if (!status) {
-            throw new Error("Error al listar por estado");
-        }
-        if (status !== '1' && status !== '0') {
-            throw new Error("Estado inválido");
+    validateNumDocument: async (numDocument) => {
+        let existNumDocument = await Apprentice.findOne({ numDocument });
+        if (existNumDocument) {
+            throw new Error("El número del documentó ya existe");
         }
     },
-
-    // Valida que el número de teléfono tenga excatamente 10 números 
     validatePhone: async (phone) => {
-        if (!/^\d{10}$/.test(phone)) {
-            throw new Error("El número de teléfono debe tener 10 números")
+        let existPhone = await Apprentice.findOne({ phone });
+        if (existPhone) {
+            throw new Error("El télefono ya existe");
         }
     },
-    //valida que la cédula tenga entre 8 y 10
-    validateDocumento: async (cedula) => {
-        if (!/^\d{8,10}$/.test(cedula)){
-            throw new Error("La cédula debe tener entre 8 y 10 números")
-        }
-    },
-     // Valida que el email tenga la estructura correcta
     validateEmail: async (email) => {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            throw new Error("Formato de correo electrónico inválido");
+        let existEmail = await Apprentice.findOne({ email });
+        if (existEmail) {
+            throw new Error("El correo ya existe");
         }
     },
-
-    // validateApprentice: async (idInstructor) => {
-    //     // Valida que el instructor exista en la base de datos
-    //     let existInstructor = await Instructor.findOne({ _id: idInstructor });
-    //     if (!existInstructor) {
-    //         throw new Error("El instructor no existe en la base de datos");
+    // validateStatus:  (status) => {
+    //     if (status != 0 || status != 1) {
+    //         throw new Error("El estado debe ser 1 o 0");
+    //     }else{
+    //         return true;
     //     }
-    // }
-};
+    // },
+    validateStatus:  (status) =>{
+        const Status =[0,1];
+        if(!Status.includes(status)){
+            throw new Error("El estado debe ser 0 o 1");
+    }
+    return true;
+},
+    validateTpDocument: async (tpdoc) => {
+        const tpdocumentValidos = ["cédula de ciudadanía", "tarjeta de identidad", "cédula de extranjería"];
+        if (!tpdocumentValidos.includes(tpdoc)) {
+            throw new Error("El tipo de documento bede ser 'cédula de ciudadanía','tarjeta de identidad','cedula de extranjería'");
+        }
+        return true
+    }
 
+};
 module.exports = apprenticeHelper;
