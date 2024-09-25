@@ -9,7 +9,7 @@ const binnacleRoutes = express.Router()
 
 // listar todas las bitácoras
 binnacleRoutes.get("/listallbinnacles", [
-    validateJWT,
+    // validateJWT,
     validateFields
 ], binnacleController.getListAllBinnacles)
 
@@ -33,7 +33,7 @@ binnacleRoutes.get("/listbinnaclesbyassignment/:assignment", [
 binnacleRoutes.get("/listbinnaclesbyinstructor/:instructor", [
     validateJWT,
     check('instructor', 'El id es obligatorio y debe ser un ID de MongoDB válido').notEmpty().isMongoId(),
-    // check('instructor').custom(binnacleHelper.validateInstructor)
+    check('instructor').custom(binnacleHelper.validateInstructor),
     validateFields
 ], binnacleController.getListBinnaclesByInstructor)
 
@@ -43,7 +43,7 @@ binnacleRoutes.post("/addbinnacles", [
     check('assignment', 'La asignación es obligatoria y debe ser un ID de MongoDB válido').notEmpty().isMongoId(),
     check('assignment').custom(binnacleHelper.validateAssignment),
     check('instructor', 'El instructor es obligatorio y debe ser un ID de MongoDB válido').notEmpty().isMongoId(),
-    // check('instructor').custom(binnacleHelper.validateInstructor),
+    check('instructor').custom(binnacleHelper.validateInstructor),
     check('number', 'El número es obligatorio y debe ser un número').isNumeric(),
     check('number').custom(binnacleHelper.validateNumber),
     check('status').optional().custom(binnacleHelper.validateStatus),

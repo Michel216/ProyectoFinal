@@ -1,6 +1,6 @@
 // login
 const UserEp = require('../models/userEp.js')
-const { generarJWT } = require('../middlewares/validarJWT');
+const { generarJWT } = require('../middlewares/validateJWT');
 const { comparePassword } = require('../helpers/userEp.js');
 
 

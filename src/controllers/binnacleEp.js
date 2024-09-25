@@ -1,11 +1,15 @@
 const Binnacle = require("./../models/binnacleEp.js")
+const Assignment = require('../models/assignment');
+const axios = require('axios');
+
+const xtoken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZjFkMTliNzFlN2Q4ZTBiNGI2NDE4ZiIsInJvbCI6IkNPT1JESU5BRE9SIiwiZW1haWwiOiJldGFwYXNwcnVlYmFzQGdtYWlsLmNvbSIsInN1cGVyIjowLCJpYXQiOjE3MjcxMzc3MDYsImV4cCI6MTcyNzMxMDUwNn0.UyTMrdtdJAO4_VzB_B_fLiOylrWBYUGviGmC4pIATsI'
 
 const binnacleController = {
     // listar todas las bitácoras
     getListAllBinnacles: async (req, res) => {
         try {
             const ListAllBinnacles = await Binnacle.find()
-            res.json({ ListAllBinnacles })
+            res.json({ ListAllBinnacles  })
         } catch (error) {
             console.log({ error });
             res.status(400).json({ error: "Error al listar bitácoras" })
@@ -14,12 +18,12 @@ const binnacleController = {
     // listar bitácoras por ID
     getListBinnacleById: async (req, res) => {
         try {
-            const id = req.params.id
-            const listBinnaclesById = await Binnacle.findById(id)
-            res.json({ listBinnaclesById })
+            const id = req.params.id;
+            const binnacle = await Binnacle.findById(id);
+            res.json({ binnacle });
         } catch (error) {
             console.log({ error });
-            res.status(400).json({ error: "Error al listar bitácora" })
+            res.status(400).json({ error: "Error al listar bitácora o al obtener instructor" });
         }
     },
     // listar bitácoras por asignación 
@@ -36,24 +40,32 @@ const binnacleController = {
     // listar bitácoras por instructor
     getListBinnaclesByInstructor: async (req, res) => {
         try {
-            const instructor = req.params.instructor
-            const listBinnaclesByInstructor = await Binnacle.find({ instructor })
-            res.json({ listBinnaclesByInstructor })
+            const instructor = req.params.instructor;
+            const binnacles = await Binnacle.find({ instructor });
+            res.json({ binnacles });
         } catch (error) {
             console.log({ error });
-            res.status(400).json({ error: "Error al listar bitácora" })
+            res.status(400).json({ error: "Error al listar bitácoras o al obtener instructor" });
         }
     },
     // crear bitácoras
     postAddBinnacle: async (req, res) => {
         try {
             const { assignment, instructor, number, document, observations } = req.body;
-            const newBinnacle = new Binnacle({ assignment, instructor, number, document, observations });
+            const instructorResponse = await axios.get(`http://89.116.49.65:4500/api/instructors/${instructor}`, {
+                headers: {
+                    'token': xtoken
+                }
+            });
+            const assignmentResponse = await Assignment.findById(assignment)
+            const instructorData = instructorResponse.data;
+
+            const newBinnacle = new Binnacle({ assignment: assignmentResponse, instructor: instructorData, number, document, observations });
             await newBinnacle.save();
             res.json({ newBinnacle });
         } catch (error) {
             console.log({ error });
-            res.status(400).json({ error: "Error al crear bitácora" });
+            res.status(400).json({ error: "Error al crear bitácora o al obtener instructor" });
         }
     },
     // modificar bitácoras
