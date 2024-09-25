@@ -18,7 +18,7 @@ const logController = {
     getlistlogsbyid: async (req, res) => {
         try {
             const id = req.params.id
-            const listlogsbyid = await Log.findByID(id);
+            const listlogsbyid = await Log.findById(id);
             res.json({ listlogsbyid });
 
         } catch (error) {
@@ -30,7 +30,7 @@ const logController = {
     postaddlog: async (req, res) => {
         try {
             const { users,email, action, information} = req.body
-            const newlog = new Log ({ users, action, information, data })
+            const newlog = new Log ({ users, email, action, information})
             await newlog.save()
             res.json({ newlog })
         } catch (error) {
@@ -45,7 +45,7 @@ const logController = {
         try {
             const id = req.params.id
             const enableLog = await Log.findByIdAndUpdate(id, { status: 1 })
-            res.json({ msg: "Registro activado" })
+            res.json({ msg: "Registro activado",enableLog })
         } catch (error) {
             console.log({ error });
             res.status(400).json({ error: "Error al activar registro" })
@@ -57,7 +57,7 @@ const logController = {
         try {
             const id = req.params.id
             const disableLog = await Log.findByIdAndUpdate(id, { status: 0 })
-            res.json({ msg: "Registro desactivado" })
+            res.json({ msg: "Registro desactivado",disableLog })
         } catch (error) {
             console.log({ error });
             res.status(400).json({ error: "Error al desactivar registro" })

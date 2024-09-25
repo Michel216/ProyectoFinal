@@ -32,8 +32,8 @@ const register = {
     getlistregisterbyapprentice: async (req, res) => {
 
         try {
-            const id = req.params.id
-            const listRegisterByapprentice = await Register.findById(id);
+            const idapprentice = req.params.idapprentice 
+            const listRegisterByapprentice = await Register.find({apprentice:idapprentice});
             res.json({ listRegisterByapprentice });
 
         } catch (error) {
@@ -72,61 +72,90 @@ const register = {
         }
     },
 
-    //listar registro por fecha de inicio
-    getlistregisterbystartdate: async (req, res) => {
-
+    updateModalityregister: async (req, res) => {
         try {
-            const { startDate, endDate } = req.body;
-            const query = {};
+            const modalityId = req.params.id; // ID de la modalidad desde la URL
+            const newData = req.body; // Datos a actualizar
 
-            if (startDate && endDate) {
-                query.fecha = {
-                    $gte: new Date(startDate),
-                    $lte: new Date(endDate)
-                };
-            }
 
-            const register = await Register.find(query);
-            res.json({ register });
+            const updatedRegister = await Register.findOneAndUpdate({ modality: modalityId }, newData, { new: true }
+            );
+            res.json({ updatedRegister })
+
         } catch (error) {
-            res.status(400).json({ error });
+            console.error(error);
+            res.status(400).json({ error: "Error al modificar los datos del registro" });
         }
     },
 
-    //listar registro por fecha de finalizacion
-    getlistregisterbyenddate: async (req, res) => {
-        try {
-            const { startDate, endDate } = req.body;
-            const query = {};
+   // Listar registro por fecha de inicio
+getlistregisterbystartdate: async (req, res) => {
+    try {
+        const { startDate, endDate } = req.query;
+        const query = {};
 
-            if (startDate && endDate) {
-                query.fechaFinalizacion = {
-                    $gte: new Date(startDate),
-                    $lte: new Date(endDate)
-                };
-            }
-
-            const registers = await Register.find(query);
-            res.json({ registers });
-        } catch (error) {
-            res.status(400).json({ error });
+        if (startDate) {
+            query.startDate = { $gte: new Date(startDate) }; // Asumiendo que el campo es 'startDate'
         }
-    },
+        if (endDate) {
+            query.endDate = { $lte: new Date(endDate) }; // Asumiendo que el campo es 'endDate'
+        }
+
+        const registers = await Register.find(query);
+        res.json({ registers });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+},
+
+// Listar registro por fecha de finalización
+getlistregisterbyenddate: async (req, res) => {
+    try {
+        const { startDate, endDate } = req.query;
+        const query = {};
+
+        if (startDate) {
+            query.startDate = { $gte: new Date(startDate) }; // Asumiendo que el campo es 'startDate'
+        }
+        if (endDate) {
+            query.endDate = { $lte: new Date(endDate) }; // Asumiendo que el campo es 'endDate'
+        }
+
+        const registers = await Register.find(query);
+        res.json({ registers });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+},
 
     //agregar registro
 
     postaddregister: async (req, res) => {
         try {
-            const { apprentice, modality, startDate, endDate , company, phonecompany, addresscompany, owner, docalternative, hour } = req.body
-            const newregister = new Register({ apprentice, modality, startDate , endDate, company, phonecompany, addresscompany, owner, docalternative, hour })
-            await newregister.save()
-            res.json({ newregister })
+            const { apprentice, modality, startDate, endDate, company, phonecompany, addresscompany, owner, docAlternative, hour } = req.body;
+
+            const newregister = new Register({
+                apprentice,
+                modality,
+                startDate,
+                endDate,
+                company,
+                phonecompany,
+                addresscompany,
+                owner,
+                docAlternative,
+                hour
+            });
+
+            await newregister.save();
+            return res.json({ newregister });
+
         } catch (error) {
-            console.log({ error });
-            res.status(400).json({ error: "Error al crear el registro " })
+            console.error(error);
+
+            return res.status(400).json({ error: "Error al crear el registro" });
         }
     },
-
     //actualizar registro por id
 
     updateregisterbyid: async (req, res) => {
@@ -146,7 +175,7 @@ const register = {
         try {
             const id = req.params.id
             const enableRegister = await Register.findByIdAndUpdate(id, { status: 1 })
-            res.json({ msg: "Registro activado" })
+            res.json({ msg: "Registro activado" ,enableRegister})
         } catch (error) {
             console.log({ error });
             res.status(400).json({ error: "Error al activar registro" })
@@ -158,7 +187,7 @@ const register = {
         try {
             const id = req.params.id
             const disableRegister = await Register.findByIdAndUpdate(id, { status: 0 })
-            res.json({ msg: "Registro desactivado" })
+            res.json({ msg: "Registro desactivado",disableRegister })
         } catch (error) {
             console.log({ error });
             res.status(400).json({ error: "Error al desactivar registro" })
