@@ -12,5 +12,5 @@ const apprenticeSchema = new mongoose.Schema({
     // createdAt: { type: timestamps,type: String, require: true },
     // updatedAt: { type: timestamps,type: String, require: true }
 }, { timestamps: true })
- 
-module.exports = mongoose.model("Apprentice", apprenticeSchema) 
+
+module.exports = mongoose.model("Apprentice", apprenticeSchema)

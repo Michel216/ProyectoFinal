@@ -26,7 +26,7 @@ const followupController = {
     getListFollowUpInstructorByAssignment: async (req, res) => {
         try {
             const idAssignment = req.params.idAssignment;
-            const listFollowupByAssignment = await Followup.find({ assignment: idAssignment });
+            const listFollowupByAssignment = await Followup.findOne({ assignment: idAssignment });
             res.json({ listFollowupByAssignment });
         } catch (error) {
             console.error(error);
@@ -37,7 +37,7 @@ const followupController = {
     getListFollowupByInstructor: async (req, res) => {
         try {
             const idInstructor = req.params.idInstructor;
-            const listFollowupByInstructor = await Followup.find({ instructor: idInstructor });
+            const listFollowupByInstructor = await Followup.findOne({ instructor: idInstructor });
             res.json({ listFollowupByInstructor });
         } catch (error) {
             console.error(error);

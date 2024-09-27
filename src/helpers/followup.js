@@ -1,3 +1,4 @@
+const e = require("express")
 const Assignment = require("../models/assignment.js")
 const Followup = require("../models/followup.js")
 // const Instructor = require("../models/instructor.js")
@@ -9,11 +10,11 @@ const followUpHelper = {
         }
     },
 
-    validateAssignment: async(idassignment) =>{
-        let existAssignment = await Assignment.findById(idassignment)
+    validateAssignment: async(idAssignment) =>{
+        let existAssignment = await Assignment.findById(idAssignment)
         if(!existAssignment){
             throw new Error("El id de asignación no existe ")
-        }
+        } return existAssignment
     },
     
     // validateInstrustor: async(idinstructor) => {
