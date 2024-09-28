@@ -15,7 +15,10 @@
     </q-header>
 
     <q-drawer show-if-above v-model="leftDrawerOpen" side="left" bordered>
-      <!-- drawer content -->
+      <div class="q-pa-md q-gutter-sm">
+        <q-btn to="/modality">Modalidades</q-btn>
+        <q-btn to="/binnacles">Bitácoras</q-btn>
+      </div>
     </q-drawer>
 
     <q-page-container>

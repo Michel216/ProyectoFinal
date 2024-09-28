@@ -4,7 +4,7 @@ import Modality from "./../views/Modality.vue"
 import { createRouter, createWebHashHistory } from "vue-router"
 
 const routes = [{
-    path: "/home", component: Home, children: [
+    path: "/", component: Home, children: [
         { path: "/binnacles", component: Binnacles },
         { path: "/modality", component: Modality }
     ]
