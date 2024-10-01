@@ -37,7 +37,8 @@ const apprenticeController = {
     getListApprenticeByStatus: async (req, res) => {
         try {
             const status = req.params.status;
-            const apprentices = await Apprentice.find({ status });
+            const idApprentice = req.params.idApprentice;
+            const apprentices = await Apprentice.findByIdAndUpdate(idApprentice,{ status });
             res.json({apprentices});
         } catch (error) {
             console.error(error);

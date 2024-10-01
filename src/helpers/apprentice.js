@@ -29,13 +29,13 @@ const apprenticeHelper = {
             throw new Error("El correo ya existe");
         }
     },
-    // validateStatus:  (status) => {
-    //     if (status != 0 || status != 1) {
-    //         throw new Error("El estado debe ser 1 o 0");
-    //     }else{
-    //         return true;
-    //     }
-    // },
+    validateStatus:  (status) => {
+        if (status != 0 || status != 1) {
+            throw new Error("El estado debe ser 1 o 0");
+        }else{
+            return true;
+        }
+    },
     validateStatus:  (status) =>{
         const Status =[0,1];
         if(!Status.includes(status)){
@@ -49,7 +49,19 @@ const apprenticeHelper = {
             throw new Error("El tipo de documento bede ser 'cédula de ciudadanía','tarjeta de identidad','cedula de extranjería'");
         }
         return true
-    }
+    },
 
+    validateFiche:async (idFiche) =>{
+        let exisIdFiche = await axios.get(`http://89.116.49.65:4500/api/fiches/${idFiche}`,{
+            headers:{
+                "token":process.env.TOKEN
+            }
+        });
+        if (!exisIdFiche){
+            throw new Error("La ficha no existe");
+        } 
+        return true;
+    }
+   
 };
 module.exports = apprenticeHelper;
