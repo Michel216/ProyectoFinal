@@ -27,6 +27,7 @@ followupRoute.get('/listfollowupbyassignment/:idAssignment', [
     // validateJWT,
     check('idAssignment', 'El idAssignment es obligatorio y debe ser un ID de MongoDB válido').isMongoId().trim(),
     check('idAssignment').custom(followUpHelper.validateAssignment),
+    check('idAssignment').custom(followUpHelper.validateAssignment),
     validateFields
 ], followupController.getListFollowUpInstructorByAssignment);
 
@@ -46,10 +47,12 @@ followupRoute.post('/addfollowup', [
     check('instructor', 'El campo instructor es obligatorio').notEmpty().trim(),
     check('instructor','El campo debe ser un mongoId').isMongoId().trim(),
     check('instructor').custom(followUpHelper.validateInstrustor),
+    check('instructor').custom(followUpHelper.validateInstrustor),
     check('number', 'El campo número es obligatorio y debe ser un número entero').isNumeric().trim(),
     check('month', 'El campo mes es obligatorio y debe ser un mes válido').not().isEmpty().trim(),
     check('document', 'El campo documento es obligatorio').notEmpty().trim(),
-    // check('status', 'El campo estado es obligatorio').notEmpty(),
+    check('status', 'El campo estado es obligatorio').notEmpty(),
+    check('status').custom(followUpHelper.validateStatus),
     check('users', 'El campo Usuario es obligatorio').notEmpty().trim(),
     check('observations', 'El campo observaciones es obligatorio').notEmpty(),
     validateFields
