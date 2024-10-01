@@ -43,7 +43,7 @@ const followupController = {
             console.error(error);
             res.status(400).json({ error: 'Error al listar los seguimientos por instructor' });
         }
-    },
+    }, 
     // Añadir seguimiento
     postAddFollowup: async (req, res) => {
         try {
