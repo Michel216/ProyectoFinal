@@ -1,4 +1,4 @@
-import Home from "./../components/Home.vue"
+import Home from "./../layouts/MainLayout.vue"
 import Binnacles from "./../views/Binnacles.vue"
 import Modality from "./../views/Modality.vue"
 import { createRouter, createWebHashHistory } from "vue-router"

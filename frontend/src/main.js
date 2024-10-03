@@ -1,5 +1,5 @@
 import { createApp } from 'vue'
-import { router } from './routes/routes'
+import { router } from './router/routes.js'
 import { Quasar } from 'quasar'
 import { createPinia } from 'pinia'
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
