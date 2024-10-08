@@ -4,6 +4,7 @@ import Home from "./../views/Home.vue"
 import Binnacles from "./../views/Binnacles.vue"
 import Modality from "./../views/Modality.vue"
 import Assignment from "./../views/assignment.vue"
+import ForgotPassword from "./../views/ForgotPassword.vue"
 import { createRouter, createWebHashHistory } from "vue-router"
 
 const routes = [  {path: "/", component: Logs},{

@@ -20,11 +20,12 @@
             <label for="password">Contraseña</label>
             <input type="password" id="password" v-model="password" required class="input-field"/>
           </div>
-          <button @click="Login()" type="submit" class="login-button">INICIAR SESIÓN</button>
+          <Btn :label='"INICIAR SESIÓN"'
+          :onClickFunction='ClickFunctionLogin'></Btn>
         </form>
       </div>
       <p>
-          <a href="#" @click="forgotPassword" class="forgot-password">Olvidé mi contraseña</a>
+          <a  @click="forgotPassword" class="forgot-password">Olvidé mi contraseña</a>
         </p>
     </div>
       </div>
@@ -33,6 +34,7 @@
   <script setup>
   import { ref } from 'vue'
   import { useRouter } from 'vue-router';
+  import Btn from '../components/Button.vue'
   
   const router = useRouter();
   
@@ -44,10 +46,11 @@
   }
   
   const forgotPassword = () => {
+    router.replace("./forgotpassword")
     console.log('Olvidé mi contraseña')
   }
   
-  const Login = async () => {
+  const ClickFunctionLogin = async () => {
     router.replace("/Home")
   }
   </script>
