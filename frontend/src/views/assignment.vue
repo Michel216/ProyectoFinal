@@ -1,7 +1,7 @@
 <template>
     <div>
       <MyTable
-        :title="Assignment"
+        :title='Assignment'
         :rows="tableRows"
         :columns="tableColumns"
         :onClickEdit="handleEdit"
@@ -15,10 +15,11 @@
   import MyTable from '../components/Table.vue'
   
   const tableRows = ref([
-    { name: 'John', estado: 1 },
-    { name: 'Jane', estado: 0 },
-    { name: 'Sam', estado: 1 },
   ])
+
+//   async function bring(){
+// let res = await 
+//   }
   
   const tableColumns = ref([
     { name: 'name', label: 'Nombre', align: 'center', field: 'name' },

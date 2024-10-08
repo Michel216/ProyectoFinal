@@ -66,6 +66,7 @@ const route = useRoute();
 const menuItems = [
   { label: 'Home', path: '/home', icon: 'home' },
   { label: 'Bitacora', path: '/Binnacles', icon: 'library_books' },
+  {label: 'Asignaciones', path: '/Assignment', icon: 'assignment'}
 ];
 
 function isActiveRoute(path) {
@@ -79,9 +80,7 @@ const drawer = ref(false)
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value
 }
-// function toggleDrawer() {
-//   drawer.value = !drawer.value; // Cambiar el estado de drawer
-// }
+
 </script>
 
 <style scoped>

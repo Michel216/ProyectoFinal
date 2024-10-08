@@ -24,6 +24,7 @@
 import { ref } from 'vue'
 import TreatsTable from './../components/Table.vue'
 
+
 let alert = ref(false)
 
 const columns = [
