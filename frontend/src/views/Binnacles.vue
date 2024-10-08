@@ -1,48 +1,59 @@
 <template>
   <div class="q-pa-md">
-    <TreatsTable :title="'Bitácoras'" :columns="columns" :rows="rows" :onClickEdit="openDialog" />
-    <q-dialog v-model="alert">
-    <q-card>
-      <q-card-section>
-        <div class="text-h6">Alert</div>
-      </q-card-section>
-
-      <q-card-section class="q-pt-none">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Rerum repellendus sit voluptate voluptas eveniet
-        porro. Rerum blanditiis perferendis totam, ea at omnis vel numquam exercitationem aut, natus minima, porro
-        labore.
-      </q-card-section>
-
-      <q-card-actions align="right">
-        <q-btn flat label="OK" color="primary" v-close-popup />
-      </q-card-actions>
-    </q-card>
-  </q-dialog>
+    <TableTable :title="title" :columns="columns" :rows="rows" />
   </div>
 </template>
+
 <script setup>
-import { ref } from 'vue'
-import TreatsTable from './../components/Table.vue'
+import { ref, onBeforeMount } from 'vue';
+import { getData, putData } from './../services/apiClient.js';
+import TableTable from '../components/tables/TableWithOutOption.vue'
 
-let alert = ref(false)
 
-const columns = [
-{ name: 'number', align: "center", label: 'Número de bitácora', field: 'number', sortable: true },
-{ name: 'document', align: "center", label: 'Documento', field: 'document' },
-{ name: 'observations', align: "center", label: 'Observaciones', field: 'observations' }
-]
+let title = "Bitácoras"
+const rows = ref([])
+let columns = ref([
+  { name: 'number', align: "center", label: 'Número de bitácora', field: 'number', sortable: true },
+  { name: 'document', align: "center", label: 'Documento', field: 'document' },
+  { name: "status1", align: "center", label: "Estado", field: "status" },
+]);
 
-const rows = [{
-number: 1,
-document: '123456',
-observations: 'Observación 1'
-
-}]
-
-function openDialog(row){
-alert.value=true
-console.log(row);
-
+async function bring() {
+  try {
+    let data = await getData('/binnacles/listallbinnacles');
+    rows.value = data.ListAllBinnacles;
+    
+  } catch (error) {
+    console.log(error);
+  }
 }
 
+// async function bring() {
+//   try {
+//     let data = await getData('/modality/listallmodality');
+//     rows.value = data.listAllModalities;
+//     console.log(rows.value);
+    
+//   } catch (error) {
+//     console.log(error);
+//   }
+// }
+
+// onBeforeMount(() => {
+//   bring();
+// })
+
+// async function handleToggleActive(row){
+//   console.log(row);
+//   let data = await putData(`/binnacles/updatestatus/${row}/2`);
+//   bring();
+// }
+
+// function handleEdit(row) {
+//   console.log("Editar", row);
+// }
+
+onBeforeMount(() => {
+  bring();
+})
 </script>

@@ -61,15 +61,20 @@
 <script setup>
 import { ref } from "vue";
 import { useRoute } from "vue-router";
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { faPenToSquare, faCheck, faXmark, faEnvelope, faUser, faLock } from '@fortawesome/free-solid-svg-icons';
 
+library.add(faPenToSquare, faCheck, faXmark, faEnvelope, faUser, faLock);
 const route = useRoute();
 const menuItems = [
   { label: 'Home', path: '/home', icon: 'home' },
-  { label: 'Bitacora', path: '/Binnacles', icon: 'library_books' },
+  { label: 'Bitácora', path: '/Binnacles', icon: 'library_books' },
+  { label: 'Modalidades', path: '/Modality', icon: 'swap_horiz' },
 ];
 
-function isActiveRoute(path) {
-  return route.path === path;
+function isActiveRoute(to) {
+  return route.to === to;
 }
 
 const leftDrawerOpen = ref(false);

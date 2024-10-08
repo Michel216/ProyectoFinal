@@ -10,9 +10,9 @@ const routes = [  {path: "/", component: Logs},{
   
     path: "/Base", component: Base, children: [
         {path: "/Home", component: Home},
-        { path: "/binnacles", component: Binnacles },
-        { path: "/modality", component: Modality },
-        { path: "/assignment", component: Assignment },
+        { path: "/Binnacles", component: Binnacles },
+        { path: "/Modality", component: Modality },
+        { path: "/Assignment", component: Assignment },
     ]
 }]
 

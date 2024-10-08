@@ -9,7 +9,7 @@ const modalityRoutes = express.Router()
 
 // listar todas las modalidades
 modalityRoutes.get("/listallmodality", [
-    validateJWT,
+    // validateJWT,
     validateFields
 ], modalityController.getListAllModalities)
 
@@ -23,7 +23,7 @@ modalityRoutes.get("/listmodalitybyid/:id", [
 
 // crear modalidades
 modalityRoutes.post("/addmodality", [
-    validateJWT,
+    // validateJWT,
     check('name', 'El nombre es obligatorio').notEmpty(),
     check('hourInstructorFollow', 'Las horas del instructor de seguimiento son obligatorias').optional().isNumeric(),
     check('hourInstructorTechnical', 'Las horas del instructor técnico son obligatorias').optional().isNumeric(),

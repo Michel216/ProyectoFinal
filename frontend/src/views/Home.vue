@@ -15,7 +15,7 @@
   
   <script setup>
   // Importa el componente UserCard y UseLayout
-  import UserCard from '../components/cards.vue'
+  import UserCard from '../components/cards/cards.vue'
   
   // Define las tarjetas con datos
   const cards = [

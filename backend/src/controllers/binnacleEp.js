@@ -52,9 +52,9 @@ const binnacleController = {
     postAddBinnacle: async (req, res) => {
         try {
             const { assignment, instructor, number, document, observations } = req.body;
-            const instructorResponse = await axios.get(`http://89.116.49.65:4500/api/instructors/${instructor}`, {
+            const instructorResponse = await axios.get(`${process.env.INSTRUCTOR_URL}/${instructor}`, {
                 headers: {
-                    'token': xtoken
+                    'token': process.env.TOKEN
                 }
             });
             const assignmentResponse = await Assignment.findById(assignment)

@@ -30,9 +30,9 @@ const binnacleHelper = {
     // valida que exista el instructor en la base de datos
     validateInstructor: async (instructor) => {
         try {
-            const instructorResponse = await axios.get(`http://89.116.49.65:4500/api/instructors/${instructor}`, {
+            const instructorResponse = await axios.get(`${process.env.INSTRUCTOR_URL}/${instructor}`, {
                 headers: {
-                    'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZjFkMTliNzFlN2Q4ZTBiNGI2NDE4ZiIsInJvbCI6IkNPT1JESU5BRE9SIiwiZW1haWwiOiJldGFwYXNwcnVlYmFzQGdtYWlsLmNvbSIsInN1cGVyIjowLCJpYXQiOjE3MjcxMzc3MDYsImV4cCI6MTcyNzMxMDUwNn0.UyTMrdtdJAO4_VzB_B_fLiOylrWBYUGviGmC4pIATsI'
+                    'token': process.env.TOKEN
                 }
             });
             if (instructorResponse && instructorResponse.data) {

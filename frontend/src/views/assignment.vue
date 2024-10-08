@@ -12,7 +12,7 @@
   
   <script setup>
   import { ref } from 'vue'
-  import MyTable from '../components/Table.vue'
+  import MyTable from '../components/tables/TableWithOptions.vue'
   
   const tableRows = ref([
     { name: 'John', estado: 1 },
