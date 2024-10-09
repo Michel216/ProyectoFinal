@@ -71,7 +71,8 @@ const menuItems = [
   { label: 'Home', path: '/home', icon: 'home' },
   { label: 'Bitácora', path: '/Binnacles', icon: 'library_books' },
   { label: 'Modalidades', path: '/Modality', icon: 'swap_horiz' },
-  {label: 'Asignaciones', path: '/Assignment', icon: 'assignment'}
+  {label: 'Asignaciones', path: '/Assignment', icon: 'assignment'},
+  {label: 'Registros', path: '/Register', icon: 'file-document'},
 ];
 
 function isActiveRoute(to) {

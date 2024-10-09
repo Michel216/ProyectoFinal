@@ -6,6 +6,7 @@ import Modality from "./../views/Modality.vue"
 import Assignment from "./../views/assignment.vue"
 import ForgotPassword from "./../views/ForgotPassword.vue"
 import { createRouter, createWebHashHistory } from "vue-router"
+import Register from "../views/Register.vue"
 
 const routes = [  {path: "/", component: Logs},{
   
@@ -14,6 +15,7 @@ const routes = [  {path: "/", component: Logs},{
         { path: "/Binnacles", component: Binnacles },
         { path: "/Modality", component: Modality },
         { path: "/Assignment", component: Assignment },
+        { path: "/Register", component: Register },
     ]
 }]
 

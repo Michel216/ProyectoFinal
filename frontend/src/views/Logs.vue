@@ -34,7 +34,7 @@
   <script setup>
   import { ref } from 'vue'
   import { useRouter } from 'vue-router';
-  import Btn from '../components/Button.vue'
+  import Btn from '../components/buttons/Button.vue'
   
   const router = useRouter();
   

@@ -6,7 +6,7 @@
 
 <script setup>
 import { ref, onBeforeMount } from 'vue';
-import { getData, putData } from './../services/apiClient.js';
+// import { getData, putData } from '../services/apiClient.js';
 import TableTable from '../components/tables/TableWithOutOption.vue'
 
 
