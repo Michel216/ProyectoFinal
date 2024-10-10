@@ -19,7 +19,8 @@
           <q-item clickable v-ripple v-for="item in menuItems" :key="item.label" :to="item.path"
             active-class="active-item" class="custom-button">
             <q-item-section avatar>
-              <q-icon :name="item.icon" class="icon" />
+              <!-- <q-icon :name="item.icon" class="icon" /> -->
+              <font-awesome-icon :icon="item.icon" class="icon" />
             </q-item-section>
             <q-item-section>
               <span class="button-text">{{ item.label }}</span>
@@ -63,20 +64,26 @@ import { ref } from "vue";
 import { useRoute } from "vue-router";
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { faPenToSquare, faCheck, faXmark, faEnvelope, faUser, faLock } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faBook, faTasks, faFileAlt, faUser, faChartLine } from '@fortawesome/free-solid-svg-icons';
 
-library.add(faPenToSquare, faCheck, faXmark, faEnvelope, faUser, faLock);
+// Añadir iconos a la librería FontAwesome
+library.add(faHome, faBook, faTasks, faFileAlt, faUser, faChartLine);
+
 const route = useRoute();
+
 const menuItems = [
-  { label: 'Home', path: '/home', icon: 'home' },
-  { label: 'Bitácora', path: '/Binnacles', icon: 'library_books' },
-  { label: 'Modalidades', path: '/Modality', icon: 'swap_horiz' },
-  {label: 'Asignaciones', path: '/Assignment', icon: 'assignment'},
-  {label: 'Registros', path: '/Register', icon: 'file-document'},
+  { label: 'Home', path: '/home', icon: ['fas', 'home'] },
+  { label: 'Bitácora', path: '/Binnacles', icon: ['fas', 'book'] },
+  { label: 'Modalidades', path: '/Modality', icon: ['fas', 'tasks'] },
+  { label: 'Asignaciones', path: '/Assignment', icon: ['fas', 'file-alt'] },
+  { label: 'Registros', path: '/Register', icon: ['fas', 'user'] },
+  { label: 'Aprendices', path: '/Apprentice', icon: ['fas', 'user-graduate'] },
+  { label: 'Seguimientos', path: '/FollowUp', icon: ['fas', 'chart-line'] }
 ];
 
+
 function isActiveRoute(to) {
-  return route.to === to;
+  return route.path === to;
 }
 
 const leftDrawerOpen = ref(false);

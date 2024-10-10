@@ -12,8 +12,7 @@ import 'quasar/src/css/index.sass'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faHome } from '@fortawesome/free-solid-svg-icons'
-// Assumes your root component is App.vue
+import { faPenToSquare, faCheck, faXmark, faEnvelope, faUser, faLock, faHome, faBook, faTasks, faFileAlt, faUserGraduate, faChartLine } from '@fortawesome/free-solid-svg-icons';// Assumes your root component is App.vue
 // and placed in same folder as main.js
 import App from './App.vue'
 
@@ -23,7 +22,7 @@ pinia.use(piniaPluginPersistedstate)
 myApp.use(Quasar, {
     plugins: {}, // import Quasar plugins and add here
 })
-library.add(faHome);
+library.add(faPenToSquare, faCheck, faXmark, faEnvelope, faUser, faLock, faHome, faBook, faTasks, faFileAlt, faUserGraduate, faChartLine);
 
 myApp.use(router)
 myApp.use(pinia)
