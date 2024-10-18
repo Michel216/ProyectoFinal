@@ -56,7 +56,7 @@ apprenticeRoute.post('/addapprentice', [
     check('email','El correo debe ser válido').isEmail().trim(),
     check('email').custom(apprenticeHelper.validateEmail).trim(),
     check('fiche','La ficha debe ser obligatoria').notEmpty().trim(),
-    check('fiche').custom(apprenticeHelper.validateFiche),
+    // check('fiche').custom(apprenticeHelper.validateFiche),
     validateFields
 ], apprenticeController.postAddAprentice);
 
@@ -68,14 +68,23 @@ apprenticeRoute.put('/updateapprenticebyid/:id', [
     check('numDocument','El número docuemnto es obligatorio').notEmpty().trim(),
     // check('numDocument').custom(apprenticeHelper.validateNumDocument).trim(),
     check('numDocument','El número docuemnto debe tener mínimo 8 y maximo 10 caracteres').isLength({min:8, max: 10}).trim(),
+    check('numDocument').custom(async (numDocument, { req }) => {
+        await apprenticeHelper.validateNumDocumentIfIsDiferent(numDocument, req.params.id);
+    }),
     check('firstName','El nombre es obligatorio').notEmpty().trim(),
     check('lastName','El apellido es obligatorio').notEmpty().trim(),
     check('phone','El teléfono es obligatorio').notEmpty().trim(),
     check('phone','El número debe tener 10 digitos').isLength({ min: 10, max:10}).trim(),
     check('phone','El teléfono es obligatorio').isMobilePhone().trim(),
+    check('phone').custom(async (phone, { req }) => {
+        await apprenticeHelper.validatePhoneIfIsDifferent(phone, req.params.id);
+    }),
     // check('phone').custom(apprenticeHelper.validatePhone).trim(),
     check('email','El correo electrónico es obligatorio').notEmpty().trim(),
     check('email','El correo debe ser válido').isEmail().trim(),
+    check('email').custom(async (email, { req }) => {
+        await apprenticeHelper.validateEmailIfIsDifferent(email, req.params.id);
+    }),
     // check('email').custom(apprenticeHelper.validateEmail).trim(),
     check('fiche','La ficha debe ser obligatoria').notEmpty().trim(),
     validateFields

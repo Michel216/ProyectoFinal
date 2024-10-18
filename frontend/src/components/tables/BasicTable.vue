@@ -1,10 +1,10 @@
 <template>
   <div>
-    <q-table :title="title" :rows="rows" :columns="combinedColumns">
+    <q-table :title="title" :rows="rows" :columns="combinedColumns" :loading="loading">
       <!-- Slot para la celda de editar -->
       <template v-slot:body-cell-editar="scope">
         <q-td :props="scope" class="q-pa-sm">
-          <q-btn class="q-pa-sm" @click="onClickEdit(scope.row)">📝</q-btn>
+          <q-btn class="q-pa-sm" @click="toggleUpdate(scope.row._id)">📝</q-btn>
         </q-td>
       </template>
       <!-- Slot para la celda de activar/desactivar -->
@@ -54,6 +54,9 @@ const props = defineProps({
   },
   onUpdateStatus: {
     type: Function
+  },
+  loading : {
+    type: Boolean
   }
 });
 

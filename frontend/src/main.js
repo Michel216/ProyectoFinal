@@ -1,6 +1,6 @@
 import { createApp } from 'vue'
 import { router } from './router/routes.js'
-import { Quasar } from 'quasar'
+import { Quasar, Notify  } from 'quasar'
 import { createPinia } from 'pinia'
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 
@@ -20,7 +20,7 @@ const pinia = createPinia()
 const myApp = createApp(App)
 pinia.use(piniaPluginPersistedstate)
 myApp.use(Quasar, {
-    plugins: {}, // import Quasar plugins and add here
+    plugins: {Notify}, // import Quasar plugins and add here
 })
 library.add(faPenToSquare, faCheck, faXmark, faEnvelope, faUser, faLock, faHome, faBook, faTasks, faFileAlt, faUserGraduate, faChartLine);
 

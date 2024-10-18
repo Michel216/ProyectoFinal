@@ -61,7 +61,48 @@ const apprenticeHelper = {
             throw new Error("La ficha no existe");
         } 
         return true;
-    }
+    },
+
+    validateNumDocumentIfIsDiferent: async (numDocument, id) => {
+        let apprentice = await Apprentice.findById(id);
+        if (numDocument && numDocument !== apprentice.numDocument) {
+            let existNumDocument = await Apprentice.findOne({ numDocument });
+            if (existNumDocument) {
+                throw new Error("El número de documento ya existe");
+            } else {
+                return true
+            }
+        } else {
+            return true
+        }
+    },
    
+    validatePhoneIfIsDifferent: async (phone, id) => {
+        let apprentice = await Apprentice.findById(id);
+    
+        // Validar si el número de teléfono es diferente
+        if (phone && phone !== apprentice.phone) {
+            let existPhone = await Apprentice.findOne({ phone });
+            if (existPhone) {
+                throw new Error("El número de teléfono ya existe");
+            }
+        }
+    
+        return true;
+    },
+
+    validateEmailIfIsDifferent: async (email, id) => {
+        let apprentice = await Apprentice.findById(id);
+    
+        // Validar si el correo electrónico es diferente
+        if (email && email !== apprentice.email) {
+            let existEmail = await Apprentice.findOne({ email });
+            if (existEmail) {
+                throw new Error("El correo electrónico ya existe");
+            }
+        }
+    
+        return true;
+    }
 };
 module.exports = apprenticeHelper;

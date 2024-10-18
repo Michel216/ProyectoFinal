@@ -4,8 +4,6 @@
             <q-card>
                 <q-card-section class="bg-primary row items-center">
                     <div class="text-h6 text-white">{{ label }}</div>
-                    <q-space />
-                    <q-btn class="text-white" icon="close" flat round dense v-close-popup />
                 </q-card-section>
 
                 <q-card-section>

@@ -15,7 +15,7 @@ modalityRoutes.get("/listallmodality", [
 
 // listar modalidades por ID
 modalityRoutes.get("/listmodalitybyid/:id", [
-    validateJWT,
+    // validateJWT,
     check('id', 'El id es obligatorio y debe ser un ID de MongoDB válido').notEmpty().isMongoId(),
     check('id').custom(modalityHelper.validateId),
     validateFields
