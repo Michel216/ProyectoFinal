@@ -1,8 +1,8 @@
 <template>
   <div class="q-pa-md q-gutter-md">
-    <Btn :label="btnLabel" :onClickFunction='ClickFunctionLogin' />
+    <!-- <Btn :label="btnLabel" :onClickFunction='ClickFunctionLogin' /> -->
     <ApprenticeTable :title="title" :rows="rows" :columns="columns" :onToggleActivate="handleToggleActivate" />
-    <Modal :isVisible="showModal" @update:isVisible="showModal = $event" :label="btnLabel" />
+    <!-- <Modal :isVisible="showModal" @update:isVisible="showModal = $event" :label="btnLabel" /> -->
   </div>
 </template>
 
@@ -10,12 +10,12 @@
 import { ref, onBeforeMount } from "vue";
 import { getData, putData } from '../services/apiClient.js';
 import ApprenticeTable from '../components/tables/Table.vue'
-import Btn from "../components/buttons/Button.vue";
-import Modal from "../components/modals/Modal.vue";
+// import Btn from "../components/buttons/Button.vue";
+// import Modal from "../components/modals/Modal.vue";
 
 let title = 'Asignación'
-let btnLabel = 'Crear asignación'
-const showModal = ref(false);
+// let btnLabel = 'Crear asignación'
+// const showModal = ref(false);
 const rows = ref([])
 const columns = ref([
   { name: 'register', label: 'Registro', align: 'center', field: 'register' },
@@ -24,7 +24,7 @@ const columns = ref([
   { name: 'proyectInstructor', label: 'Instructor Proyecto', align: 'center', field: 'proyectInstructor' },
   { name: 'certificationdoc', label: 'Certificado', align: 'center', field: 'certificationdoc' },
   { name: 'judymenthphoto', label: 'Foto Juicio', align: 'center', field: 'judymenthphoto' },
-  { name: 'observation', label: 'Observación', align: 'center', field: 'observation' },
+  // { name: 'observation', label: 'Observación', align: 'center', field: 'observation' },
   { name: 'status', label: 'Estado Numérico', align: 'center', field: 'status' },
   { name: "editar", label: "Editar", align: "center" },
   { name: "activar", label: "Activar/Desactivar", align: "center" }
@@ -47,7 +47,7 @@ async function bring() {
   try {
     let data = await getData('/assignment/listallassignment');
     console.log(data);
-    rows.value = data.assignments
+    rows.value = data
   } catch (error) {
     console.log(error);
   }
@@ -65,7 +65,7 @@ async function handleToggleActivate(rows, status) {
 
 };
 
-function ClickFunctionLogin() {
-  showModal.value = true; // Abre el modal
-}
+// function ClickFunctionLogin() {
+//   showModal.value = true; // Abre el modal
+// }
 </script>
