@@ -1,6 +1,5 @@
 <template>
-  <div class="q-pa-md">
-    <Btn :label="btnLabel" :onClickFunction='ClickFunctionLogin' />
+  <div class="q-pa-md q-gutter-md">
     <FollowupTable :title="title" :columns="columns" :rows="rows" :options="options"
       :onUpdateStatus="handleUpdateStatus" />
   </div>
@@ -9,11 +8,9 @@
 <script setup>
 import { ref, onBeforeMount } from 'vue';
 import { getData, putData } from '../services/apiClient.js';
-import FollowupTable from "../components/tables/Table.vue";
 import { formatMonth } from '../utils/formatMonth.js';
-import Btn from "../components/buttons/Button.vue";
+import FollowupTable from '../components/tables/SecondTable.vue';
 
-let btnLabel = 'Crear asignación'
 let title = 'Seguimientos'
 const rows = ref([]);
 const columns = ref([
@@ -24,7 +21,6 @@ const columns = ref([
   { name: 'document', label: 'Documento', align: 'center', field: 'document' },
   { name: 'users', label: 'Usuarios', align: 'center', field: 'users' },
   // { name: 'observations', label: 'Observaciones', align: 'center', field: 'observations' }
-  { name: "options", label: "Editar", align: "center", field: "status" }
 ]);
 
 // valida que el tipo de la bitácora sea de 1 a 4. Programado: 1, Ejecutado: 2, Pendiente: 3, Verificado: 4

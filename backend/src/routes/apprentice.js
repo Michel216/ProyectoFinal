@@ -9,13 +9,13 @@ const apprenticeRoute = express.Router();
 
 // Obtener todos los aprendices
 apprenticeRoute.get('/listallapprentice', [
-    validateJWT,
+    // validateJWT,
     validateFields
 ], apprenticeController.getListApprentices);
 
 // Obtener aprendices por ID
 apprenticeRoute.get('/listapprenticebyid/:id', [
-    validateJWT,
+    // validateJWT,
     check('id', 'El id es obligatorio y debe ser un ID de MongoDB válido').isMongoId().trim(),
     check('id').custom(apprenticeHelper.validateApprentice).trim(),
     validateFields
@@ -23,7 +23,7 @@ apprenticeRoute.get('/listapprenticebyid/:id', [
 
 // Obtener aprendices por ficha
 apprenticeRoute.get('/listapprenticebyfiche/:idFiche', [
-    validateJWT,
+    // validateJWT,
     check('idFiche', 'El id de la ficha es obligatorio y debe ser un ID de MongoDB válido').isMongoId().trim(),
     check('idFiche').custom(apprenticeHelper.validateFiche),
     validateFields

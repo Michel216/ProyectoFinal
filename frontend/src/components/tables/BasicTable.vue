@@ -1,6 +1,6 @@
 <template>
   <div>
-    <q-table :title="title" :rows="rows" :columns="columns">
+    <q-table :title="title" :rows="rows" :columns="combinedColumns">
       <!-- Slot para la celda de editar -->
       <template v-slot:body-cell-editar="scope">
         <q-td :props="scope" class="q-pa-sm">
@@ -19,13 +19,6 @@
         <q-td :props="scope">
           <strong style="color: green" v-if="scope.row.status === 1">Activo</strong>
           <strong style="color: red" v-else>Inactivo</strong>
-        </q-td>
-      </template>
-      <template v-slot:body-cell-options="scope">
-        <q-td :props="scope">
-          <div class="q-pa-md" align="center">
-            <q-select outlined v-model="scope.row.status" style="width: 200px;" :options="options" label="Estado" emit-value map-options @update:model-value="updateStatus($event, scope.row._id)"/>
-          </div>
         </q-td>
       </template>
     </q-table>
@@ -65,11 +58,12 @@ const props = defineProps({
 });
 
 // Combinar las columnas pasadas con las columnas de acciones "editar" y "activar"
-// const combinedColumns = computed(() => [
-//   ...props.columns,
-//   { name: "editar", label: "Editar", align: "center" },
-//   { name: "activar", label: "Activar/Desactivar", align: "center" }
-// ]);
+const combinedColumns = computed(() => [
+  ...props.columns,
+  { name: 'status', label: 'Estado', align: 'center', field: 'status' },
+  { name: "editar", label: "Editar", align: "center" },
+  { name: "activar", label: "Activar/Desactivar", align: "center" }
+]);
 
 // // Manejador para la acción de activar/desactivar
 const toggleActivate = (row, status) => {
@@ -77,8 +71,5 @@ const toggleActivate = (row, status) => {
 }
 const toggleUpdate = (row) => {
   props.onClickEdit(row);
-}
-function updateStatus(status, row){
-  props.onUpdateStatus(status,row);
 }
 </script>

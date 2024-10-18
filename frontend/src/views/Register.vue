@@ -1,5 +1,5 @@
 <template>
-  <div class="q-pa-md">
+  <div class="q-pa-md q-gutter-md">
     <RegisterTable :title="title" :columns="columns" :rows="rows" :onToggleActivate="handleToggleActivate" />
   </div>
 </template>
@@ -7,7 +7,7 @@
 <script setup>
 import { ref, onBeforeMount } from 'vue';
 import { getData, putData } from '../services/apiClient.js';
-import RegisterTable from "../components/tables/Table.vue";
+import RegisterTable from "../components/tables/BasicTable.vue";
 import { formatDate } from '../utils/formatDate.js';
 
 let title = 'Registros'
@@ -22,10 +22,7 @@ const columns = ref([
   { name: 'addresscompany', label: 'Dirección de Empresa', align: 'center', field: 'addresscompany' },
   { name: 'owner', label: 'Propietario', align: 'center', field: 'owner' },
   { name: 'docAlternative', label: 'Documento Alternativo', align: 'center', field: 'docAlternative' },
-  { name: 'hour', label: 'Hora', align: 'center', field: 'hour' },
-  { name: "status", label: "Estado", align: "center", field: "status" },
-  { name: "editar", label: "Editar", align: "center" },
-  { name: "activar", label: "Activar/Desactivar", align: "center" }
+  { name: 'hour', label: 'Hora', align: 'center', field: 'hour' }
 ])
 
 onBeforeMount(() => {

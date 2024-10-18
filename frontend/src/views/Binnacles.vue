@@ -1,5 +1,5 @@
 <template>
-  <div class="q-pa-md">
+  <div class="q-pa-md q-gutter-md">
     <binnacleTable :title="title" :columns="columns" :rows="rows" :options="options"
       :onUpdateStatus="handleUpdateStatus" />
   </div>
@@ -8,7 +8,7 @@
 <script setup>
 import { ref, onBeforeMount } from 'vue';
 import { getData, putData } from '../services/apiClient.js';
-import binnacleTable from '../components/tables/Table.vue'
+import binnacleTable from '../components/tables/SecondTable.vue';
 
 
 let title = "Bitácoras"
@@ -17,8 +17,7 @@ let columns = ref([
   { name: 'assignment', label: 'Asignación', align: 'center', field: 'assignment' },
   { name: 'instructor', label: 'Instructor', align: 'center', field: 'instructor' },
   { name: 'number', align: "center", label: 'Número de bitácora', field: 'number', sortable: true },
-  { name: 'document', align: "center", label: 'Documento', field: 'document' },
-  { name: "options", label: "Editar", align: "center", field: "status" }
+  { name: 'document', align: "center", label: 'Documento', field: 'document' }
 ]);
 
 // valida que el tipo de la bitácora sea de 1 a 4. Programado: 1, Ejecutado: 2, Pendiente: 3, Verificado: 4
