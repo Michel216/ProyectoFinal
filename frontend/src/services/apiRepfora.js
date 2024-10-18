@@ -4,7 +4,7 @@ import apiClient from './../plugins/axiosRepfora.js'; // Importa tu instancia de
 // Función POST Login
 export async function postDataLogin(url, data) {
     try {
-        const response = await apiClient.post(url, data);
+        const response = await apiRepfora.post(url, data);
         return response.data;  // Devuelve los datos de la respuesta
     } catch (error) {
         console.error('Error en la petición POST de Login:', error);
@@ -12,9 +12,9 @@ export async function postDataLogin(url, data) {
     }
 }
 
-export async function getData(url) {
+export async function getDataRepfora(url) {
     try {
-        const response = await apiClient.get(url);
+        const response = await apiRepfora.get(url);
         return response.data;  // Devuelve los datos de la respuesta
     } catch (error) {
         console.error('Error en la petición GET:', error);
