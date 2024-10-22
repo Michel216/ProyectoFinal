@@ -18,8 +18,14 @@
     <q-drawer v-model="leftDrawerOpen" side="left" overlay bordered :width="300" :breakpoint="400">
       <q-scroll-area style="height: calc(100% - 150px); margin-top: 150px; border-right: 1px solid #ddd">
         <q-list padding class="drawer-content">
-          <q-item clickable v-ripple v-for="item in menuItems" :key="item.label" :to="item.path"
-            active-class="active-item" class="custom-button">
+          <q-item 
+            clickable 
+            v-ripple 
+            v-for="item in filteredMenuItems" 
+            :key="item.label" 
+            :to="item.path"
+            active-class="active-item" 
+            class="custom-button">
             <q-item-section avatar>
               <font-awesome-icon :icon="item.icon" class="icon" />
             </q-item-section>
@@ -63,6 +69,7 @@
 <script setup>
 import { ref } from "vue";
 import { useRoute } from "vue-router";
+import { useAuthStore } from '../store/useAuth.js';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faHome, faBook, faTasks, faFileAlt, faUser, faChartLine, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
@@ -71,16 +78,24 @@ import { faHome, faBook, faTasks, faFileAlt, faUser, faChartLine, faRightFromBra
 library.add(faHome, faBook, faTasks, faFileAlt, faUser, faChartLine, faRightFromBracket);
 
 const route = useRoute();
+const authStore = useAuthStore();
+const role = authStore.getRole(); // Obtiene el rol del usuario actual
+
+console.log('Rol actual:', role); // Verifica el rol actual
 
 const menuItems = [
-  { label: 'Home', path: '/home', icon: ['fas', 'home'] },
-  { label: 'Bitácora', path: '/Binnacles', icon: ['fas', 'book'] },
-  { label: 'Modalidades', path: '/Modality', icon: ['fas', 'tasks'] },
-  { label: 'Asignaciones', path: '/Assignment', icon: ['fas', 'file-alt'] },
-  { label: 'Registros', path: '/Register', icon: ['fas', 'user'] },
-  { label: 'Aprendices', path: '/Apprentice', icon: ['fas', 'user-graduate'] },
-  { label: 'Seguimientos', path: '/FollowUp', icon: ['fas', 'chart-line'] }
+    { label: 'Home', path: '/home', icon: ['fas', 'home'], rol: ["ADMIN", "INSTRUCTOR", "ETAPA PRODUCTIVA"] },
+    { label: 'Bitácora', path: '/Binnacles', icon: ['fas', 'book'], rol: ["ETAPA PRODUCTIVA", "INSTRUCTOR"] },
+    { label: 'Modalidades', path: '/Modality', icon: ['fas', 'tasks'], rol: ["ETAPA PRODUCTIVA"] },
+    { label: 'Asignaciones', path: '/Assignment', icon: ['fas', 'file-alt'], rol: ["ETAPA PRODUCTIVA"] },
+    { label: 'Registros', path: '/Register', icon: ['fas', 'user'], rol: ["ETAPA PRODUCTIVA"] },
+    { label: 'Aprendices', path: '/Apprentice', icon: ['fas', 'user-graduate'], rol: ["ETAPA PRODUCTIVA"] },
+    { label: 'Seguimientos', path: '/FollowUp', icon: ['fas', 'chart-line'], rol: ["ETAPA PRODUCTIVA", "INSTRUCTOR"] }
 ];
+
+// Filtrar los elementos del menú según el rol del usuario
+const filteredMenuItems = menuItems.filter(item => item.rol.includes(role));
+console.log('Elementos del menú filtrados:', filteredMenuItems); // Verifica los elementos filtrados
 
 function isActiveRoute(to) {
   return route.path === to;
@@ -92,6 +107,7 @@ function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;
 }
 </script>
+
 
 <style scoped>
 .custom-button {
