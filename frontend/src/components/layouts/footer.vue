@@ -1,0 +1,11 @@
+<template>
+      <q-layout view="hHh Lpr lff">
+        <q-footer bordered class="bg-grey-4 text-black text-center text-h6 text-weight-bold text-subtitle1">
+      <q-toolbar>
+        <q-toolbar-title>
+          <div>REPFORA - Sena 2024 © Todos los derechos reservados</div>
+        </q-toolbar-title>
+      </q-toolbar>
+    </q-footer>
+      </q-layout>
+</template>
