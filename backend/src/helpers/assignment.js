@@ -27,4 +27,4 @@ const assigmentHelper = {
     }
 
 }
-module.exports =assigmentHelper;
+module.exports = assigmentHelper;

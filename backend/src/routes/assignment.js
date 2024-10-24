@@ -23,30 +23,30 @@ assignmentRoute.get('/listassignmentbyid/:id', [
 ], assignmentController.getListAssignmentById);
 
 // Obtener asignaciones por ID de registro
-assignmentRoute.get('/listassignmentbyregister/:idregister', [
-    validateJWT,
-    check('idregister', 'El idregister no es válido').isMongoId(),
-    check('idregister').custom(registerHelper.registerExists),
+assignmentRoute.get('/listassignmentbyregister/:register', [
+    // validateJWT,
+    check('register', 'El idregister no es válido').isMongoId(),
+    check('register').custom(registerHelper.registerExists),
     validateFields
 ], assignmentController.getListAssignmentByRegister);
 
 // Obtener seguimiento de instructor por ID
 assignmentRoute.get('/listfollowupinstructor/:idinstructor', [
-    validateJWT,
+    // validateJWT,
     check('idinstructor', 'El idinstructor no es válido').isMongoId(),
     validateFields
 ], assignmentController.getListFollowUpInstructorById);
 
 // Obtener instructor técnico por ID
 assignmentRoute.get('/listtechnicalinstructor/:idinstructor', [
-    validateJWT,
+    // validateJWT,
     check('idinstructor', 'El idinstructor no es válido').isMongoId(),
     validateFields
 ], assignmentController.getListTechnicalInstructorById);
 
 // Obtener instructor de proyecto por ID
 assignmentRoute.get('/listprojectinstructor/:idinstructor', [
-    validateJWT,
+    // validateJWT,
     check('idinstructor', 'El idinstructor no es válido').isMongoId(),
     validateFields
 ], assignmentController.getListProjectInstructorById);
@@ -54,11 +54,11 @@ assignmentRoute.get('/listprojectinstructor/:idinstructor', [
 // Agregar una nueva asignación
 assignmentRoute.post('/addassignment', [
     // validateJWT,
-    check('idregister', 'El idregister no es válido').isMongoId(),
-    check('idregister').custom(assigmentHelper.registerExists),
+    check('register', 'El idregister no es válido').isMongoId(),
+    check('register').custom(registerHelper.registerExists),
     check('certificationdoc', 'El certificationdoc es obligatorio').not().isEmpty(),
     check('judymenthphoto', 'El judymenthphoto debe ser un string').isString(),
-    check('observation', 'El observation es obligatorio').not().isEmpty(),
+    // check('observation', 'El observation es obligatorio').not().isEmpty(),
     check('followInstructor', 'El followInstructor debe ser un ID de MongoDB válido').optional().isMongoId(),
     check('technicalInstructor', 'El technicalInstructor debe ser un ID de MongoDB válido').optional().isMongoId(),
     check('proyectInstructor', 'El proyectInstructor debe ser un ID de MongoDB válido').optional().isMongoId(),
@@ -88,7 +88,7 @@ assignmentRoute.put('/enableassignmentbyid/:id', [
 // Deshabilitar asignación por ID
 assignmentRoute.put('/disableassignmentbyid/:id', [
     // validateJWT,
-    check('id', 'El id es obligatorio y debe ser un ID de MongoDB válido').isMongoId(),
+    check('id', 'El id no es válido').isMongoId(),
     validateFields
 ], assignmentController.putDisableAssignment);
 

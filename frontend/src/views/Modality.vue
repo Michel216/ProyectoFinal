@@ -37,7 +37,7 @@ let hourInstructorProject = ref()
 let hourInstructorTechnical = ref()
 let hourInstructorFollow = ref()
 let idModality = ref('')
-let change = ref()
+let change = ref() // true: crear, false: modificar
 const rows = ref([])
 const columns = [
   { name: 'name', align: "center", label: 'Nombre', field: 'name', sortable: true },
@@ -61,9 +61,9 @@ async function bring() {
   }
 }
 
-async function handleToggleActivate(rows, status) {
+async function handleToggleActivate(id, status) {
   try {
-    const url = status === 0 ? `/modality/enablemodalitybyid/${rows}` : `/modality/disablemodalitybyid/${rows}`
+    const url = status === 0 ? `/modality/enablemodalitybyid/${id}` : `/modality/disablemodalitybyid/${id}`
     let data = await putData(url);
     bring()
 
@@ -89,12 +89,13 @@ async function onSubmit() {
       console.log('creo');
       console.log(data);
       url.value = await postData(`/modality/addmodality`, data)
-
+      notifySuccessRequest('Modalidad creada exitosamente');
     } else {
       console.log('edito');
       url.value = await putData(`/modality/updatemodalitybyid/${idModality.value}`, data)
+      notifySuccessRequest('Modalidad actualizada exitosamente');
     }
-    notifySuccessRequest('Modalidad creada exitosamente');
+
     showModal.value = false;
     bring();
     onReset()
@@ -113,13 +114,13 @@ function onReset() {
   hourInstructorProject.value = ''
 }
 
-async function bringId(row) {
+async function bringId(id) {
   showModal.value = true;
-  if (row) {
-    let modality = await getData(`/modality/listmodalitybyid/${row}`);
+  if (id) {
+    let modality = await getData(`/modality/listmodalitybyid/${id}`);
     let TheModality = modality.listModalityById
-    idModality.value = row
-    console.log(row);
+    idModality.value = id
+    console.log(id);
     change.value = false
     name.value = TheModality.name
     hourInstructorFollow.value = TheModality.hourInstructorFollow
