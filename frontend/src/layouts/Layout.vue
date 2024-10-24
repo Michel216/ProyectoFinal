@@ -85,12 +85,12 @@ console.log('Rol actual:', role); // Verifica el rol actual
 
 const menuItems = [
     { label: 'Home', path: '/home', icon: ['fas', 'home'], rol: ["ADMIN", "INSTRUCTOR", "ETAPA PRODUCTIVA"] },
-    { label: 'Bitácora', path: '/Binnacles', icon: ['fas', 'book'], rol: ["ETAPA PRODUCTIVA", "INSTRUCTOR"] },
-    { label: 'Modalidades', path: '/Modality', icon: ['fas', 'tasks'], rol: ["ETAPA PRODUCTIVA"] },
-    { label: 'Asignaciones', path: '/Assignment', icon: ['fas', 'file-alt'], rol: ["ETAPA PRODUCTIVA"] },
-    { label: 'Registros', path: '/Register', icon: ['fas', 'user'], rol: ["ETAPA PRODUCTIVA"] },
-    { label: 'Aprendices', path: '/Apprentice', icon: ['fas', 'user-graduate'], rol: ["ETAPA PRODUCTIVA"] },
-    { label: 'Seguimientos', path: '/FollowUp', icon: ['fas', 'chart-line'], rol: ["ETAPA PRODUCTIVA", "INSTRUCTOR"] }
+    { label: 'Bitácora', path: '/Binnacles', icon: ['fas', 'book'], rol: ["ADMIN", "ETAPA PRODUCTIVA", "INSTRUCTOR"] },
+    { label: 'Modalidades', path: '/Modality', icon: ['fas', 'tasks'], rol: ["ADMIN","ETAPA PRODUCTIVA"] },
+    { label: 'Asignaciones', path: '/Assignment', icon: ['fas', 'file-alt'], rol: ["ADMIN","ETAPA PRODUCTIVA"] },
+    { label: 'Registros', path: '/Register', icon: ['fas', 'user'], rol: ["ADMIN","ETAPA PRODUCTIVA"] },
+    { label: 'Aprendices', path: '/Apprentice', icon: ['fas', 'user-graduate'], rol: ["ADMIN","ETAPA PRODUCTIVA"] },
+    { label: 'Seguimientos', path: '/FollowUp', icon: ['fas', 'chart-line'], rol: ["ADMIN","ETAPA PRODUCTIVA", "INSTRUCTOR"] }
 ];
 
 // Filtrar los elementos del menú según el rol del usuario

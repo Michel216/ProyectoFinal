@@ -60,6 +60,14 @@ apprenticeRoute.post('/addapprentice', [
     validateFields
 ], apprenticeController.postAddAprentice);
 
+//Login para el aprendiz
+apprenticeRoute.post('/loginapprentice', [
+    check('email','El correo electrónico es obligatorio').notEmpty().trim(),
+    check('email','El correo debe ser válido').isEmail().trim(),
+    check('numDocument','El número docuemnto es obligatorio').notEmpty().trim(),
+    check('numDocument').custom(apprenticeHelper.validateNumDocument).trim()
+    ], apprenticeController.postLoginApprentice);
+    
 // Actualizar aprendiz por ID (Solo valida ID y updatedAt)
 apprenticeRoute.put('/updateapprenticebyid/:id', [
     validateJWT,

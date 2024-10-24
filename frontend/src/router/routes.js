@@ -34,7 +34,7 @@ const routes = [
         component: Base,
         children: [
             { path: "/Home", component: Home, beforeEnter: auth, meta: { rol: ["ADMIN", "INSTRUCTOR"] } },
-            { path: "/Binnacles", component: Binnacles, beforeEnter: auth, meta: { rol: ["ADMIN", "INSTRUCTOR"] } },
+            { path: "/Binnacles", component: Binnacles, beforeEnter: auth, meta: { rol: ["ADMIN", "INSTRUCTOR","APRENDIZ"] } },
             { path: "/Modality", component: Modality, beforeEnter: auth, meta: { rol: ["ADMIN"] } },
             { path: "/Assignment", component: Assignment, beforeEnter: auth, meta: { rol: ["ADMIN"] } },
             { path: "/Register", component: Register, beforeEnter: auth, meta: { rol: ["ADMIN"] } },
@@ -50,15 +50,21 @@ const router = createRouter({
     routes
 });
 
-// Verificación adicional antes de cada ruta
 router.beforeEach((to, from, next) => {
     const authStore = useAuthStore();
     const token = authStore.getToken();
     const role = authStore.getRole();
 
+    // Verificar si no está autenticado y la ruta requiere autenticación
     if (to.meta.requiresAuth && !token) {
         next({ path: '/login' }); // Redirigir al login si no hay token
-    } else if (to.meta.role && to.meta.role !== role) {
+    } 
+    // Verificar si es "APRENDIZ" y está intentando acceder a algo que no sea "Binnacles"
+    // else if (role === 'APRENDIZ' && to.path !== '/Binnacles') {
+    //     next({ path: '/Binnacles' }); // Redirigir automáticamente a la única ruta permitida
+    // } 
+    // Verificar si el rol no coincide con el rol requerido por la ruta
+    else if (to.meta.rol && !to.meta.rol.includes(role)) {
         next({ path: '/unauthorized' }); // Redirigir si el rol no coincide
     } else {
         next(); // Continuar a la ruta solicitada

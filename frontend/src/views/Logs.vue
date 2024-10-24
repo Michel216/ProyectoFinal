@@ -47,6 +47,7 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import Btn from '../components/buttons/Button.vue';
 import { postDataLogin } from '../services/apiRepfora.js';
+import { postLogin } from '../services/apiClient.js';
 import { useAuthStore } from '../store/useAuth.js';
 
 const router = useRouter();
@@ -62,19 +63,18 @@ const handleSubmit = async () => {
     console.log('Inicio de sesión con rol:', rol.value, email.value, 'y contraseña:', password.value);
     try {
         let endpoint;
+        let data;
 
         if (rol.value === 'ADMIN') {
-            endpoint = '/users/login';
+            data = await postDataLogin('/users/login', {role:rol.value, email: email.value, password: password.value });
         } else if (rol.value === 'INSTRUCTOR') {
-            endpoint = '/instructors/login';
-        } else if (rol.value === 'APRENDIZ') {
-            console.error('La ruta para APRENDIZ aún no está implementada.');
-            return;
+          data = await postDataLogin('/instructors/login', {role:rol.value, email: email.value, password: password.value });
+        } 
+
+        if (rol.value === 'APRENDIZ') {
+            data = await postLogin('apprentice/loginapprentice', { email: email.value, numDocument: cedula.value });
+            console.log('Datos de inicio de sesión del aprendiz:', data);
         }
-
-        const data = await postDataLogin(endpoint, {role:rol.value, email: email.value, password: password.value });
-
-        console.log('Datos de inicio de sesión:', data);
 
         if (!data) {
             console.error('No se recibió respuesta válida del servidor');
