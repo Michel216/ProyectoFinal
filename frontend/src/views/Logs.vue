@@ -24,12 +24,26 @@
           <div class="form-group" v-if="rol === 'APRENDIZ'">
             <label for="cedula">Número de Documento</label>
             <input type="text" id="cedula" v-model="cedula" required class="input-field" />
-          </div>
-
-
-          <div class="form-group" v-if="rol === 'ADMIN' || rol === 'INSTRUCTOR'">
+          </div>           
+          <div
+            class="form-group"
+            v-if="rol === 'ADMIN' || rol === 'INSTRUCTOR'"
+          >
             <label for="password">Contraseña</label>
-            <input type="password" id="password" v-model="password" required class="input-field" />
+            <q-input
+              outlined
+              class="q-mt-md"
+              v-model="password"
+              :type="isPwd ? 'password' : 'text'"
+            >
+              <template v-slot:append>
+                <q-icon
+                  :name="isPwd ? 'visibility_off' : 'visibility'"
+                  class="cursor-pointer"
+                  @click="isPwd = !isPwd"
+                />
+              </template>
+            </q-input>
           </div>
 
           <Btn :label='btnLabel' :onClickFunction='ClickFunctionLogin' />
@@ -104,100 +118,99 @@ handleSubmit()
 
 <style scoped>
 .login-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-
-  background-color: #f0f0f0;
-}
-
-.login-container p {
-  margin-top: 10px !important;
-  margin-bottom: 20px !important;
-  text-decoration: underline;
-}
-
-.container-form {
-  padding: 20px !important;
-}
-
-.login-box {
-  width: 30%;
-  /* padding: 20px; */
-  border-radius: 10px;
-  background-color: #fff;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  text-align: center;
-  margin: 40% 0;
-  height: auto;
-}
-
-.login-header {
-  background-color: #2F7D32;
-  padding: 10px;
-  border-radius: 8px 8px 0 0;
-}
-
-.login-header h1 {
-  color: white;
-  font-size: 40px;
-  font-weight: bold;
-  margin: 0;
-}
-
-.logo {
-  width: 100px;
-  margin: 20px 0;
-}
-
-.login-title {
-  font-size: 25px;
-  margin-bottom: 10px;
-  font-weight: bold;
-  margin: 0;
-}
-
-.form-group {
-  margin-bottom: 20px;
-}
-
-.form-group label {
-  font-weight: bold !important;
-}
-
-.input-field {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 14px;
-}
-
-
-.login-button {
-  width: 30%;
-  padding: 10px;
-  background-color: #2F7D32;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-.login-button:hover {
-  background-color: #246024;
-  font-weight: 600;
-}
-
-.forgot-password {
-  color: #2F7D32;
-  text-decoration: none;
-}
-
-.forgot-password:hover {
-  text-decoration: underline;
-  font-weight: bold !important;
-}
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    
+    background-color: #f0f0f0;
+  }
+  
+  .login-container p{
+    margin-top: 10px !important;
+    margin-bottom: 20px !important;
+    text-decoration: underline;
+  }
+  
+  .container-form{
+    padding: 20px !important;
+  }
+  
+  .login-box {
+    width: 30%;
+    /* padding: 20px; */
+    border-radius: 10px;
+    background-color: #fff;
+    box-shadow: 0 5px 5px -3px #0003, 0 8px 10px 1px #00000024,
+    0 3px 14px 2px #0000001f;    text-align: center;
+    margin: 40% 0;
+    height: auto;
+  }
+  
+  .login-header {
+    background-color: #2F7D32;
+    padding: 10px;
+    border-radius: 8px 8px 0 0;
+  }
+  
+  .login-header h1 {
+    color: white;
+    font-size: 40px;
+    font-weight: bold;
+    margin: 0;
+  }
+  
+  .logo {
+    width: 100px;
+    margin: 20px 0;
+  }
+  
+  .login-title {
+    font-size: 25px;
+    margin-bottom: 10px;
+    font-weight: bold;
+    margin: 0;
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+  }
+  .form-group label{
+    font-weight: bold !important;
+  }
+  
+  .input-field {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+  }
+  
+  
+  .login-button {
+    width: 30%;
+    padding: 10px;
+    background-color: #2F7D32;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .login-button:hover {
+    background-color: #246024;
+    font-weight: 600;
+  }
+  
+  .forgot-password {
+    color: #2F7D32;
+    text-decoration: none;
+  }
+  
+  .forgot-password:hover {
+    text-decoration: underline;
+    font-weight: bold !important;
+  }
 </style>
