@@ -15,7 +15,7 @@ binnacleRoutes.get("/listallbinnacles", [
 
 // Listar bitácoras por ID
 binnacleRoutes.get("/listbinnaclesbyid/:id", [
-    validateJWT,
+    // validateJWT,
     check('id', 'El id es obligatorio y debe ser un ID de MongoDB válido').notEmpty().isMongoId(),
     check('id').custom(binnacleHelper.validateId),
     validateFields
@@ -23,7 +23,7 @@ binnacleRoutes.get("/listbinnaclesbyid/:id", [
 
 // listar bitácoras por asignación 
 binnacleRoutes.get("/listbinnaclesbyassignment/:assignment", [
-    validateJWT,
+    // validateJWT,
     check('assignment', 'El id es obligatorio y debe ser un ID de MongoDB válido').notEmpty().isMongoId(),
     check('assignment').custom(binnacleHelper.validateAssignment),
     validateFields
@@ -31,7 +31,7 @@ binnacleRoutes.get("/listbinnaclesbyassignment/:assignment", [
 
 // listar bitácoras por instructor 
 binnacleRoutes.get("/listbinnaclesbyinstructor/:instructor", [
-    validateJWT,
+    // validateJWT,
     check('instructor', 'El id es obligatorio y debe ser un ID de MongoDB válido').notEmpty().isMongoId(),
     // check('instructor').custom(binnacleHelper.validateInstructor),
     validateFields
@@ -39,7 +39,7 @@ binnacleRoutes.get("/listbinnaclesbyinstructor/:instructor", [
 
 // crear bitácoras
 binnacleRoutes.post("/addbinnacles", [
-    validateJWT,
+    // validateJWT,
     check('assignment', 'La asignación es obligatoria y debe ser un ID de MongoDB válido').notEmpty().isMongoId(),
     check('assignment').custom(binnacleHelper.validateAssignment),
     check('instructor', 'El instructor es obligatorio y debe ser un ID de MongoDB válido').notEmpty().isMongoId(),
@@ -52,13 +52,13 @@ binnacleRoutes.post("/addbinnacles", [
     check('observations.*.observation', 'Cada observación es obligatoria y debe tener al menos 3 caracteres').notEmpty().isLength({ min: 3 }),
     check('observations.*.user', 'El usuario en cada observación es obligatorio y debe ser un ID de MongoDB válido').notEmpty().isMongoId(),
     // check('observations.*.user').custom(binnacleHelper.validateUserEp),
-    check('observations.*.observationDate', 'La fecha en cada observación es obligatoria y debe ser una fecha válida').notEmpty().isDate(),
+    check('observations.*.observationDate', 'La fecha en cada observación es obligatoria y debe ser una fecha válida').notEmpty(),
     validateFields
 ], binnacleController.postAddBinnacle)
 
 // modificar bitácoras
 binnacleRoutes.put("/updatebinnaclebyid/:id", [
-    validateJWT,
+    // validateJWT,
     check('id', 'El id es obligatorio y debe ser un ID de MongoDB válido').notEmpty().isMongoId(),
     check('id').custom(binnacleHelper.validateId),
     check('assignment', 'La asignación debe ser un ID de MongoDB válido').optional().isMongoId(),

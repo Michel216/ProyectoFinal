@@ -1,8 +1,4 @@
 const Binnacle = require("./../models/binnacleEp.js")
-const Assignment = require('../models/assignment');
-const axios = require('axios');
-
-const xtoken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZjFkMTliNzFlN2Q4ZTBiNGI2NDE4ZiIsInJvbCI6IkNPT1JESU5BRE9SIiwiZW1haWwiOiJldGFwYXNwcnVlYmFzQGdtYWlsLmNvbSIsInN1cGVyIjowLCJpYXQiOjE3MjcxMzc3MDYsImV4cCI6MTcyNzMxMDUwNn0.UyTMrdtdJAO4_VzB_B_fLiOylrWBYUGviGmC4pIATsI'
 
 const binnacleController = {
     // listar todas las bitácoras
@@ -54,15 +50,8 @@ const binnacleController = {
     postAddBinnacle: async (req, res) => {
         try {
             const { assignment, instructor, number, document, observations } = req.body;
-            const instructorResponse = await axios.get(`${process.env.INSTRUCTOR_URL}/${instructor}`, {
-                headers: {
-                    'token': process.env.TOKEN
-                }
-            });
-            const assignmentResponse = await Assignment.findById(assignment)
-            const instructorData = instructorResponse.data;
 
-            const newBinnacle = new Binnacle({ assignment: assignmentResponse, instructor: instructorData, number, document, observations });
+            const newBinnacle = new Binnacle({ assignment, instructor, number, document, observations });
             await newBinnacle.save();
             res.json({ newBinnacle });
         } catch (error) {

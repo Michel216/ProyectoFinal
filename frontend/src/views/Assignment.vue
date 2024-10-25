@@ -91,7 +91,6 @@ const filterInstructorTecnico = ref('');
 const filterInstructorProyecto = ref('');
 let change = ref() // true: crear, false: modificar
 let idAssignment = ref()
-
 const columns = ref([
   { name: 'register', label: 'Registro', align: 'center', field: 'register' },
   { name: 'followInstructor', label: 'Instructor Seguimiento', align: 'center', field: 'followInstructor' },
