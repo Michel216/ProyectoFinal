@@ -93,9 +93,9 @@ const assignmentController = {
 
     // Agregar una nueva asignación
     postAddAssignment: async (req, res) => {
-        const { register, followInstructor, technicalInstructor, proyectInstructor, certificationdoc, judymenthphoto, observation, productiveStage } = req.body;
+        const { register, followInstructor, technicalInstructor, proyectInstructor, certificationdoc, judymenthphoto, productiveStage } = req.body;
 
-        let assignmentData = { register, certificationdoc, judymenthphoto, observation, productiveStage };
+        let assignmentData = { register, certificationdoc, judymenthphoto, productiveStage };
 
         if (followInstructor) assignmentData.followInstructor = followInstructor;
         if (technicalInstructor) assignmentData.technicalInstructor = technicalInstructor;
@@ -180,14 +180,14 @@ const assignmentController = {
         const id = req.params.id;
         const { updatedAt, ...newData } = req.body;
         try {
-            const validation = validateUpdateA(req.body);
-            if (!validation.valid) {
-                return res.status(400).json({ error: validation.message });
-            }
+            // const validation = validateUpdateA(req.body);
+            // if (!validation.valid) {
+            //     return res.status(400).json({ error: validation.message });
+            // }
             const updatedAssignment = await Assignment.findByIdAndUpdate(id, newData, { new: true });
-            if (!updatedAssignment) {
-                return res.status(404).json({ msg: 'Asignación no encontrada' });
-            }
+            // if (!updatedAssignment) {
+            //     return res.status(404).json({ msg: 'Asignación no encontrada' });
+            // }
             res.json({ message: 'Asignación actualizada', assignment: updatedAssignment });
         } catch (error) {
             console.error('Error al actualizar la asignación', error);

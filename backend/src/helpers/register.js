@@ -1,4 +1,5 @@
 const { check } = require('express-validator');
+const Register = require("../models/register.js")
 
 const validateDateRange = () => {
     return [
