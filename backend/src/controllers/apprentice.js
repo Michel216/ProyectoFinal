@@ -5,10 +5,9 @@ const apprenticeController = {
     getListApprentices: async (req, res) => {
         try {
             const listApprentice = await Apprentice.find();
-            res.json({ listApprentice });
+            res.status(200).json({ listApprentice });
         } catch (error) {
-            console.error({ error });
-            res.status(400).json({ error: "Error al listar Aprendices" });
+            res.status(400).json({ error });
         }
     },
     // Obtener todos los aprendices por ID
@@ -16,10 +15,9 @@ const apprenticeController = {
         try {
             const id = req.params.id;
             const listApprenticesById = await Apprentice.findById(id);
-            res.json({ listApprenticesById });
+            res.status(200).json({ listApprenticesById });
         } catch (error) {
-            console.error({ error });
-            res.status(400).json({ error: "Error al buscar Aprendices por ID" });
+            res.status(400).json({ error });
         }
     },
     // Obtener aprendiz por ficha
@@ -27,10 +25,9 @@ const apprenticeController = {
         try {
             const idFiche = req.params.idFiche;
             const listApprenticesByFiche = await Apprentice.find({ fiche: idFiche });
-            res.json({ listApprenticesByFiche });
+            res.status(200).json({ listApprenticesByFiche });
         } catch (error) {
-            console.error({ error });
-            res.status(400).json({ error: "Error al buscar los aprendices por el Id de la ficha" });
+            res.status(400).json({ error });
         }
     },
     // Obtener aprendiz por estado
@@ -38,16 +35,15 @@ const apprenticeController = {
         try {
             const status = req.params.status;
             const idApprentice = req.params.idApprentice;
-            const apprentices = await Apprentice.findByIdAndUpdate(idApprentice,{ status });
-            res.json({apprentices});
+            const apprentices = await Apprentice.findByIdAndUpdate(idApprentice, { status });
+            res.status(200).json({ apprentices });
         } catch (error) {
-            console.error(error);
-            res.status(400).json({ error: "Error interno del servidor" });
+            res.status(400).json({ error });
         }
     },
     // Añadir aprendiz
     postAddAprentice: async (req, res) => {
-        const { tpdocument, numDocument, firstName, lastName, phone, email, fiche} = req.body;
+        const { tpdocument, numDocument, firstName, lastName, phone, institutionalEmail, personalEmail, fiche, modality } = req.body;
         try {
             const newApprentice = new Apprentice({
                 tpdocument,
@@ -55,49 +51,46 @@ const apprenticeController = {
                 firstName,
                 lastName,
                 phone,
-                email,
-                fiche
+                institutionalEmail,
+                personalEmail,
+                fiche,
+                modality
             });
             await newApprentice.save();
-            res.json({ newApprentice });
+            res.status(200).json({ newApprentice });
         } catch (error) {
-            console.error('Error al insertar un nuevo Aprendiz', error);
             res.status(400).json({ error });
         }
     },
     // Actualizar aprendiz
     putUpdateApprentice: async (req, res) => {
-        const id = req.params.id;
-        const newData = req.body;
         try {
-            // Asegúrate de incluir `updatedAt` si es obligatorio
+            const id = req.params.id;
+            const newData = req.body;
             const updateApprentice = await Apprentice.findByIdAndUpdate(id, newData, { new: true });
-            res.status(200).json({updateApprentice});
+            res.status(200).json({ updateApprentice });
         } catch (error) {
-            console.error({ message: "Error actualizando el aprendiz", error });
-            res.status(400).json({ message: "Error actualizando el aprendiz", error });
+            res.status(400).json({ error });
         }
     },
     // Habilitar aprendiz
     putEnableApprentice: async (req, res) => {
-        const id = req.params.id;
         try {
+            const id = req.params.id;
             const enableApprentice = await Apprentice.findByIdAndUpdate(id, { status: 1 });
-            res.json({ message: 'Aprendiz activo', enableApprentice });
+            res.status(200).json({ message: 'Aprendiz activo' });
         } catch (error) {
-            console.error({ message: 'Error al activar el aprendiz', error });
-            res.status(400).json({ message: 'Error al activar el aprendiz', error });
+            res.status(400).json({ error });
         }
     },
     // Deshabilitar aprendiz
     putDisableApprentice: async (req, res) => {
-        const id = req.params.id;
         try {
+            const id = req.params.id;
             const disableApprentice = await Apprentice.findByIdAndUpdate(id, { status: 0 });
-            res.json({ message: 'Aprendiz Inactivo', disableApprentice });
+            res.status(200).json({ message: 'Aprendiz Inactivo' });
         } catch (error) {
-            console.error({ message: 'Error al desactivar el aprendiz', error });
-            res.status(400).json({ message: 'Error al desactivar el aprendiz', error });
+            res.status(400).json({ error });
         }
     }
 };
