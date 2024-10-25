@@ -10,23 +10,23 @@ const assignmentRoute = express.Router();
 
 // Obtener todas las asignaciones
 assignmentRoute.get('/listallassignment', [
-    // validateJWT,
+    validateJWT,
     validateFields
 ], assignmentController.getListAssignment);
 
 // Obtener asignación por ID
 assignmentRoute.get('/listassignmentbyid/:id', [
-    // validateJWT,
+    validateJWT,
     check('id', 'El id no es válido').isMongoId(),
     check('id').custom(assigmentHelper.assignmentIdExists),
     validateFields
 ], assignmentController.getListAssignmentById);
 
 // Obtener asignaciones por ID de registro
-assignmentRoute.get('/listassignmentbyregister/:register', [
+assignmentRoute.get('/listassignmentbyregister/:idregister', [
     // validateJWT,
-    check('register', 'El idregister no es válido').isMongoId(),
-    check('register').custom(registerHelper.registerExists),
+    check('idregister', 'El idregister no es válido').isMongoId(),
+    check('idregister').custom(registerHelper.registerExists),
     validateFields
 ], assignmentController.getListAssignmentByRegister);
 
@@ -53,7 +53,7 @@ assignmentRoute.get('/listprojectinstructor/:idinstructor', [
 
 // Agregar una nueva asignación
 assignmentRoute.post('/addassignment', [
-    // validateJWT,
+    validateJWT,
     check('register', 'El idregister no es válido').isMongoId(),
     check('register').custom(registerHelper.registerExists),
     check('certificationdoc', 'El certificationdoc es obligatorio').not().isEmpty(),
@@ -67,41 +67,30 @@ assignmentRoute.post('/addassignment', [
 ], assignmentController.postAddAssignment);
 
 assignmentRoute.post('/sendEmail', [
-    // validateJWT,
+    validateJWT,
     validateFields
 ], assignmentController.postSendEmail)
 
 // Actualizar asignación por ID
 assignmentRoute.put('/updateassignmentbyid/:id', [
-    // validateJWT,
+    validateJWT,
     check('id', 'El id es obligatorio y debe ser un ID de MongoDB válido').isMongoId(),
     validateFields
 ], assignmentController.putUpdateAssignment);
 
 // Habilitar asignación por ID
 assignmentRoute.put('/enableassignmentbyid/:id', [
-    // validateJWT,
+    validateJWT,
     check('id', 'El id no es válido').isMongoId(),
     validateFields
 ], assignmentController.putEnableAssignment);
 
 // Deshabilitar asignación por ID
 assignmentRoute.put('/disableassignmentbyid/:id', [
-    // validateJWT,
-    check('id', 'El id no es válido').isMongoId(),
+    validateJWT,
+    check('id', 'El id es obligatorio y debe ser un ID de MongoDB válido').isMongoId(),
     validateFields
 ], assignmentController.putDisableAssignment);
 
 module.exports = assignmentRoute;
 
-// "<!DOCTYPE html>
-// <html lang="en">
-// <head>
-// <meta charset="utf-8">
-// <title>Error</title>
-// </head>
-// <body>
-// <pre>Cannot PUT /api/assignment/disableassignmentbyid/66e8cf97bb264722a15e9e4f</pre>
-// </body>
-// </html>
-// "
