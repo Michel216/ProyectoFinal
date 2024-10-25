@@ -7,7 +7,6 @@ const assignmentShema = new mongoose.Schema({
     proyectInstructor: { type: instructorSchema, default: {} },
     certificationdoc: { type: String, require: true },
     judymenthphoto: { type: String, default: true },
-    observation: { type: String, require: true },
     status: { type: Number, default: 1 },
 }, { timestamps: true });
 

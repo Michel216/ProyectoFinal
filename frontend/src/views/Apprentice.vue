@@ -1,8 +1,8 @@
 <template>
   <div class="q-pa-md q-gutter-md">
-    <Btn :label="btnLabel" :onClickFunction='bringId' :loading="loading" />
+    <Btn :label="btnLabel" :onClickFunction='bringIdAndOpenModal' :loading="loading" />
     <apprenticeTable :title="title" :rows="rows" :columns="columns" :onToggleActivate="handleToggleActivate"
-      :loading="loading" :onClickEdit="bringId" />
+      :loading="loading" :onClickEdit="bringIdAndOpenModal" />
     <Modal :isVisible="showModal" @update:isVisible="showModal = $event" :label="btnLabel">
       <div class="q-pa-md" style="max-width: 400px">
         <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
@@ -55,7 +55,7 @@ let lastName = ref('')
 let phone = ref('')
 let email = ref('')
 let idApprentice = ref('')
-let change = ref(false)
+let change = ref() // true: crear, false: modificar
 const rows = ref([]);
 let optionsTpDoc = ref(["cédula de ciudadanía", "tarjeta de identidad", "cédula de extranjería"])
 let optionsIdFiche = ref(["671016f171e7d8e0b4b7cf5b"])
@@ -88,10 +88,10 @@ async function bring() {
   }
 }
 
-async function handleToggleActivate(rows, status) {
+async function handleToggleActivate(id, status) {
   try {
-    const url = status === 0 ? `/apprentice/enableapprentice/${rows}` : `/apprentice/disableapprentice/${rows}`
-    let mainUrl = await putData(url);
+    const url = status === 0 ? `/apprentice/enableapprentice/${id}` : `/apprentice/disableapprentice/${id}`
+    await putData(url);
     bring()
 
   } catch (error) {
@@ -115,11 +115,12 @@ async function onSubmit() {
     if (change.value === true) {
       console.log('creo');
       url.value = await postData(`/apprentice/addapprentice`, data)
+      notifySuccessRequest('Aprendiz creado exitosamente');
     } else {
       console.log('edito');
       url.value = await putData(`/apprentice/updateapprenticebyid/${idApprentice.value}`, data)
+      notifySuccessRequest('Aprendiz actualizado exitosamente');
     }
-    notifySuccessRequest('Aprendiz creado exitosamente');
     showModal.value = false;
     bring();
     onReset()
@@ -141,13 +142,13 @@ function onReset() {
   fiche.value = ''
 }
 
-async function bringId(row) {
+async function bringIdAndOpenModal(id) {
   showModal.value = true;
-  if (row) {
-    let apprentice = await getData(`/apprentice/listapprenticebyid/${row}`);
+  if (id) {
+    let apprentice = await getData(`/apprentice/listapprenticebyid/${id}`);
     let theApprentice = apprentice.listApprenticesById
-    idApprentice.value = row
-    console.log(row);
+    idApprentice.value = id
+    console.log(id);
     change.value = false
     tpDoc.value = theApprentice.tpdocument
     numDoc.value = theApprentice.numDocument

@@ -54,11 +54,11 @@ assignmentRoute.get('/listprojectinstructor/:idinstructor', [
 // Agregar una nueva asignación
 assignmentRoute.post('/addassignment', [
     validateJWT,
-    check('idregister', 'El idregister no es válido').isMongoId(),
-    check('idregister').custom(assigmentHelper.registerExists),
+    check('register', 'El idregister no es válido').isMongoId(),
+    check('register').custom(registerHelper.registerExists),
     check('certificationdoc', 'El certificationdoc es obligatorio').not().isEmpty(),
     check('judymenthphoto', 'El judymenthphoto debe ser un string').isString(),
-    check('observation', 'El observation es obligatorio').not().isEmpty(),
+    // check('observation', 'El observation es obligatorio').not().isEmpty(),
     check('followInstructor', 'El followInstructor debe ser un ID de MongoDB válido').optional().isMongoId(),
     check('technicalInstructor', 'El technicalInstructor debe ser un ID de MongoDB válido').optional().isMongoId(),
     check('proyectInstructor', 'El proyectInstructor debe ser un ID de MongoDB válido').optional().isMongoId(),
@@ -94,14 +94,3 @@ assignmentRoute.put('/disableassignmentbyid/:id', [
 
 module.exports = assignmentRoute;
 
-// "<!DOCTYPE html>
-// <html lang="en">
-// <head>
-// <meta charset="utf-8">
-// <title>Error</title>
-// </head>
-// <body>
-// <pre>Cannot PUT /api/assignment/disableassignmentbyid/66e8cf97bb264722a15e9e4f</pre>
-// </body>
-// </html>
-// "

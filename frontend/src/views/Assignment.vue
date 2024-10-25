@@ -1,14 +1,13 @@
 <template>
   <div class="q-pa-md q-gutter-md">
-    <Btn :label="btnLabel" :onClickFunction="bringIdAndOpenModal" :loading="loading" />
-    <ApprenticeTable v-if="rows.length > 0" :title="title" :rows="rows" :columns="columns" :onToggleActivate="handleToggleActivate" :loading="loading" :onClickEdit="bringIdAndOpenModal" />
-
+    <ApprenticeTable :title="title" :rows="rows" :columns="columns" :onToggleActivate="handleToggleActivate"
+      :loading="loading" :onClickEdit="bringIdAndOpenModal" />
     <Modal :isVisible="showModal" @update:isVisible="showModal = $event" :label="btnLabel">
       <div class="q-pa-md" style="max-width: 400px">
         <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
-          <q-select clearable outlined v-model="fichaRegistro" label="Registro" :options="options" use-input input-debounce="0"
-            @filter="filterRegister" style="width: 100%; margin-bottom: 20px; border-radius: 8px;" behavior="menu"
-            emit-value map-options lazy-rules>
+          <q-select clearable outlined v-model="fichaRegistro" label="Registro" :options="options"
+            style="width: 100%; margin-bottom: 20px; border-radius: 8px;" behavior="menu" emit-value map-options
+            lazy-rules>
             <template v-slot:no-option>
               <q-item>
                 <q-item-section class="text-grey">
@@ -82,13 +81,14 @@ let title = 'Asignación';
 let btnLabel = 'Crear Asignación';
 const rows = ref([]);
 const showModal = ref(false);
-const options = ref([]);
+const options = ref(['6709424071e7d8e0b4b778bd', '66eb7269c249bb3aaed686e1']);
 const textCertificacion = ref('');
 const textFotoJudicial = ref('');
-const textObservacion = ref('');
 const fichaRegistro = ref('');
 const filterInstructorFollowUp = ref('');
-const fichaInstructorProyecto = ref('');
+const filterInstructorTecnico = ref('');
+const filterInstructorProyecto = ref('');
+
 let change = ref() // true: crear, false: modificar
 let idAssignment = ref()
 
@@ -98,8 +98,7 @@ const columns = ref([
   { name: 'technicalInstructor', label: 'Instructor Técnico', align: 'center', field: 'technicalInstructor' },
   { name: 'proyectInstructor', label: 'Instructor Proyecto', align: 'center', field: 'proyectInstructor' },
   { name: 'certificationdoc', label: 'Certificado', align: 'center', field: 'certificationdoc' },
-  { name: 'judymenthphoto', label: 'Foto Juicio', align: 'center', field: 'judymenthphoto' },
-  { name: 'observation', label: 'Observación', align: 'center', field: 'observation' }
+  { name: 'judymenthphoto', label: 'Foto Juicio', align: 'center', field: 'judymenthphoto' }
 ]);
 
 onBeforeMount(() => {
@@ -110,19 +109,54 @@ async function bring() {
   try {
     let data = await getData('/assignment/listallassignment');
     console.log(data);  // Asegúrate de que `data.assignments` exista
-    rows.value = data.assignments || [];
+    rows.value = data.assignments.map(assignment => {
+      return {
+        ...assignment,
+        register: assignment.register.apprentice,
+      }
+    });
   } catch (error) {
     console.log(error);
   }
 }
 
-async function handleToggleActivate(rows, status) {
+async function handleToggleActivate(id, status) {
   try {
-    const url = status === 0 ? `/assignment/enableassignmentbyid/${rows}` : `/assignment/disableassignmentbyid/${rows}`;
+    const url = status === 0 ? `/assignment/enableassignmentbyid/${id}` : `/assignment/disableassignmentbyid/${id}`;
     await putData(url);
-    bring();
+    bring()
   } catch (error) {
     console.log(error);
+  }
+}
+
+async function onSubmit() {
+  loading.value = true
+  try {
+    let url = ref()
+    let data = {
+      "register": fichaRegistro.value,
+      "certificationdoc": textCertificacion.value,
+      "judymenthphoto": textFotoJudicial.value,
+    }
+    if (filterInstructorFollowUp != '') data.followInstructor = filterInstructorFollowUp.value
+    // if (filterInstructorTecnico != '') data.technicalInstructor = filterInstructorTecnico.value
+    // if (filterInstructorProyecto != '') data.proyectInstructor = filterInstructorProyecto.value
+    if (change.value === true) {
+      url.value = await postData(`/assignment/addassignment`, data)
+      notifySuccessRequest('Asignación creado exitosamente');
+    } else {
+      url.value = await putData(`/assignment/updateassignmentbyid/${idAssignment.value}`, data)
+      notifySuccessRequest('Asignación actualizada exitosamente');
+    }
+    showModal.value = false;
+    bring();
+    onReset()
+  } catch (error) {
+    console.log(error);
+    notifyErrorRequest(error?.response?.data?.errors?.[0]?.msg || "Error desconocido");
+  } finally {
+    loading.value = false
   }
 }
 async function onSubmit() {
@@ -183,6 +217,26 @@ async function bringIdAndOpenModal(id) {
     change.value = true
   }
 }
+
+async function bringIdAndOpenModal(id) {
+  showModal.value = true;
+  if (id) {
+    let assignment = await getData(`/assignment/listassignmentbyid/${id}`);
+    let theAssignment = assignment.assignment
+    idAssignment.value = id
+    console.log(id);
+    change.value = false
+    fichaRegistro.value = theAssignment.register
+    filterInstructorFollowUp.value = theAssignment.followInstructor
+    filterInstructorTecnico.value = theAssignment.technicalInstructor
+    filterInstructorProyecto.value = theAssignment.proyectInstructor
+    textCertificacion.value = theAssignment.certificationdoc
+    textFotoJudicial.value = theAssignment.judymenthphoto
+  } else {
+    idAssignment.value = ''
+    change.value = true
+  }
+}
 const filterRegister = async (val, update) => {
   try {
     let res = await getData('/register/listallregister');
@@ -194,7 +248,7 @@ const filterRegister = async (val, update) => {
         update(() => {
           options.value = res.register.map(register => ({
             label: register.apprentice.firstName,
-            value: register._id
+            value: register.id
           }));
         });
         return;

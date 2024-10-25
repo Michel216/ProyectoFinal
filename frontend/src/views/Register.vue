@@ -6,6 +6,7 @@
     <Modal :isVisible="showModal" @update:isVisible="showModal = $event" :label="btnLabel">
       <div class="q-pa-md" style="max-width: 400px">
         <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
+
           <q-select outlined v-model="apprentice" label="Aprendiz" :options="optionsApprentice" emit-value map-options
             clearable use-input input-debounce="0" behavior="menu" @filter="filterApprentice" lazy-rules :rules="[
               val => val && val.length > 0 ||
@@ -255,6 +256,7 @@ async function bringIdAndOpenModal(id) {
   }
 }
 
+
 async function filterApprentice(val, update) {
   let apprentices = await getData('/apprentice/listallapprentice');
   let theApprentice = apprentices.listApprentice
@@ -298,4 +300,5 @@ async function filterModality(val, update) {
     })).filter(option => option.label.toLowerCase().includes(needle));
   });
 }
+
 </script>
