@@ -1,8 +1,7 @@
 <template>
   <q-card class="my-card">
     <q-img :src="imageSrc" class="card-image">
-      <div class="text-subtitle2 absolute-top text-center" style="font-weight: bold; font-size: 15px;">
-        {{ title }}
+      <div class="text-subtitle2 absolute-top text-center" style="font-weight: bold; font-size: 15px; background-color: green;">{{ title }}
       </div>
     </q-img>
     <q-card-section class="card-section">

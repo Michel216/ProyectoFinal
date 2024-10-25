@@ -43,30 +43,22 @@ function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;
 }
 </script> -->
-
 <template>
   <q-header elevated class="bg-green-8 text-white">
     <q-toolbar>
-      <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
-      <q-toolbar-title>
-        <span>{{ title }}</span>
-      </q-toolbar-title>
+      <q-btn dense flat round icon="menu" @click="$emit('toggle-drawer')" />
+      <router-link to="/home" class="q-toolbar-title" style="text-decoration: none; color: white;">
+        ETAPAS PRODUCTIVAS
+      </router-link>
+      <router-link to="/" class="iconExit" style="display: flex; align-items: center;">
+          <font-awesome-icon :icon="['fas', 'right-from-bracket']" class="exit-icon" />
+        </router-link>
     </q-toolbar>
   </q-header>
 </template>
 
-<script setup>
-import { defineProps, defineEmits } from 'vue';
-
-const  props= defineProps({
-  title:{
-    type: String,
-    default: "REPFORA"
-  },
-  drawerOpen:{
-    type: Boolean,
-    default: false
-  }
-});
- const emit 
+<script>
+export default {
+  name: 'Header',
+};
 </script>

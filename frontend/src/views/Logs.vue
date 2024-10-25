@@ -27,9 +27,25 @@
           </div>
 
            
-          <div class="form-group" v-if="rol === 'ADMIN' || rol === 'INSTRUCTOR'">
+          <div
+            class="form-group"
+            v-if="rol === 'ADMIN' || rol === 'INSTRUCTOR'"
+          >
             <label for="password">Contraseña</label>
-            <input type="password" id="password" v-model="password" required class="input-field"/>
+            <q-input
+              outlined
+              class="q-mt-md"
+              v-model="password"
+              :type="isPwd ? 'password' : 'text'"
+            >
+              <template v-slot:append>
+                <q-icon
+                  :name="isPwd ? 'visibility_off' : 'visibility'"
+                  class="cursor-pointer"
+                  @click="isPwd = !isPwd"
+                />
+              </template>
+            </q-input>
           </div>
 
           <Btn :label='btnLabel' :onClickFunction='ClickFunctionLogin' />
@@ -55,7 +71,7 @@ const rol = ref('CONSULTOR');
 const email = ref('');
 const cedula = ref('');
 const password = ref('');
-
+const isPwd = ref(true);
 const handleSubmit = async () => {
   console.log('Inicio de sesión con rol:', rol.value, 'y contraseña:', password.value);
   let data = await postDataLogin('/instructor/login',{rol:rol.value,});
@@ -96,8 +112,8 @@ const ClickFunctionLogin = async () => {
     /* padding: 20px; */
     border-radius: 10px;
     background-color: #fff;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
+    box-shadow: 0 5px 5px -3px #0003, 0 8px 10px 1px #00000024,
+    0 3px 14px 2px #0000001f;    text-align: center;
     margin: 40% 0;
     height: auto;
   }
