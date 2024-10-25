@@ -20,7 +20,7 @@ export async function postDataLogin(url, data) {
 export async function getDataRepfora(url) {
     try {
         const response = await apiRepfora.get(url);
-        return response.data;  // Devuelve los datos de la respuesta
+        return response;  // Devuelve los datos de la respuesta
     } catch (error) {
         console.error('Error en la petición GET:', error);
         throw error;  // Opcionalmente, puedes manejar el error o lanzarlo
