@@ -29,20 +29,20 @@ const apprenticeHelper = {
             throw new Error("El correo ya existe");
         }
     },
-    validateStatus:  (status) => {
+    validateStatus: (status) => {
         if (status != 0 || status != 1) {
             throw new Error("El estado debe ser 1 o 0");
-        }else{
+        } else {
             return true;
         }
     },
-    validateStatus:  (status) =>{
-        const Status =[0,1];
-        if(!Status.includes(status)){
+    validateStatus: (status) => {
+        const Status = [0, 1];
+        if (!Status.includes(status)) {
             throw new Error("El estado debe ser 0 o 1");
-    }
-    return true;
-},
+        }
+        return true;
+    },
     validateTpDocument: async (tpdoc) => {
         const tpdocumentValidos = ["cédula de ciudadanía", "tarjeta de identidad", "cédula de extranjería"];
         if (!tpdocumentValidos.includes(tpdoc)) {
@@ -51,15 +51,15 @@ const apprenticeHelper = {
         return true
     },
 
-    validateFiche:async (idFiche) =>{
-        let exisIdFiche = await axios.get(`http://89.116.49.65:4500/api/fiches/${idFiche}`,{
-            headers:{
-                "token":process.env.TOKEN
+    validateFiche: async (idFiche) => {
+        let exisIdFiche = await axios.get(`http://89.116.49.65:4500/api/fiches/${idFiche}`, {
+            headers: {
+                "token": process.env.TOKEN
             }
         });
-        if (!exisIdFiche){
+        if (!exisIdFiche) {
             throw new Error("La ficha no existe");
-        } 
+        }
         return true;
     },
 
@@ -76,10 +76,10 @@ const apprenticeHelper = {
             return true
         }
     },
-   
+
     validatePhoneIfIsDifferent: async (phone, id) => {
         let apprentice = await Apprentice.findById(id);
-    
+
         // Validar si el número de teléfono es diferente
         if (phone && phone !== apprentice.phone) {
             let existPhone = await Apprentice.findOne({ phone });
@@ -87,13 +87,13 @@ const apprenticeHelper = {
                 throw new Error("El número de teléfono ya existe");
             }
         }
-    
+
         return true;
     },
 
     validateEmailIfIsDifferent: async (email, id) => {
         let apprentice = await Apprentice.findById(id);
-    
+
         // Validar si el correo electrónico es diferente
         if (email && email !== apprentice.email) {
             let existEmail = await Apprentice.findOne({ email });
@@ -101,8 +101,15 @@ const apprenticeHelper = {
                 throw new Error("El correo electrónico ya existe");
             }
         }
-    
+
         return true;
+    },
+
+    validateLogin: async (email, numDocument)=> {
+        let existUser = await Apprentice.findOne({ email , numDocument  });
+        if (!existUser) {
+            throw new Error("El correo electrónico o el número de documento no es válido");
+        }
     }
 };
 module.exports = apprenticeHelper;

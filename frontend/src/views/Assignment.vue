@@ -1,6 +1,5 @@
 <template>
   <div class="q-pa-md q-gutter-md">
-    <Btn :label="btnLabel" :onClickFunction="bringIdAndOpenModal" :loading="loading" />
     <ApprenticeTable :title="title" :rows="rows" :columns="columns" :onToggleActivate="handleToggleActivate"
       :loading="loading" :onClickEdit="bringIdAndOpenModal" />
     <Modal :isVisible="showModal" @update:isVisible="showModal = $event" :label="btnLabel">
@@ -18,8 +17,8 @@
             </template>
           </q-select>
 
-          <q-select clearable outlined v-model="filterInstructorFollowUp" label="Instructor de Seguimiento"
-            :options="options" style="width: 100%; margin-bottom: 20px; border-radius: 8px;" behavior="menu" emit-value
+          <q-select clearable outlined v-model="filterInstructorFollowUp" label="Instructor de Seguimiento" use-input input-debounce="0"
+            :options="options" @filter="filterInstructorSeguimiento" style="width: 100%; margin-bottom: 20px; border-radius: 8px;" behavior="menu" emit-value
             map-options>
             <template v-slot:no-option>
               <q-item>
@@ -89,6 +88,7 @@ const fichaRegistro = ref('');
 const filterInstructorFollowUp = ref('');
 const filterInstructorTecnico = ref('');
 const filterInstructorProyecto = ref('');
+
 let change = ref() // true: crear, false: modificar
 let idAssignment = ref()
 
@@ -108,7 +108,7 @@ onBeforeMount(() => {
 async function bring() {
   try {
     let data = await getData('/assignment/listallassignment');
-    console.log(data);
+    console.log(data);  // Asegúrate de que `data.assignments` exista
     rows.value = data.assignments.map(assignment => {
       return {
         ...assignment,
@@ -130,6 +130,35 @@ async function handleToggleActivate(id, status) {
   }
 }
 
+async function onSubmit() {
+  loading.value = true
+  try {
+    let url = ref()
+    let data = {
+      "register": fichaRegistro.value,
+      "certificationdoc": textCertificacion.value,
+      "judymenthphoto": textFotoJudicial.value,
+    }
+    if (filterInstructorFollowUp != '') data.followInstructor = filterInstructorFollowUp.value
+    // if (filterInstructorTecnico != '') data.technicalInstructor = filterInstructorTecnico.value
+    // if (filterInstructorProyecto != '') data.proyectInstructor = filterInstructorProyecto.value
+    if (change.value === true) {
+      url.value = await postData(`/assignment/addassignment`, data)
+      notifySuccessRequest('Asignación creado exitosamente');
+    } else {
+      url.value = await putData(`/assignment/updateassignmentbyid/${idAssignment.value}`, data)
+      notifySuccessRequest('Asignación actualizada exitosamente');
+    }
+    showModal.value = false;
+    bring();
+    onReset()
+  } catch (error) {
+    console.log(error);
+    notifyErrorRequest(error?.response?.data?.errors?.[0]?.msg || "Error desconocido");
+  } finally {
+    loading.value = false
+  }
+}
 async function onSubmit() {
   loading.value = true
   try {
@@ -189,6 +218,25 @@ async function bringIdAndOpenModal(id) {
   }
 }
 
+async function bringIdAndOpenModal(id) {
+  showModal.value = true;
+  if (id) {
+    let assignment = await getData(`/assignment/listassignmentbyid/${id}`);
+    let theAssignment = assignment.assignment
+    idAssignment.value = id
+    console.log(id);
+    change.value = false
+    fichaRegistro.value = theAssignment.register
+    filterInstructorFollowUp.value = theAssignment.followInstructor
+    filterInstructorTecnico.value = theAssignment.technicalInstructor
+    filterInstructorProyecto.value = theAssignment.proyectInstructor
+    textCertificacion.value = theAssignment.certificationdoc
+    textFotoJudicial.value = theAssignment.judymenthphoto
+  } else {
+    idAssignment.value = ''
+    change.value = true
+  }
+}
 const filterRegister = async (val, update) => {
   try {
     let res = await getData('/register/listallregister');
@@ -222,16 +270,19 @@ const filterRegister = async (val, update) => {
     console.error('Error al obtener registros:', error.response ? error.response.data : error);
   }
 };
-const filterFollowInstructor = async (val, update) => {
-  try {
-    let res = await getDataRepfora('/instructors');
-    console.log('Respuesta de la API:', res);
 
-    // Verificar si la respuesta tiene la propiedad 'register'
-    if (res && res.instructor && Array.isArray(res.instructor)) {
+const filterInstructorSeguimiento = async (val, update) => {
+  try {
+    // Llamada a la API para obtener los instructores
+    let response = await getDataRepfora('/instructors');
+    console.log('Respuesta de la API:', response);
+    console.log('response.data:', response.data);  // Aquí verifica el contenido de response.data
+
+    // Comprueba si response.data está definido
+    if (response.data && Array.isArray(response.data)) {
       if (val === '') {
         update(() => {
-          options.value = res.data.map(instructor => ({
+          options.value = response.data.map(instructor => ({
             label: instructor.name,
             value: instructor
           }));
@@ -239,9 +290,10 @@ const filterFollowInstructor = async (val, update) => {
         return;
       }
 
+      // Si hay un valor de búsqueda, filtra los instructores por nombre
       update(() => {
         const needle = val.toLowerCase();
-        options.value = res.data
+        options.value = response.data
           .map(instructor => ({
             label: instructor.name,
             value: instructor
@@ -249,14 +301,13 @@ const filterFollowInstructor = async (val, update) => {
           .filter(option => option.label.toLowerCase().includes(needle));
       });
     } else {
-      console.error('La respuesta de la API no contiene datos válidos:', res);
+      console.error('La respuesta de la API no contiene datos válidos:', response.data);
     }
   } catch (error) {
-    console.error('Error al obtener registros:', error.response ? error.response.data : error);
+    // Manejo de errores en la llamada a la API
+    console.error('Error al obtener instructores:', error.response ? error.response.data : error);
   }
-};
-
-
+}
 
 
 </script>

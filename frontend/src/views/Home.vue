@@ -2,7 +2,7 @@
   <div class="home">
     <div class="cards">
       <UserCard
-        v-for="(card, index) in cards"
+        v-for="(card, index) in filteredMenuItems"
         :key="index"
         :title="card.title"
         :buttonLink="card.buttonLink"
@@ -18,9 +18,13 @@ import UserCard from "../components/cards/cards.vue"; // Asegúrate de que esta 
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faCamera, faUsers, faTasks, faClipboardList, faBook, faChartLine } from "@fortawesome/free-solid-svg-icons";
+import { useAuthStore } from '../store/useAuth.js'; // Asegúrate de importar tu store
 
 // Registra los íconos
 library.add(faCamera, faUsers, faTasks, faClipboardList, faBook, faChartLine);
+
+const authStore = useAuthStore();
+const role = authStore.getRole(); // Obtiene el rol del usuario actual
 
 // Define las tarjetas con datos
 const cards = [
@@ -29,43 +33,49 @@ const cards = [
     buttonLink: "/instructor",
     buttonText: "Ver",
     icon: ["fas", "user"], 
+    rol: ["ADMIN", "INSTRUCTOR"],
   },
   {
     title: "Aprendices",
     buttonLink: "/apprentice",
     buttonText: "Ver",
     icon: ["fas", "users"], 
+    rol: ["ADMIN", "INSTRUCTOR"],
   },
   {
     title: "Asignación",
     buttonLink: "/assignment",
     buttonText: "Ver",
-    icon: ["fas", "tasks"], // Ícono de tareas
+    icon: ["fas", "tasks"], 
+    rol: ["ADMIN", "INSTRUCTOR"],
   },
   {
     title: "Seguimiento",
     buttonLink: "/followup",
     buttonText: "Ver",
-    icon: ["fas", "clipboard-list"], // Ícono de lista
+    icon: ["fas", "clipboard-list"], 
+    rol: ["ADMIN", "INSTRUCTOR"],
   },
   {
     title: "Bitacoras",
     buttonLink: "/binnacles",
     buttonText: "Ver",
-    icon: ["fas", "book"], // Ícono de libro
+    icon: ["fas", "book"], 
+    rol: ["ADMIN", "INSTRUCTOR", "APRENDIZ"],
   },
   {
     title: "Informes",
     buttonLink: "/reports",
     buttonText: "Ver",
-    icon: ["fas", "chart-line"], // Ícono de gráfico
+    icon: ["fas", "chart-line"], 
+    rol: ["ADMIN", "INSTRUCTOR"],
   },
 ];
 
+// Filtra las tarjetas según el rol del usuario
+const filteredMenuItems = cards.filter((item) => item.rol.includes(role));
+
 // Asegúrate de registrar el componente FontAwesomeIcon
-const components = {
-  FontAwesomeIcon
-};
 </script>
 
 <style scoped>
@@ -79,6 +89,5 @@ const components = {
   justify-content: center;
   text-align: center;
   align-items: center;
-  
 }
 </style>

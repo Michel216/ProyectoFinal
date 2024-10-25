@@ -6,19 +6,39 @@
     <Modal :isVisible="showModal" @update:isVisible="showModal = $event" :label="btnLabel">
       <div class="q-pa-md" style="max-width: 400px">
         <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
-          <q-select outlined v-model="apprentice" label="Aprendiz" :options="optionsApprentice" emit-value map-options lazy-rules :rules="[
-            val => (val && val.length > 0) ||
-              'Por favor, dígite al aprendiz'
-          ]" />
-          <q-select outlined v-model="modality" label="Modalidad" :options="optionsModality" emit-value map-options lazy-rules :rules="[
-            val => (val && val.length > 0) ||
-              'Por favor, dígite la modalidad'
-          ]" />
-          <q-input outlined v-model="startDate" label="Fecha inicial" mask="date" :rules="[val => (val && val.length > 0) || 'Por favor, dígite la fecha inicio']">
+
+          <q-select outlined v-model="apprentice" label="Aprendiz" :options="optionsApprentice" emit-value map-options
+            clearable use-input input-debounce="0" behavior="menu" @filter="filterApprentice" lazy-rules :rules="[
+              val => val && val.length > 0 ||
+                'Por favor, dígite la cédula del aprendiz'
+            ]">
+            <template v-slot:no-option>
+              <q-item>
+                <q-item-section class="text-grey">
+                  No results
+                </q-item-section>
+              </q-item>
+            </template>
+          </q-select>
+          <q-select outlined v-model="modality" label="Modalidad" :options="optionsModality" emit-value map-options
+            clearable use-input input-debounce="0" behavior="menu" @filter="filterModality" lazy-rules :rules="[
+              val => (val && val.length > 0) ||
+                'Por favor, dígite la modalidad'
+            ]">
+            <template v-slot:no-option>
+              <q-item>
+                <q-item-section class="text-grey">
+                  No results
+                </q-item-section>
+              </q-item>
+            </template>
+          </q-select>
+          <q-input outlined v-model="startDate" label="Fecha inicial" mask="date"
+            :rules="[val => val && val.length > 0 || 'Por favor, dígite la fecha inicio']">
             <template v-slot:append>
               <q-icon name="event" class="cursor-pointer">
                 <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                  <q-date v-model="startDate">
+                  <q-date v-model="startDate" today-btn>
                     <div class="row items-center justify-end">
                       <q-btn v-close-popup label="Close" color="primary" flat />
                     </div>
@@ -27,11 +47,12 @@
               </q-icon>
             </template>
           </q-input>
-          <q-input outlined v-model="endDate" label="Fecha final" mask="date" :rules="[val => (val && val.length > 0) || 'Por favor, dígite la fecha de fin']">
+          <q-input outlined v-model="endDate" label="Fecha final" mask="date"
+            :rules="[val => (val && val.length > 0) || 'Por favor, dígite la fecha de fin']">
             <template v-slot:append>
               <q-icon name="event" class="cursor-pointer">
                 <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                  <q-date v-model="endDate">
+                  <q-date v-model="endDate" today-btn>
                     <div class="row items-center justify-end">
                       <q-btn v-close-popup label="Close" color="primary" flat />
                     </div>
@@ -99,7 +120,7 @@ let hour = ref()
 let idRegister = ref()
 let change = ref() // true: crear, false: modificar
 const showModal = ref(false);
-const optionsApprentice = ref(['66ecd1c69cefb9a42078f965'])
+const optionsApprentice = ref()
 const optionsModality = ref(['6704a1cb514834375739c7a0'])
 const rows = ref([])
 const columns = ref([
@@ -128,10 +149,13 @@ async function bring() {
     rows.value = data.register.map(register => {
       return {
         ...register,
-        apprentice: (register.apprentice.firstName + register.apprentice.lastName ),
+        apprentice: (register.apprentice.firstName + ' ' + register.apprentice.lastName),
+        modality: register.modality.name,
         startDate: formatDate(register.startDate),
-        endDate: formatDate(register.endDate),
+        endDate: formatDate(register.endDate)
       }
+
+
     })
 
   } catch (error) {
@@ -204,11 +228,20 @@ async function bringIdAndOpenModal(id) {
   if (id) {
     let register = await getData(`/register/listregisterbyid/${id}`);
     let theRegister = register.listRegisterById
+    let apprentices = await getData(`/apprentice/listapprenticebyid/${theRegister.apprentice}`);
+    let modalities = await getData(`/modality/listmodalitybyid/${theRegister.modality}`);
     idRegister.value = id
-    console.log(id);
     change.value = false
-    apprentice.value = theRegister.apprentice
-    modality.value = theRegister.modality
+    apprentice.value = apprentices.listApprenticesById._id
+    modality.value = modalities.listModalityById._id
+    optionsApprentice.value = [{
+      label: apprentices.listApprenticesById.numDocument,
+      value: apprentices.listApprenticesById._id
+    }];
+    optionsModality.value = [{
+      label: modalities.listModalityById.name,
+      value: modalities.listModalityById._id
+    }];
     startDate.value = theRegister.startDate
     endDate.value = theRegister.endDate
     company.value = theRegister.company
@@ -222,4 +255,50 @@ async function bringIdAndOpenModal(id) {
     change.value = true
   }
 }
+
+
+async function filterApprentice(val, update) {
+  let apprentices = await getData('/apprentice/listallapprentice');
+  let theApprentice = apprentices.listApprentice
+  if (val === '') {
+    update(() => {
+      optionsApprentice.value = theApprentice.map(apprentice => ({
+        label: apprentice.numDocument,
+        value: apprentice._id
+      }));
+    });
+    return;
+  }
+
+  update(() => {
+    const needle = val.toLowerCase();
+    optionsApprentice.value = theApprentice.map(apprentice => ({
+      label: apprentice.numDocument,
+      value: apprentice._id
+    })).filter(option => option.label.toLowerCase().includes(needle));
+  });
+}
+
+async function filterModality(val, update) {
+  let modality = await getData('/modality/listallmodality');
+  let theModality = modality.listAllModalities;
+  if (val === '') {
+    update(() => {
+      optionsModality.value = theModality.map(modality => ({
+        label: modality.name,
+        value: modality._id
+      }));
+    });
+    return;
+  }
+
+  update(() => {
+    const needle = val.toLowerCase();
+    optionsModality.value = theModality.map(modality => ({
+      label: modality.name,
+      value: modality._id
+    })).filter(option => option.label.toLowerCase().includes(needle));
+  });
+}
+
 </script>

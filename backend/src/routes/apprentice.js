@@ -9,13 +9,13 @@ const apprenticeRoute = express.Router();
 
 // Obtener todos los aprendices
 apprenticeRoute.get('/listallapprentice', [
-    // validateJWT,
+    validateJWT,
     validateFields
 ], apprenticeController.getListApprentices);
 
 // Obtener aprendices por ID
 apprenticeRoute.get('/listapprenticebyid/:id', [
-    // validateJWT,
+    validateJWT,
     check('id', 'El id es obligatorio y debe ser un ID de MongoDB válido').isMongoId().trim(),
     check('id').custom(apprenticeHelper.validateApprentice).trim(),
     validateFields
@@ -23,7 +23,7 @@ apprenticeRoute.get('/listapprenticebyid/:id', [
 
 // Obtener aprendices por ficha
 apprenticeRoute.get('/listapprenticebyfiche/:idFiche', [
-    // validateJWT,
+    validateJWT,
     check('idFiche', 'El id de la ficha es obligatorio y debe ser un ID de MongoDB válido').isMongoId().trim(),
     check('idFiche').custom(apprenticeHelper.validateFiche),
     validateFields
@@ -31,7 +31,7 @@ apprenticeRoute.get('/listapprenticebyfiche/:idFiche', [
 
 // Obtener aprendices por estados
 apprenticeRoute.get('/listapprenticebystatus/:idApprentice/:status', [
-    // validateJWT,
+    validateJWT,
     check('idApprentice').custom(apprenticeHelper.validateApprentice).trim(),
     check('status', 'El estado es obligatorio').notEmpty().trim(),
     check('status').custom(apprenticeHelper.validateStatus),
@@ -40,7 +40,7 @@ apprenticeRoute.get('/listapprenticebystatus/:idApprentice/:status', [
 
 // Añadir aprendiz
 apprenticeRoute.post('/addapprentice', [
-    // validateJWT,
+    validateJWT,
     check('tpdocument', 'El tipo de documento es obligatorio').notEmpty().trim(),
     check('tpdocument').custom(apprenticeHelper.validateTpDocument).trim(),
     check('numDocument','El número docuemnto es obligatorio').notEmpty().trim(),
@@ -60,9 +60,17 @@ apprenticeRoute.post('/addapprentice', [
     validateFields
 ], apprenticeController.postAddAprentice);
 
+//Login para el aprendiz
+apprenticeRoute.post('/loginapprentice', [
+    check('email','El correo electrónico es obligatorio').notEmpty().trim(),
+    check('email','El correo debe ser válido').isEmail().trim(),
+    check('numDocument','El número docuemnto es obligatorio').notEmpty().trim(),
+    check('numDocument').custom(apprenticeHelper.validateNumDocument).trim()
+    ], apprenticeController.postLoginApprentice);
+    
 // Actualizar aprendiz por ID (Solo valida ID y updatedAt)
 apprenticeRoute.put('/updateapprenticebyid/:id', [
-    // validateJWT,
+    validateJWT,
     check('tpdocument', 'El tipo de documento es obligatorio').notEmpty().trim(),
     // check('tpdocument').custom(apprenticeHelper.validateTpDocument).trim(),
     check('numDocument','El número docuemnto es obligatorio').notEmpty().trim(),
@@ -92,7 +100,7 @@ apprenticeRoute.put('/updateapprenticebyid/:id', [
 
 // Habilitar aprendiz por ID
 apprenticeRoute.put('/enableapprentice/:id', [
-    // validateJWT,
+    validateJWT,
     check('id', 'El id es obligatorio y debe ser un ID de MongoDB válido').isMongoId().trim(),
     check('id').custom(apprenticeHelper.validateApprentice).trim(),
     validateFields
@@ -100,7 +108,7 @@ apprenticeRoute.put('/enableapprentice/:id', [
 
 // Deshabilitar aprendiz por ID
 apprenticeRoute.put('/disableapprentice/:id', [
-    // validateJWT,
+    validateJWT,
     check('id', 'El id es obligatorio y debe ser un ID de MongoDB válido').isMongoId().trim(),
     check('id').custom(apprenticeHelper.validateApprentice).trim(),
     validateFields
