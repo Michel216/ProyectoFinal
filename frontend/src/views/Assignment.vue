@@ -188,6 +188,7 @@ async function bringIdAndOpenModal(id) {
   }
 }
 
+
 const filterRegister = async (val, update) => {
   try {
     let res = await getData('/register/listallregister');
