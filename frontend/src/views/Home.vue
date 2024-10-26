@@ -2,7 +2,7 @@
   <div class="home">
     <div class="cards">
       <UserCard
-        v-for="(card, index) in filteredMenuItems"
+        v-for="(card, index) in filteredCards"
         :key="index"
         :title="card.title"
         :buttonLink="card.buttonLink"
@@ -29,25 +29,18 @@ const role = authStore.getRole(); // Obtiene el rol del usuario actual
 // Define las tarjetas con datos
 const cards = [
   {
-    title: "Instructor",
-    buttonLink: "/instructor",
-    buttonText: "Ver",
-    icon: ["fas", "user"], 
-    rol: ["ADMIN", "INSTRUCTOR"],
-  },
-  {
     title: "Aprendices",
     buttonLink: "/apprentice",
     buttonText: "Ver",
     icon: ["fas", "users"], 
-    rol: ["ADMIN", "INSTRUCTOR"],
+    rol: ["ADMIN",],
   },
   {
     title: "Asignación",
     buttonLink: "/assignment",
     buttonText: "Ver",
     icon: ["fas", "tasks"], 
-    rol: ["ADMIN", "INSTRUCTOR"],
+    rol: ["ADMIN"],
   },
   {
     title: "Seguimiento",
@@ -73,7 +66,7 @@ const cards = [
 ];
 
 // Filtra las tarjetas según el rol del usuario
-const filteredMenuItems = cards.filter((item) => item.rol.includes(role));
+const filteredCards = cards.filter((item) => item.rol.includes(role));
 
 // Asegúrate de registrar el componente FontAwesomeIcon
 </script>

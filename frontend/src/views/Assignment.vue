@@ -158,35 +158,6 @@ async function onSubmit() {
     loading.value = false
   }
 }
-async function onSubmit() {
-  loading.value = true
-  try {
-    let url = ref()
-    let data = {
-      "register": fichaRegistro.value,
-      "certificationdoc": textCertificacion.value,
-      "judymenthphoto": textFotoJudicial.value,
-    }
-    if (filterInstructorFollowUp != '') data.followInstructor = filterInstructorFollowUp.value
-    // if (filterInstructorTecnico != '') data.technicalInstructor = filterInstructorTecnico.value
-    // if (filterInstructorProyecto != '') data.proyectInstructor = filterInstructorProyecto.value
-    if (change.value === true) {
-      url.value = await postData(`/assignment/addassignment`, data)
-      notifySuccessRequest('Asignación creado exitosamente');
-    } else {
-      url.value = await putData(`/assignment/updateassignmentbyid/${idAssignment.value}`, data)
-      notifySuccessRequest('Asignación actualizada exitosamente');
-    }
-    showModal.value = false;
-    bring();
-    onReset()
-  } catch (error) {
-    console.log(error);
-    notifyErrorRequest(error?.response?.data?.errors?.[0]?.msg || "Error desconocido");
-  } finally {
-    loading.value = false
-  }
-}
 
 function onReset() {
   fichaRegistro.value = ''
@@ -217,25 +188,7 @@ async function bringIdAndOpenModal(id) {
   }
 }
 
-async function bringIdAndOpenModal(id) {
-  showModal.value = true;
-  if (id) {
-    let assignment = await getData(`/assignment/listassignmentbyid/${id}`);
-    let theAssignment = assignment.assignment
-    idAssignment.value = id
-    console.log(id);
-    change.value = false
-    fichaRegistro.value = theAssignment.register
-    filterInstructorFollowUp.value = theAssignment.followInstructor
-    filterInstructorTecnico.value = theAssignment.technicalInstructor
-    filterInstructorProyecto.value = theAssignment.proyectInstructor
-    textCertificacion.value = theAssignment.certificationdoc
-    textFotoJudicial.value = theAssignment.judymenthphoto
-  } else {
-    idAssignment.value = ''
-    change.value = true
-  }
-}
+
 const filterRegister = async (val, update) => {
   try {
     let res = await getData('/register/listallregister');
