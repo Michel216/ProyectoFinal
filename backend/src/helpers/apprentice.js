@@ -71,7 +71,7 @@ const apprenticeHelper = {
         if (!exisIdModality) {
             throw new Error("La modalidad no existe en la base de datos");
         } return true
-    }, 
+    },
     // válida que no se repita el número de documento
     validateNumDocumentIfIsDiferent: async (numDocument, id) => {
         let apprentice = await Apprentice.findById(id);
@@ -125,11 +125,24 @@ const apprenticeHelper = {
         return true;
     },
     // válida que el aprendiz exista en la base de datos
-    validateLogin: async (numDocument, email )=> {
-        let existUser = await Apprentice.findOne({ email , numDocument  });
+    validateLogin: async (numDocument, email) => {
+        let existUser = await Apprentice.findOne({ email, numDocument });
         if (!existUser) {
             throw new Error("El correo electrónico o el número de documento no es válido");
-        }
+        } return true
+    },
+    validateStatus: async (institutionalEmail) => {
+        let existUser = await Apprentice.findOne({ institutionalEmail });
+        if (existUser.status === 0) {
+            throw new Error("El aprendiz está inactivo");
+        } return true
+
+    },
+    validateModalityStatus: async (modality) => {
+        let modalityActive = await Modality.findById(modality);
+        if (modalityActive.status === 0) {
+            throw new Error("La modalidad está inactiva");
+        } return true
     }
 };
 module.exports = apprenticeHelper;

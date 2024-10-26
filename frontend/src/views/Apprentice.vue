@@ -10,6 +10,19 @@
             val => (val && val.length > 0) ||
               'Por favor, dígite el código de la ficha'
           ]" />
+          <q-select outlined v-model="modality" label="Modalidad" :options="optionsModality" emit-value map-options
+            clearable use-input input-debounce="0" behavior="menu" @filter="filterModality" lazy-rules :rules="[
+              val => (val && val.length > 0) ||
+                'Por favor, dígite la modalidad'
+            ]">
+            <template v-slot:no-option>
+              <q-item>
+                <q-item-section class="text-grey">
+                  No results
+                </q-item-section>
+              </q-item>
+            </template>
+          </q-select>
           <q-select outlined v-model="tpDoc" label="Tipo de documento" :options="optionsTpDoc" emit-value map-options
             lazy-rules :rules="[
               val => (val && val.length > 0) ||
@@ -23,8 +36,10 @@
             :rules="[val => val && val.length > 0 || 'Por favor, dígite el apellido del aprendiz']" />
           <q-input outlined type="number" v-model="phone" label="Teléfono" lazy-rules
             :rules="[val => val && val.length > 0 || 'Por favor, dígite el teléfono del aprndiz']" />
-          <q-input outlined v-model="email" label="Email" lazy-rules
-            :rules="[val => val && val.length > 0 || 'Por favor, dígite el correo del aprendiz']" />
+          <q-input outlined v-model="institutionalEmail" label="Email institucional" lazy-rules
+            :rules="[val => val && val.length > 0 || 'Por favor, dígite el correo institucional del aprendiz']" />
+          <q-input outlined v-model="personalEmail" label="Email personal" lazy-rules
+            :rules="[val => val && val.length > 0 || 'Por favor, dígite el correo personal del aprendiz']" />
           <div>
             <q-btn label="guardar" type="submit" color="primary" :loading="loading" />
             <q-btn label="cerrar" type="reset" color="primary" flat class="q-ml-sm" v-close-popup />
@@ -48,25 +63,30 @@ let title = 'Aprendices'
 let btnLabel = 'Crear aprendiz'
 const showModal = ref(false);
 let fiche = ref('')
+let modality = ref('')
 let tpDoc = ref('')
 let numDoc = ref('')
 let firstName = ref('')
 let lastName = ref('')
 let phone = ref('')
-let email = ref('')
+let institutionalEmail = ref('')
+let personalEmail = ref('')
 let idApprentice = ref('')
 let change = ref() // true: crear, false: modificar
 const rows = ref([]);
 let optionsTpDoc = ref(["cédula de ciudadanía", "tarjeta de identidad", "cédula de extranjería"])
 let optionsIdFiche = ref(["671016f171e7d8e0b4b7cf5b"])
+let optionsModality = ref([])
 const columns = ref([
   { name: "tpdocument", label: "Tipo de Documento", align: "center", field: "tpdocument" },
   { name: "numDocument", label: "Número de Documento", align: "center", field: "numDocument" },
   { name: "firstName", label: "Nombre", align: "center", field: "firstName" },
   { name: "lastName", label: "Apellido", align: "center", field: "lastName" },
   { name: "phone", label: "Télefono", align: "center", field: "phone" },
-  { name: "email", label: "Correo", align: "center", field: "email" },
-  { name: "fiche", label: "Ficha", align: "center", field: "fiche" }
+  { name: "institutionalEmail", label: "Correo institucional", align: "center", field: "institutionalEmail" },
+  { name: "personalEmail", label: "Correo personal", align: "center", field: "personalEmail" },
+  { name: "fiche", label: "Ficha", align: "center", field: "fiche" },
+  { name: 'modality', label: 'Modalidad', align: 'center', field: 'modality' },
 ]);
 
 
@@ -80,6 +100,12 @@ async function bring() {
     let url = await getData('/apprentice/listallapprentice');
     console.log(url);
     rows.value = url.listApprentice
+    .map(apprentice => {
+      return {
+        ...apprentice,
+        modality: apprentice.modality.name,
+      }
+    })
 
   } catch (error) {
     console.log(error);
@@ -109,8 +135,10 @@ async function onSubmit() {
       firstName: firstName.value,
       lastName: lastName.value,
       phone: phone.value,
-      email: email.value,
-      fiche: fiche.value
+      institutionalEmail: institutionalEmail.value,
+      personalEmail: personalEmail.value,
+      fiche: fiche.value,
+      modality: modality.value
     }
     if (change.value === true) {
       console.log('creo');
@@ -138,8 +166,10 @@ function onReset() {
   firstName.value = ''
   lastName.value = ''
   phone.value = ''
-  email.value = ''
+  institutionalEmail.value = ''
+  personalEmail.value = ''
   fiche.value = ''
+  modality.value = ''
 }
 
 async function bringIdAndOpenModal(id) {
@@ -147,6 +177,7 @@ async function bringIdAndOpenModal(id) {
   if (id) {
     let apprentice = await getData(`/apprentice/listapprenticebyid/${id}`);
     let theApprentice = apprentice.listApprenticesById
+    let modalities = await getData(`/modality/listmodalitybyid/${theApprentice.modality}`);
     idApprentice.value = id
     console.log(id);
     change.value = false
@@ -155,11 +186,39 @@ async function bringIdAndOpenModal(id) {
     firstName.value = theApprentice.firstName
     lastName.value = theApprentice.lastName
     phone.value = theApprentice.phone
-    email.value = theApprentice.email
+    institutionalEmail.value = theApprentice.institutionalEmail
+    personalEmail.value = theApprentice.personalEmail
     fiche.value = theApprentice.fiche
+    modality.value = modalities.listModalityById._id
+    optionsModality.value = [{
+      label: modalities.listModalityById.name,
+      value: modalities.listModalityById._id
+    }];
   } else {
     idApprentice.value = ''
     change.value = true
   }
+}
+
+async function filterModality(val, update) {
+  let modality = await getData('/modality/listallmodality');
+  let theModality = modality.listAllModalities;
+  if (val === '') {
+    update(() => {
+      optionsModality.value = theModality.map(modality => ({
+        label: modality.name,
+        value: modality._id
+      }));
+    });
+    return;
+  }
+
+  update(() => {
+    const needle = val.toLowerCase();
+    optionsModality.value = theModality.map(modality => ({
+      label: modality.name,
+      value: modality._id
+    })).filter(option => option.label.toLowerCase().includes(needle));
+  });
 }
 </script>

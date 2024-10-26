@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const binnacleSchema = new mongoose.Schema({
-    assignment: { type: mongoose.Schema.Types.ObjectId },
+    assignment: { type: mongoose.Schema.Types.ObjectId, ref: 'Register' },
     instructor: { type: mongoose.Schema.Types.ObjectId},
     number: { type: Number, required: true, enum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] },
     document: { type: String, required: true },

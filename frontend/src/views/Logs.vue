@@ -86,7 +86,7 @@ const handleSubmit = async () => {
         } 
 
         if (rol.value === 'APRENDIZ') {
-            data = await postLogin('apprentice/loginapprentice', { email: email.value, numDocument: cedula.value });
+            data = await postLogin('/apprentice/loginapprentice', { institutionalEmail: email.value, numDocument: cedula.value });
             console.log('Datos de inicio de sesión del aprendiz:', data);
         }
 

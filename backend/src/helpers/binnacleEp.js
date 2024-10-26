@@ -20,36 +20,6 @@ const binnacleHelper = {
     //         throw new Error("La asignación no existe en la base de datos")
     //     }
     // },
-    // valida que exista el usuario en la base de datos
-    // validateUserEp: async (userEp) => {
-    //     let existsUserEp = await UserEp.findById(userEp)
-    //     if (!existsUserEp) {
-    //         throw new Error("La asignación no existe en la base de datos")
-    //     }
-    // },
-    // valida que exista el instructor en la base de datos
-    // validateInstructor: async (instructor) => {
-    //     try {
-    //         const instructorResponse = await axios.get(`${process.env.INSTRUCTOR_URL}/${instructor}`, {
-    //             headers: {
-    //                 'token': process.env.TOKEN
-    //             }
-    //         });
-    //         if (instructorResponse && instructorResponse.data) {
-    //             return true;
-    //         } else {
-    //             throw new Error("El instructor no existe en la base de datos");
-    //         }
-    //     } catch (error) {
-    //         if (error.response && error.response.status === 400) {
-    //             throw new Error(`Error 400: Solicitud incorrecta. Mensaje de la API: ${error.response.data.msg || 'Sin mensaje adicional'}`);
-    //         } else if (error.response && error.response.status === 404) {
-    //             throw new Error("Error 404: Instructor no encontrado");
-    //         } else {
-    //             throw new Error(`Error al validar el instructor: ${error.message}`);
-    //         }
-    //     }
-    // },
     // valida que el número de la bitácora sea de 1 a 12
     validateNumber: (number) => {
         if (number < 1 || number > 12) {
