@@ -1,5 +1,5 @@
 const Binnacle = require("../models/binnacleEp.js")
-const Assignment = require('../models/assignment.js');
+// const Assignment = require('../models/assignment.js');
 // const UserEp = require("../models/userEp.js")
 // const axios = require('axios');
 
@@ -14,12 +14,12 @@ const binnacleHelper = {
         }
     },
     // valida que exista la asignación en la base de datos
-    validateAssignment: async (assignment) => {
-        let existsAssignment = await Assignment.findById(assignment)
-        if (!existsAssignment) {
-            throw new Error("La asignación no existe en la base de datos")
-        }
-    },
+    // validateAssignment: async (assignment) => {
+    //     let existsAssignment = await Assignment.findById(assignment)
+    //     if (!existsAssignment) {
+    //         throw new Error("La asignación no existe en la base de datos")
+    //     }
+    // },
     // valida que exista el usuario en la base de datos
     // validateUserEp: async (userEp) => {
     //     let existsUserEp = await UserEp.findById(userEp)

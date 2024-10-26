@@ -7,10 +7,9 @@ const followupController = {
             const listallFollowup = await Followup.find()
             .populate({ path: 'assignment' })
             .exec();
-            res.json({ listallFollowup });
+            res.status(200).json({ listallFollowup });
         } catch (error) {
-            console.error(error);
-            res.status(400).json({ error: 'Error al listar los seguimientos' });
+            res.status(400).json({ error });
         }
     },
     // Listar seguimiento por ID
@@ -18,10 +17,9 @@ const followupController = {
         try {
             const id = req.params.id;
             const listFollowupById = await Followup.findById(id);
-            res.json({ listFollowupById });
+            res.status(200).json({ listFollowupById });
         } catch (error) {
-            console.error(error);
-            res.status(400).json({ error: 'Error al listar los seguimientos por ID' });
+            res.status(400).json({ error });
         }
     },
     // Listar seguimientos por asignación
@@ -29,10 +27,9 @@ const followupController = {
         try {
             const idAssignment = req.params.idAssignment;
             const listFollowupByAssignment = await Followup.findOne({ assignment: idAssignment });
-            res.json({ listFollowupByAssignment });
+            res.status(200).json({ listFollowupByAssignment });
         } catch (error) {
-            console.error(error);
-            res.status(400).json({ error: 'Error al listar los seguimientos por asignación' });
+            res.status(400).json({ error });
         }
     },
     // Listar seguimientos por instructor
@@ -40,10 +37,9 @@ const followupController = {
         try {
             const idInstructor = req.params.idInstructor;
             const listFollowupByInstructor = await Followup.findOne({ instructor: idInstructor });
-            res.json({ listFollowupByInstructor });
+            res.status(200).json({ listFollowupByInstructor });
         } catch (error) {
-            console.error(error);
-            res.status(400).json({ error: 'Error al listar los seguimientos por instructor' });
+            res.status(400).json({ error });
         }
     }, 
     // Añadir seguimiento
@@ -61,10 +57,9 @@ const followupController = {
             });
 
             await followUp.save();
-            res.json({ followUp });
+            res.status(200).json({ followUp });
         } catch (error) {
-            console.error(error);
-            res.status(400).json({ error: 'Error al insertar un nuevo seguimiento' });
+            res.status(400).json({ error });
         }
     },
     // Actualizar seguimiento
@@ -76,7 +71,7 @@ const followupController = {
             res.status(200).json({ updateFollowup });
         } catch (error) {
             console.error(error);
-            res.status(400).json({ message: "Error actualizando el seguimiento", error });
+            res.status(400).json({ error });
         }
     },
     // modifica el estado de la bitácora
@@ -85,10 +80,9 @@ const followupController = {
             const id = req.params.id
             const status = req.params.status
             const updatedFollowud = await Followup.findByIdAndUpdate(id, { status }, { new: true })
-            res.json({ updatedFollowud })
+            res.status(200).json({ updatedFollowud })
         } catch (error) {
-            console.log({ error });
-            res.status(400).json({ error: "Error al modificar seguimientos" })
+            res.status(400).json({ error })
         }
     }
 };

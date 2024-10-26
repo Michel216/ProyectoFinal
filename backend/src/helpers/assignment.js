@@ -1,5 +1,4 @@
 const { body } = require('express-validator');
-const Assignment = require('../models/assignment.js')
 
 const assigmentHelper = {
     assignmentIdExists: async (id) => {
@@ -27,4 +26,4 @@ const assigmentHelper = {
     }
 
 }
-module.exports = assigmentHelper;
+// module.exports = assigmentHelper;

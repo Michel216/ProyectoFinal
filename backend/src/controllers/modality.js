@@ -5,10 +5,9 @@ const modalityController = {
     getListAllModalities: async (req, res) => {
         try {
             const listAllModalities = await Modality.find()
-            res.json({ listAllModalities })
+            res.status(200).json({ listAllModalities })
         } catch (error) {
-            console.log({ error });
-            res.status(400).json({ error: "Error al listar modalidades" })
+            res.status(400).json({ error })
         }
     },
     // listar modalidades por ID
@@ -16,22 +15,20 @@ const modalityController = {
         try {
             const id = req.params.id
             const listModalityById = await Modality.findById(id)
-            res.json({ listModalityById })
+            res.status(200).json({ listModalityById })
         } catch (error) {
-            console.log({ error });
-            res.status(400).json({ error: "Error al listar modalidad" })
+            res.status(400).json({ error })
         }
     },
     // crear modalidades
     postAddModality: async (req, res) => {
         try {
             const { name, hourInstructorFollow, hourInstructorTechnical, hourInstructorProject} = req.body
-            const newModality = new Modality({ name, hourInstructorFollow, hourInstructorTechnical, hourInstructorProject})
+            const newModality = new Modality({ name, hourInstructorFollow, hourInstructorTechnical, hourInstructorProject })
             await newModality.save()
-            res.json({ newModality })
+            res.status(200).json({ newModality })
         } catch (error) {
-            console.log({ error });
-            res.status(400).json({ error: "Error al crear modalidad" })
+            res.status(400).json({ error })
         }
     },
     // modificar modalidades
@@ -40,10 +37,9 @@ const modalityController = {
             const id = req.params.id
             const newData = req.body
             const updatedModality = await Modality.findByIdAndUpdate(id, newData, {new: true})
-            res.json({ updatedModality })
+            res.status(200).json({ updatedModality })
         } catch (error) {
-            console.log({ error });
-            res.status(400).json({ error: "Error al modificar modalidad" })
+            res.status(400).json({ error })
         }
     },
     // activar modalidades
@@ -51,10 +47,9 @@ const modalityController = {
         try {
             const id = req.params.id
             const enableModality = await Modality.findByIdAndUpdate(id, { status: 1 })
-            res.json({ msg: "Modalidad activada", enableModality })
+            res.status(200).json({ msg: "Modalidad activada" })
         } catch (error) {
-            console.log({ error });
-            res.status(400).json({ error: "Error al activar modalidad" })
+            res.status(400).json({ error })
         }
     },
     // desactivar modalidades
@@ -62,10 +57,9 @@ const modalityController = {
         try {
             const id = req.params.id
             const disableModality = await Modality.findByIdAndUpdate(id, { status: 0 })
-            res.json({ msg: "Modalidad desactivada", disableModality })
+            res.status(200).json({ msg: "Modalidad desactivada" })
         } catch (error) {
-            console.log({ error });
-            res.status(400).json({ error: "Error al desactivar modalidad" })
+            res.status(400).json({ error })
         }
     }
 }

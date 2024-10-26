@@ -37,6 +37,11 @@ modalityRoutes.put("/updatemodalitybyid/:id", [
     // validateJWT,
     check('id', 'El id es obligatorio y debe ser un ID de MongoDB válido').notEmpty().isMongoId(),
     check('id').custom(modalityHelper.validateId),
+    check('name', 'El nombre es obligatorio').notEmpty(),
+    check('hourInstructorFollow', 'Las horas del instructor de seguimiento son obligatorias').optional().isNumeric(),
+    check('hourInstructorTechnical', 'Las horas del instructor técnico son obligatorias').optional().isNumeric(),
+    check('hourInstructorProject', 'Las horas del instructor de proyecto son obligatorias').optional().isNumeric(),
+    modalityHelper.validateAtLeastOneInstructorHour(),
     validateFields
 ], modalityController.putUpdateModality)
 

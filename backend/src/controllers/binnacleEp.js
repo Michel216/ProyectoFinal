@@ -6,57 +6,51 @@ const binnacleController = {
         try {
             const ListAllBinnacles = await Binnacle.find()
             .populate({ path: 'assignment' })
-            .exec()
-            res.json({ ListAllBinnacles  })
+            res.status(200).json({ ListAllBinnacles  })
         } catch (error) {
-            console.log({ error });
-            res.status(400).json({ error: "Error al listar bitácoras" })
+            res.status(400).json({ error })
         }
     },
     // listar bitácoras por ID
     getListBinnacleById: async (req, res) => {
         try {
             const id = req.params.id;
-            const binnacle = await Binnacle.findById(id);
-            res.json({ binnacle });
+            const listBinnacleById = await Binnacle.findById(id);
+            res.status(200).json({ listBinnacleById });
         } catch (error) {
-            console.log({ error });
-            res.status(400).json({ error: "Error al listar bitácora o al obtener instructor" });
+            res.status(400).json({ error });
         }
     },
     // listar bitácoras por asignación 
     getListBinnaclesByAssignment: async (req, res) => {
         try {
-            const assignment = req.params.assignment
-            const listBinnaclesByAssignment = await Binnacle.find({ assignment })
-            res.json({ listBinnaclesByAssignment })
+            const idAssignment = req.params.idAssignment
+            const listBinnaclesByAssignment = await Binnacle.find({ assignment: idAssignment })
+            res.status(200).json({ listBinnaclesByAssignment })
         } catch (error) {
-            console.log({ error });
-            res.status(400).json({ error: "Error al listar bitácora" })
+            res.status(400).json({ error })
         }
     },
     // listar bitácoras por instructor
     getListBinnaclesByInstructor: async (req, res) => {
         try {
-            const instructor = req.params.instructor;
-            const binnacles = await Binnacle.find({ instructor });
-            res.json({ binnacles });
+            const idInstructor = req.params.idInstructor;
+            const listBinnalcesByInstructor = await Binnacle.find({ instructor: idInstructor });
+            res.status(200).json({ listBinnalcesByInstructor });
         } catch (error) {
-            console.log({ error });
-            res.status(400).json({ error: "Error al listar bitácoras o al obtener instructor" });
+            res.status(400).json({ error });
         }
     },
     // crear bitácoras
     postAddBinnacle: async (req, res) => {
         try {
-            const { assignment, instructor, number, document, observations } = req.body;
+            const { assignment, instructor, number, document, observations, status } = req.body;
 
-            const newBinnacle = new Binnacle({ assignment, instructor, number, document, observations });
+            const newBinnacle = new Binnacle({ assignment, instructor, number, document, observations, status });
             await newBinnacle.save();
-            res.json({ newBinnacle });
+            res.status(200).json({ newBinnacle });
         } catch (error) {
-            console.log({ error });
-            res.status(400).json({ error: "Error al crear bitácora o al obtener instructor" });
+            res.status(400).json({ error });
         }
     },
     // modificar bitácoras
@@ -65,10 +59,9 @@ const binnacleController = {
             const id = req.params.id;
             const newData = req.body
             const updatedBinnacle = await Binnacle.findByIdAndUpdate(id, newData, { new: true })
-            res.json({ updatedBinnacle })
+            res.status(200).json({ updatedBinnacle })
         } catch (error) {
-            console.log({ error });
-            res.status(400).json({ error: "Error al modificar bitácora" })
+            res.status(400).json({ error })
         }
     },
     // modifica el estado de la bitácora
@@ -77,10 +70,9 @@ const binnacleController = {
             const id = req.params.id
             const status = req.params.status
             const updatedBinnacle = await Binnacle.findByIdAndUpdate(id, { status }, { new: true })
-            res.json({ updatedBinnacle })
+            res.status(200).json({ updatedBinnacle })
         } catch (error) {
-            console.log({ error });
-            res.status(400).json({ error: "Error al modificar bitácora" })
+            res.status(400).json({ error })
         }
     }
 }

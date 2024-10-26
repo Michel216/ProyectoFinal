@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const Assignment = require('../models/assignment');
 const nodemailer = require('nodemailer');
 
 const assignmentController = {
@@ -226,4 +225,4 @@ const assignmentController = {
     },
 }
 
-module.exports = assignmentController;
+// module.exports = assignmentController;

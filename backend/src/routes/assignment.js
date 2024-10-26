@@ -1,9 +1,7 @@
 const express = require('express');
 const { check } = require('express-validator');
-const assigmentHelper = require('../helpers/assignment.js');
 const registerHelper = require('../helpers/register.js');
 const { validateJWT } = require('./../middlewares/validateJWT.js');
-const assignmentController = require('../controllers/assignment.js');
 const { validateFields } = require('./../middlewares/validate-fields.js');
 
 const assignmentRoute = express.Router();
@@ -92,5 +90,5 @@ assignmentRoute.put('/disableassignmentbyid/:id', [
     validateFields
 ], assignmentController.putDisableAssignment);
 
-module.exports = assignmentRoute;
+// module.exports = assignmentRoute;
 

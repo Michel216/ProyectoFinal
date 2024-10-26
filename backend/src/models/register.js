@@ -5,13 +5,23 @@ const registerSchema = new mongoose.Schema({
    modality: { type: mongoose.Schema.Types.ObjectId, ref: 'Modality', required: true },
    startDate: { type: Date, required: true },
    endDate: { type: Date, required: true },
-   company: { type: String, required: true }, 
-   phonecompany: { type: String, required: true, unique: true, minlength: 10, maxlength: 10 },
-   addresscompany: { type: String, required: true, unique: true, minlength: 7 }, 
+   company: { type: String, required: true },
+   phonecompany: { type: String, required: true, unique: true },
+   addresscompany: { type: String, required: true, unique: true },
    owner: { type: String, required: true },
    docAlternative: { type: String, required: true },
-   hour: { type: String, required: true }, 
-   status: { type: Number, default: 1 },
+   hour: { type: String, required: true },
+   businessProyectHour: { type: Number, required: true },
+   assignment: [
+      {
+         followUpInstructor: { type: Object, required: true },
+         technicalInstructor: { type: Object, required: true },
+         projectInstructor: { type: Object, required: true },
+         status: { type: Number, default: 1 }
+      }
+   ],
+   certificationDoc: { type: String, required: true },
+   judymentPhoto: { type: String, required: true },
 }, { timestamps: true });
 
 module.exports = mongoose.model("Register", registerSchema);

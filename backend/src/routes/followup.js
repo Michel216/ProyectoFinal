@@ -1,7 +1,7 @@
 const express = require('express');
 const followupController = require('../controllers/followup.js'); 
 const { validateFields } = require('../middlewares/validate-fields.js'); 
-const assigmentHelper = require('../helpers/assignment.js');
+// const assigmentHelper = require('../helpers/assignment.js');
 // const { validateJWT } = require('../middlewares/validateJWT.js');
 const { check } = require('express-validator');
 const followUpHelper =require('../helpers/followup.js');
@@ -26,8 +26,8 @@ followupRoute.get('/listfollowupbyid/:id', [
 followupRoute.get('/listfollowupbyassignment/:idAssignment', [
     // validateJWT,
     check('idAssignment', 'El idAssignment es obligatorio y debe ser un ID de MongoDB válido').isMongoId().trim(),
-    check('idAssignment').custom(followUpHelper.validateAssignment),
-    check('idAssignment').custom(followUpHelper.validateAssignment),
+    // check('idAssignment').custom(followUpHelper.validateAssignment),
+    // check('idAssignment').custom(followUpHelper.validateAssignment),
     validateFields
 ], followupController.getListFollowUpInstructorByAssignment);
 

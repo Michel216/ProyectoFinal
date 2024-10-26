@@ -11,7 +11,7 @@ class Server {
         this.MONGO_URI = process.env.MONGO_URI
         this.paths = {
             apprentice: '/api/apprentice',
-            assignment: '/api/assignment',
+            // assignment: '/api/assignment',
             binnacle: '/api/binnacles',
             followup: '/api/followup',
             log: '/api/logs',
@@ -27,7 +27,7 @@ class Server {
     }
     routes() {
         this.app.use(this.paths.apprentice, require('./routes/apprentice.js'));
-        this.app.use(this.paths.assignment, require('./routes/assignment.js'));
+        // this.app.use(this.paths.assignment, require('./routes/assignment.js'));
         this.app.use(this.paths.binnacle, require('./routes/binnacleEp.js'));
         this.app.use(this.paths.followup, require('./routes/followup.js'));
         this.app.use(this.paths.log, require('./routes/log.js'));
