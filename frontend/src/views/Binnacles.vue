@@ -105,13 +105,7 @@ async function bring() {
   try {
     let data = await getData('/binnacles/listallbinnacles');
     console.log(data);
-
-    rows.value = data.ListAllBinnacles.map(binnacle => {
-      return {
-        ...binnacle,
-        instructor: binnacle.instructor.name
-      }
-    })
+    rows.value = data.ListAllBinnacles
   } catch (error) {
     console.log(error);
   }

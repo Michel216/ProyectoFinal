@@ -79,9 +79,9 @@ async function onSubmit() {
   let data = {
     name: name.value,
   }
-  if (hourInstructorFollow != '') data.hourInstructorFollow = hourInstructorFollow.value
-  if (hourInstructorTechnical != '') data.hourInstructorTechnical = hourInstructorTechnical.value
-  if (hourInstructorProject != '') data.hourInstructorProject = hourInstructorProject.value
+  if (hourInstructorFollow.value != '' ) data.hourInstructorFollow = hourInstructorFollow.value
+  if (hourInstructorTechnical.value != '') data.hourInstructorTechnical = hourInstructorTechnical.value
+  if (hourInstructorProject.value != '') data.hourInstructorProject = hourInstructorProject.value
   try {
     let url = ref();
 

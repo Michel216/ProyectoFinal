@@ -142,7 +142,9 @@ async function onSubmit() {
     }
     if (change.value === true) {
       console.log('creo');
-      url.value = await postData(`/apprentice/addapprentice`, data)
+      url.value = await postData(`apprentice/addapprentice`, data)
+      console.log(data);
+      
       notifySuccessRequest('Aprendiz creado exitosamente');
     } else {
       console.log('edito');
@@ -202,7 +204,7 @@ async function bringIdAndOpenModal(id) {
 
 async function filterModality(val, update) {
   let modality = await getData('/modality/listallmodality');
-  let theModality = modality.listAllModalities;
+  let theModality = modality.listAllModalities.filter(modality => modality.status === 1);
   if (val === '') {
     update(() => {
       optionsModality.value = theModality.map(modality => ({
