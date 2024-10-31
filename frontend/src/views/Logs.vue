@@ -2,7 +2,7 @@
   <div class="login-container">
     <div class="login-box">
       <div class="login-header">
-        <h1>REPFORA</h1>
+        <h1>ETAPAS PRODUCTIVAS</h1>
       </div>
       <img src="https://repforacat.com/images/LOGO-SENA.png" alt="Logo SENA" class="logo">
       <h2 class="login-title">LOGIN</h2>
@@ -72,6 +72,7 @@ const rol = ref('');
 const email = ref('');
 const cedula = ref('');
 const password = ref('');
+const isPwd = ref(true);
 
 const handleSubmit = async () => {
     console.log('Inicio de sesión con rol:', rol.value, email.value, 'y contraseña:', password.value);

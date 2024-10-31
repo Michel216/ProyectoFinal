@@ -40,7 +40,7 @@ const cards = [
     buttonLink: "/assignment",
     buttonText: "Ver",
     icon: ["fas", "tasks"], 
-    rol: ["ADMIN"],
+    rol: ["ADMIN","INSTRUCTOR"],
   },
   {
     title: "Seguimiento",
@@ -58,6 +58,13 @@ const cards = [
   },
   {
     title: "Informes",
+    buttonLink: "/reports",
+    buttonText: "Ver",
+    icon: ["fas", "chart-line"], 
+    rol: ["ADMIN"],
+  },
+  {
+    title: "Registro de Horas",
     buttonLink: "/reports",
     buttonText: "Ver",
     icon: ["fas", "chart-line"], 

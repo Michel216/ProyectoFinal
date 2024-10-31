@@ -9,8 +9,8 @@
     :breakpoint="400">
     
     <q-scroll-area style="height: calc(100% - 150px); margin-top: 150px; border-right: 1px solid #ddd">
-      <q-list padding class="drawer-content">
-        <q-item 
+      <q-list padding class="drawer-content" >
+        <q-item  
           clickable 
           v-ripple 
           v-for="item in filteredMenuItems" 
@@ -22,7 +22,7 @@
           <q-item-section avatar>
             <font-awesome-icon :icon="item.icon" class="icon" />
           </q-item-section>
-          <q-item-section>
+          <q-item-section >
             <span class="button-text">{{ item.label }}</span>
           </q-item-section>
           <q-item-section side v-if="isActiveRoute(item.path)">
@@ -33,14 +33,16 @@
     </q-scroll-area>
 
     <q-img class="absolute-top"
-      src="https://img.freepik.com/vector-premium/fondo-diferentes-formas-verdes_23-2148358648.jpg"
-      style="height: 150px; display: flex; justify-content: center; align-items: center;">
+      style="height: 150px; display: flex; justify-content: center; align-items: center; background-color: gainsboro;">
       <div class="absolute-bottom bg-transparent">
-        <q-avatar size="56px" class="q-mb-sm">
-          <img src="https://lostramites.com.co/wp-content/uploads/logo-de-Sena-sin-fondo-Blanco-300x300.png">
+        <q-avatar size="56px" 
+        style="display: flex; justify-content: center; align-items: center;">
+          <img src="https://senasofiaplus.xyz/wp-content/uploads/2023/10/logo-del-sena-01.png">
         </q-avatar>
-        <div class="text-weight-bold">Razvan Stoenescu</div>
-        <div>@rstoenescu</div>
+        <div class="text-weight-bold"
+        style="display: flex; justify-content: center; align-items: center; color: black;">Razvan Stoenescu</div>
+        <div
+        style="display: flex; justify-content: center; align-items: center; color: black;">@rstoenescu</div>
       </div>
     </q-img>
   </q-drawer>
@@ -63,3 +65,25 @@ const filteredMenuItems = computed(() =>
   props.menuItems.filter(item => item.rol.includes(role))
 );
 </script>
+<style scoped>
+.custom-button {
+  background-color: #4CAF50; 
+  border-radius: 10px;
+  padding: 12px; 
+  margin-bottom: 15px; 
+  transition: background-color 0.3s ease; 
+  color: white;
+  font-size: 18px; 
+  margin-left: 5%;
+  width: 90%;
+}
+
+.custom-button .icon {
+  font-size: 20px; 
+}
+
+.custom-button:hover {
+  background-color: #066b0b; /* Color verde un poco más oscuro en hover */
+}
+
+</style>
