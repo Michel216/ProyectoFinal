@@ -1,5 +1,9 @@
 <template>
   <div class="home">
+ 
+    <div class="titulo" v-if="role === 'INSTRUCTOR'">
+      <h5>SEGUIMIENTO ETAPAS PRODUCTIVAS ASIGNADAS Y REGISTRO DE HORAS LABORADAS</h5>
+    </div>
     <div class="cards">
       <UserCard
         v-for="(card, index) in filteredCards"
@@ -14,11 +18,11 @@
 </template>
 
 <script setup>
-import UserCard from "../components/cards/cards.vue"; // Asegúrate de que esta ruta sea correcta
+import UserCard from "../components/cards/cards.vue"; 
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faCamera, faUsers, faTasks, faClipboardList, faBook, faChartLine } from "@fortawesome/free-solid-svg-icons";
-import { useAuthStore } from '../store/useAuth.js'; // Asegúrate de importar tu store
+import { useAuthStore } from '../store/useAuth.js'; 
 
 // Registra los íconos
 library.add(faCamera, faUsers, faTasks, faClipboardList, faBook, faChartLine);
@@ -40,7 +44,7 @@ const cards = [
     buttonLink: "/assignment",
     buttonText: "Ver",
     icon: ["fas", "tasks"], 
-    rol: ["ADMIN"],
+    rol: ["ADMIN","INSTRUCTOR"],
   },
   {
     title: "Seguimiento",
@@ -73,14 +77,30 @@ const filteredCards = cards.filter((item) => item.rol.includes(role));
 
 <style scoped>
 .cards {
-  width: 50%;
+  width: 70%;
   margin: auto;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(30%, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(40%, 1fr));
   gap: 40px;
   margin-top: 20px;
   justify-content: center;
   text-align: center;
   align-items: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Sombra básica */
+    margin-bottom: 20px; 
+}
+
+
+.titulo{
+  text-align: center;
+
+  max-width: 600px; /* Ajusta el ancho máximo según tus necesidades */
+  margin: 0 auto; /* Centra el contenedor horizontalmente */
+  line-height: 1.2; /* Ajusta el espaciado entre líneas */
+}
+h5{
+   font-weight: bold;
+  margin: 1;
+  /* margin-top: 80px; */
 }
 </style>

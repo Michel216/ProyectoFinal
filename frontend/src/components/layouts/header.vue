@@ -47,11 +47,11 @@ function toggleLeftDrawer() {
   <q-header elevated class="bg-green-8 text-white">
     <q-toolbar>
       <q-btn dense flat round icon="menu" @click="$emit('toggle-drawer')" />
-      <router-link to="/home" class="q-toolbar-title" style="text-decoration: none; color: white;">
+      <router-link to="/home" class="q-toolbar-title" style="text-decoration: none; color: white;   font-weight: bold; ">
         ETAPAS PRODUCTIVAS
       </router-link>
-      <router-link to="/" class="iconExit" style="display: flex; align-items: center;">
-          <font-awesome-icon :icon="['fas', 'right-from-bracket']" class="exit-icon" />
+      <router-link to="/" class="iconExit" style="display: flex; text-decoration: none; color: white; margin-left: 80%;">
+        <q-btn dense flat round icon="logout" />
         </router-link>
     </q-toolbar>
   </q-header>
