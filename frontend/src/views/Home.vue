@@ -65,6 +65,13 @@ const cards = [
     buttonLink: "/reports",
     buttonText: "Ver",
     icon: ["fas", "chart-line"], 
+    rol: ["ADMIN"],
+  },
+  {
+    title: "Registro de Horas",
+    buttonLink: "/reports",
+    buttonText: "Ver",
+    icon: ["fas", "chart-line"], 
     rol: ["ADMIN", "INSTRUCTOR"],
   },
 ];
