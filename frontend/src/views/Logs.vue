@@ -2,7 +2,7 @@
   <div class="login-container">
     <div class="login-box">
       <div class="login-header">
-        <h1>ETAPAS PRODUCTIVAS</h1>
+        <h5>ETAPAS PRODUCTIVAS</h5>
       </div>
       <img src="https://repforacat.com/images/LOGO-SENA.png" alt="Logo SENA" class="logo">
       <h2 class="login-title">LOGIN</h2>
@@ -11,30 +11,30 @@
           <div class="form-group">
             <label for="rol">Rol</label>
             <select id="rol" v-model="rol" class="input-field">
-              <option value="APRENDIZ">APRENDIZ</option>
+              <option value="APRENDIZ">CONSULTOR</option>
               <option value="ADMIN">ADMIN</option>
               <option value="INSTRUCTOR">INSTRUCTOR</option>
             </select>
           </div>
 
           <div class="form-group" v-if="rol === 'APRENDIZ' || rol === 'INSTRUCTOR' || rol === 'ADMIN'">
-            <label for="email">Correo Electrónico</label>
-            <input type="email" id="email" v-model="email" required class="input-field" />
+          
+            <input type="email" id="email" v-model="email" required class="input-field" placeholder="EMAIL" />
           </div>
           <div class="form-group" v-if="rol === 'APRENDIZ'">
-            <label for="cedula">Número de Documento</label>
-            <input type="text" id="cedula" v-model="cedula" required class="input-field" />
+           
+            <input type="text" id="cedula" v-model="cedula" required class="input-field" placeholder="NUM.DOCUMENTO"/>
           </div>           
           <div
             class="form-group"
             v-if="rol === 'ADMIN' || rol === 'INSTRUCTOR'"
           >
-            <label for="password">Contraseña</label>
+  
             <q-input
               outlined
               class="q-mt-md"
               v-model="password"
-              :type="isPwd ? 'password' : 'text'"
+              :type="isPwd ? 'password' : 'text'" placeholder="CONTRASEÑA"
             >
               <template v-slot:append>
                 <q-icon
@@ -129,7 +129,7 @@ handleSubmit()
   
   .login-container p{
     margin-top: 10px !important;
-    margin-bottom: 20px !important;
+    margin-bottom: 10px !important;
     text-decoration: underline;
   }
   
@@ -137,41 +137,42 @@ handleSubmit()
     padding: 20px !important;
   }
   
-  .login-box {
-    width: 30%;
+ .login-box {
+    width: 40%;
     /* padding: 20px; */
     border-radius: 10px;
     background-color: #fff;
     box-shadow: 0 5px 5px -3px #0003, 0 8px 10px 1px #00000024,
     0 3px 14px 2px #0000001f;    text-align: center;
-    margin: 40% 0;
+    /* margin: 40% 0; */
     height: auto;
   }
   
   .login-header {
     background-color: #2F7D32;
-    padding: 10px;
+    padding: 30px;
     border-radius: 8px 8px 0 0;
   }
   
-  .login-header h1 {
+  .login-header h5 {
     color: white;
-    font-size: 40px;
+    /* font-size: 40px; */
     font-weight: bold;
     margin: 0;
   }
   
   .logo {
     width: 100px;
-    margin: 20px 0;
+    /* margin: 20px 0; */
   }
   
   .login-title {
     font-size: 25px;
-    margin-bottom: 10px;
+    /* margin-bottom: 10px; */
     font-weight: bold;
     margin: 0;
   }
+  
   
   .form-group {
     margin-bottom: 20px;

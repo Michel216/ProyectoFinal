@@ -35,12 +35,15 @@
     <q-img class="absolute-top"
       style="height: 150px; display: flex; justify-content: center; align-items: center; background-color: gainsboro;">
       <div class="absolute-bottom bg-transparent">
-        <q-avatar size="56px" 
-        style="display: flex; justify-content: center; align-items: center;">
-          <img src="https://senasofiaplus.xyz/wp-content/uploads/2023/10/logo-del-sena-01.png">
-        </q-avatar>
-        <div class="text-weight-bold"
-        style="display: flex; justify-content: center; align-items: center; color: black;">Razvan Stoenescu</div>
+        <div class="logo" style="display: flex; justify-content: center; align-items: center; width: 25%; height: 100%;">
+  <img src="https://senasofiaplus.xyz/wp-content/uploads/2023/10/logo-del-sena-01.png" style="max-width: 100%; max-height: 100%; margin-left: 195px;">
+</div>
+
+
+       <div class="titulo" v-if="role === 'INSTRUCTOR'"
+        style="display: flex; justify-content: center; align-items: center; color: black; font-size: 18px;">INSTRUCTOR</div>
+        <div class="titulo" v-if="role === 'ADMIN'"
+        style="display: flex; justify-content: center; align-items: center; color: black; font-size: 18px;">USUARIO EP</div>
         <div
         style="display: flex; justify-content: center; align-items: center; color: black;">@rstoenescu</div>
       </div>
@@ -67,7 +70,7 @@ const filteredMenuItems = computed(() =>
 </script>
 <style scoped>
 .custom-button {
-  background-color: #4CAF50; 
+  background-color: green; 
   border-radius: 10px;
   padding: 12px; 
   margin-bottom: 15px; 

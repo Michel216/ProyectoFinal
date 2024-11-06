@@ -4,7 +4,11 @@
     <div class="titulo" v-if="role === 'INSTRUCTOR'">
       <h5>SEGUIMIENTO ETAPAS PRODUCTIVAS ASIGNADAS Y REGISTRO DE HORAS LABORADAS</h5>
     </div>
-    <div class="cards">
+
+    <div class="titulo" v-if="role === 'ADMIN'">
+      <h5>REGISTRO Y ASIGNACION DE SEGUIMIENTO A ESTAPAS PRODUCTIVAS DE LOS APRENDICES</h5>
+    </div>
+    <div class="cards ">
       <UserCard
         v-for="(card, index) in filteredCards"
         :key="index"
@@ -54,25 +58,39 @@ const cards = [
     rol: ["ADMIN", "INSTRUCTOR"],
   },
   {
+    title: "Registros",
+    buttonLink: "/register",
+    buttonText: "Ver",
+    icon: ["fas", "clipboard-list"], 
+    rol: ["ADMIN", ],
+  },
+  {
     title: "Bitacoras",
     buttonLink: "/binnacles",
     buttonText: "Ver",
     icon: ["fas", "book"], 
     rol: ["ADMIN", "INSTRUCTOR", "APRENDIZ"],
   },
-  {
-    title: "Informes",
-    buttonLink: "/reports",
-    buttonText: "Ver",
-    icon: ["fas", "chart-line"], 
-    rol: ["ADMIN"],
-  },
+  // {
+  //   title: "Informes",
+  //   buttonLink: "/reports",
+  //   buttonText: "Ver",
+  //   icon: ["fas", "chart-line"], 
+  //   rol: ["ADMIN"],
+  // },
   {
     title: "Registro de Horas",
     buttonLink: "/reports",
     buttonText: "Ver",
     icon: ["fas", "chart-line"], 
-    rol: ["ADMIN", "INSTRUCTOR"],
+    rol: [, "INSTRUCTOR"],
+  },
+  {
+    title: "Fichas",
+    buttonLink: "/reports",
+    buttonText: "Ver",
+    icon: ["fas", "chart-line"], 
+    rol: [, "ADMIN"],
   },
 ];
 
@@ -84,10 +102,10 @@ const filteredCards = cards.filter((item) => item.rol.includes(role));
 
 <style scoped>
 .cards {
-  width: 70%;
+  width: 90%;
   margin: auto;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(40%, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(30%, 1fr));
   gap: 40px;
   margin-top: 20px;
   justify-content: center;
