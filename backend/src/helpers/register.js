@@ -14,32 +14,32 @@ const validateDateRange = () => {
     ];
 };
 
-function validateCreateRegister(data) {
-    const { createdAt, updatedAt } = data;
+// function validateCreateRegister(data) {
+//     const { createdAt, updatedAt } = data;
 
-    if (!createdAt || !updatedAt) {
-        return {
-            valid: false,
-            message: 'Los campos createdAt y updatedAt son obligatorios.'
-        };
-    }
+//     if (!createdAt || !updatedAt) {
+//         return {
+//             valid: false,
+//             message: 'Los campos createdAt y updatedAt son obligatorios.'
+//         };
+//     }
 
-    return { valid: true };
-}
+//     return { valid: true };
+// }
 
 // Validación de campos obligatorios para la actualización
-function validateUpdateRegister(data) {
-    const { updatedAt } = data;
+// function validateUpdateRegister(data) {
+//     const { updatedAt } = data;
 
-    if (!updatedAt) {
-        return {
-            valid: false,
-            message: 'El campo updatedAt es obligatorio al actualizar.'
-        };
-    }
+//     if (!updatedAt) {
+//         return {
+//             valid: false,
+//             message: 'El campo updatedAt es obligatorio al actualizar.'
+//         };
+//     }
 
-    return { valid: true };
-}
+//     return { valid: true };
+// }
 
 const registerExists = async (id) => {
     try {
@@ -54,10 +54,29 @@ const registerExists = async (id) => {
         throw new Error(`Error al verificar el ID: ${error.message}`);
     }
 };
+const verifyDocAlternative= async (docAlternative) => {
+    try {
+        const url = docAlternative;
 
+        const isOneDriveLink = (url) => {
+            const regex = /^https?:\/\/(www\.)?(onedrive\.live\.com|1drv\.ms)(\/.*)?$/;
+            return regex.test(url);
+        };
+
+        if (!isOneDriveLink(url)) {
+            throw new Error("El enlace proporcionado no es válido. Debe ser un enlace de OneDrive.");
+        }
+
+        console.log("El contenido es un enlace válido de OneDrive.");
+        return true;
+    } catch (error) {
+        throw new Error(error.message || "Error al verificar el enlace de OneDrive.");
+    }
+}
 module.exports = {
     validateDateRange,
     validateCreateRegister,
     validateUpdateRegister,
+    verifyDocAlternative,
     registerExists
 };
