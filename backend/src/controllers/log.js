@@ -29,8 +29,8 @@ const logController = {
     //agregar log
     postaddlog: async (req, res) => {
         try {
-            const { users,email, action, information} = req.body
-            const newlog = new Log ({ users, email, action, information})
+            const { name,email, action, information} = req.body
+            const newlog = new Log ({ name, email, action, information})
             await newlog.save()
             res.json({ newlog })
         } catch (error) {
@@ -39,7 +39,17 @@ const logController = {
         }
     },
 
-
+    // PUT: Modificar aprendiz
+    putupdateLog: async (req, res) => {
+        const { id } = req.params;
+    const { users, action, information, data } = req.body;
+    try {
+        const log = await Log.findByIdAndUpdate(id, { users, action, information, data }, { new: true });
+        res.json({ log });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+},
     //habilitar log
     putenablelogsbyid: async (req, res) => {
         try {
