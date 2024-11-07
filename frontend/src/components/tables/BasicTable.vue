@@ -64,7 +64,7 @@ const props = defineProps({
 const combinedColumns = computed(() => [
   ...props.columns,
   { name: 'status', label: 'Estado', align: 'center', field: 'status' },
-  { name: "editar", label: "Editar", align: "center" },
+  // { name: "editar", label: "Editar", align: "center" },
   { name: "activar", label: "Activar/Desactivar", align: "center" }
 ]);
 

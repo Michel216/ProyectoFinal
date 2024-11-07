@@ -1,5 +1,16 @@
 <template>
   <div class="q-pa-md q-gutter-md">
+    <q-btn
+  to="/home"
+  dense
+  unelevated
+  round
+  color="primary"
+  icon="arrow_back"
+  text-color="white"
+
+  class="iconExit"
+/>
     <h3 class="title-table">Bitacoras</h3>
     <hr id="hr" class="bg-green-9" />
 
@@ -15,122 +26,91 @@
     <Modal
       :isVisible="showModal"
       @update:isVisible="showModal = $event"
-      :label="btnLabel"
+      :label="'DILIGENCIA LA INFORMACION'" 
     >
-      <div class="q-pa-md" style="max-width: 400px">
-        <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
+    <div class="q-pa-md" style="max-width: 600px">
+        <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md" style="
+            max-height: none;
+            max-width: 100%;
+            width: 100vw;
+            margin: auto;
+           
+            gap: 20px;
+            border-radius: 50px;
+          "
+>
+         
+
+          <q-input
+            outlined
+            type="number"
+            v-model="num"
+            label="N° Bitacora"
+            lazy-rules
+            :rules="[ (val) => (val && val.length > 0) || 'Por favor, dígite el número de la bitácora' ]"
+          >
+          <template v-slot:prepend>
+    <q-icon name="123" />
+  </template>
+</q-input>
+
+          <q-input
+            outlined
+            v-model="document"
+            label="Documento"
+            lazy-rules
+            :rules="[ (val) => (val && val.length > 0) || 'Por favor, ingrese un documento' ]"
+          >
+          <template v-slot:prepend>
+    <q-icon name="description" /> 
+  </template>
+</q-input>
           <q-select
             outlined
             v-model="assignment"
-            label="Asignación"
-            :options="optionsAssignment"
+            label="Seleccione un estado"
+            :options="options"
             emit-value
             map-options
             clearable
             use-input
             input-debounce="0"
             behavior="menu"
-            @filter="filterAssignment"
             lazy-rules
-            :rules="[
-              (val) =>
-                (val && val.length > 0) || 'Por favor, dígite la asignación',
-            ]"
+            :rules="[ (val) => (val && val.length > 0) || 'Por favor, seleccione un estado' ]"
           >
+          
             <template v-slot:no-option>
               <q-item>
                 <q-item-section class="text-grey"> No results </q-item-section>
               </q-item>
             </template>
+           
+
           </q-select>
-          <q-select
-            outlined
-            v-model="instructor"
-            label="Instructor"
-            :options="optionsInstructor"
-            emit-value
-            map-options
-            lazy-rules
-            :rules="[
-              (val) =>
-                (val && val.length > 0) || 'Por favor, dígite el instructor',
-            ]"
-          />
-          <q-input
-            outlined
-            type="number"
-            v-model="num"
-            label="Número de la bitácora"
-            lazy-rules
-            :rules="[
-              (val) =>
-                (val && val.length > 0) ||
-                'Por favor, dígite el número de la bitácora',
-            ]"
-          />
-          <q-input
-            outlined
-            v-model="document"
-            label="Documento"
-            lazy-rules
-            :rules="[
-              (val) =>
-                (val && val.length > 0) || 'Por favor, ingrese un documento',
-            ]"
-          />
-          <q-input
-            outlined
-            v-model="observation"
-            label="Observación"
-            lazy-rules
-            :rules="[
-              (val) =>
-                (val && val.length > 0) || 'Por favor, dígite una observación',
-            ]"
-          />
-          <q-input
-            outlined
-            v-model="observationDate"
-            label="Fecha de la observación"
-            mask="date"
-            :rules="[
-              (val) =>
-                (val && val.length > 0) ||
-                'Por favor, dígite la fecha de la observación',
-            ]"
-          >
-            <template v-slot:append>
-              <q-icon name="event" class="cursor-pointer">
-                <q-popup-proxy
-                  cover
-                  transition-show="scale"
-                  transition-hide="scale"
-                >
-                  <q-date v-model="observationDate" today-btn>
-                    <div class="row items-center justify-end">
-                      <q-btn v-close-popup label="Close" color="primary" flat />
-                    </div>
-                  </q-date>
-                </q-popup-proxy>
-              </q-icon>
-            </template>
-          </q-input>
-          <div>
-            <q-btn
-              label="guardar"
-              type="submit"
-              color="primary"
-              :loading="loading"
-            />
-            <q-btn
-              label="cerrar"
-              type="reset"
-              color="primary"
-              flat
-              class="q-ml-sm"
-              v-close-popup
-            />
-          </div>
+          <div class="q" style="display: flex; justify-content: center; align-items: center;">
+  <q-btn 
+    label="Guardar" 
+    type="submit"       
+    icon="save"
+    color="primary" 
+    :loading="loading" 
+  />
+  
+  <q-btn 
+    label="Cerrar" 
+    type="reset"     
+    icon="close"
+    flat 
+    class="q-ml-sm" 
+    v-close-popup 
+    style="
+      background-color: white;
+      color: black;
+      box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
+    "
+  />
+</div>
         </q-form>
       </div>
     </Modal>
@@ -165,25 +145,43 @@ const rows = ref([]);
 let columns = ref([
   {
     name: "assignment",
-    label: "Asignación",
+    label: "Etapa Productiva Asignada", 
     align: "center",
     field: "assignment",
   },
   {
-    name: "instructor",
-    label: "Instructor",
-    align: "center",
-    field: "instructor",
-  },
-  {
     name: "number",
+    label: "N° Bitácora",  
     align: "center",
-    label: "Número de bitácora",
     field: "number",
     sortable: true,
   },
-  { name: "document", align: "center", label: "Documento", field: "document" },
+  {
+    name: "status",
+    label: "Estado",  
+    align: "center",
+    field: "status",
+  },
+  {
+    name: "observations",
+    label: "Observaciones",  
+    align: "center",
+    field: "observations",
+  },
+  {
+    name: "add",
+    label: "Añadir",  
+    align: "center",
+    field: "add",
+  },
+  {
+    name: "details",
+    label: "Detalles",  
+    align: "center",
+    field: "details",
+  },
 ]);
+
 
 // valida que el tipo de la bitácora sea de 1 a 4. Programado: 1, Ejecutado: 2, Pendiente: 3, Verificado: 4
 let options = ref([
@@ -311,6 +309,7 @@ async function filterAssignment(val, update) {
 .title-table {
   text-align: center;
   margin-bottom: 0;
+  font-size: 45px;
 }
 
 </style>
