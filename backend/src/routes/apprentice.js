@@ -13,6 +13,11 @@ apprenticeRoute.get('/listallapprentice', [
     validateFields
 ], apprenticeController.getListApprentices);
 
+apprenticeRoute.get('/searchapprentice', [
+    // validateJWT,
+    validateFields
+], apprenticeController.getFilterApprentices);
+
 // Obtener a un aprendiz por ID
 apprenticeRoute.get('/listapprenticebyid/:id', [
     // validateJWT,

@@ -2,159 +2,71 @@
   <div class="q-pa-md q-gutter-md">
     <h3 class="title-table">Aprendices</h3>
     <hr id="hr" class="bg-green-9" />
-    <Btn
-      :label="btnLabel"
-      :onClickFunction="bringIdAndOpenModal"
-      :loading="loading"
-    />
-    <apprenticeTable
-      :title="title"
-      :rows="rows"
-      :columns="columns"
-      :onToggleActivate="handleToggleActivate"
-      :loading="loading"
-      :onClickEdit="bringIdAndOpenModal"
-    />
-    <Modal
-      :isVisible="showModal"
-      @update:isVisible="showModal = $event"
-      :label="btnLabel"
-    >
+    
+      <Btn :label="btnLabel" :onClickFunction="bringIdAndOpenModal" :loading="loading" />
+      <q-input outlined v-model="searchTerm" label="Buscar Aprendiz" @keyup.enter="onSearch" debounce="300"/>
+    
+
+    <apprenticeTable :title="title" :rows="rows" :columns="columns" :onToggleActivate="handleToggleActivate"
+      :loading="loading" :onClickEdit="bringIdAndOpenModal" />
+    <Modal :isVisible="showModal" @update:isVisible="showModal = $event" :label="btnLabel">
       <div class="q-pa-md" style="max-width: 400px">
         <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
-          <q-select
-            outlined
-            v-model="fiche"
-            label="Ficha"
-            :options="optionsIdFiche"
-            lazy-rules
-            :rules="[
-              (val) =>
-                (val && val.length > 0) ||
-                'Por favor, dígite el código de la ficha',
-            ]"
-          />
-          <q-select
-            outlined
-            v-model="modality"
-            label="Modalidad"
-            :options="optionsModality"
-            emit-value
-            map-options
-            clearable
-            use-input
-            input-debounce="0"
-            behavior="menu"
-            @filter="filterModality"
-            lazy-rules
-            :rules="[
+          <q-select outlined v-model="fiche" label="Ficha" :options="optionsIdFiche" lazy-rules :rules="[
+            (val) =>
+              (val && val.length > 0) ||
+              'Por favor, dígite el código de la ficha',
+          ]" />
+          <q-select outlined v-model="modality" label="Modalidad" :options="optionsModality" emit-value map-options
+            clearable use-input input-debounce="0" behavior="menu" @filter="filterModality" lazy-rules :rules="[
               (val) =>
                 (val && val.length > 0) || 'Por favor, dígite la modalidad',
-            ]"
-          >
+            ]">
             <template v-slot:no-option>
               <q-item>
                 <q-item-section class="text-grey"> No results </q-item-section>
               </q-item>
             </template>
           </q-select>
-          <q-select
-            outlined
-            v-model="tpDoc"
-            label="Tipo de documento"
-            :options="optionsTpDoc"
-            emit-value
-            map-options
-            lazy-rules
-            :rules="[
+          <q-select outlined v-model="tpDoc" label="Tipo de documento" :options="optionsTpDoc" emit-value map-options
+            lazy-rules :rules="[
               (val) =>
                 (val && val.length > 0) ||
                 'Por favor, dígite el tipo de documento',
-            ]"
-          />
-          <q-input
-            outlined
-            type="number"
-            v-model="numDoc"
-            label="Número de documento"
-            lazy-rules
-            :rules="[
-              (val) =>
-                (val && val.length > 0) ||
-                'Por favor, dígite el número de documento',
-            ]"
-          />
-          <q-input
-            outlined
-            v-model="firstName"
-            label="Nombres"
-            lazy-rules
-            :rules="[
-              (val) =>
-                (val && val.length > 0) ||
-                'Por favor, dígite el nombre del aprendiz',
-            ]"
-          />
-          <q-input
-            outlined
-            v-model="lastName"
-            label="Apellidos"
-            lazy-rules
-            :rules="[
-              (val) =>
-                (val && val.length > 0) ||
-                'Por favor, dígite el apellido del aprendiz',
-            ]"
-          />
-          <q-input
-            outlined
-            type="number"
-            v-model="phone"
-            label="Teléfono"
-            lazy-rules
-            :rules="[
-              (val) =>
-                (val && val.length > 0) ||
-                'Por favor, dígite el teléfono del aprndiz',
-            ]"
-          />
-          <q-input
-            outlined
-            v-model="institutionalEmail"
-            label="Email institucional"
-            lazy-rules
-            :rules="[
-              (val) =>
-                (val && val.length > 0) ||
-                'Por favor, dígite el correo institucional del aprendiz',
-            ]"
-          />
-          <q-input
-            outlined
-            v-model="personalEmail"
-            label="Email personal"
-            lazy-rules
-            :rules="[
-              (val) =>
-                (val && val.length > 0) ||
-                'Por favor, dígite el correo personal del aprendiz',
-            ]"
-          />
+            ]" />
+          <q-input outlined type="number" v-model="numDoc" label="Número de documento" lazy-rules :rules="[
+            (val) =>
+              (val && val.length > 0) ||
+              'Por favor, dígite el número de documento',
+          ]" />
+          <q-input outlined v-model="firstName" label="Nombres" lazy-rules :rules="[
+            (val) =>
+              (val && val.length > 0) ||
+              'Por favor, dígite el nombre del aprendiz',
+          ]" />
+          <q-input outlined v-model="lastName" label="Apellidos" lazy-rules :rules="[
+            (val) =>
+              (val && val.length > 0) ||
+              'Por favor, dígite el apellido del aprendiz',
+          ]" />
+          <q-input outlined type="number" v-model="phone" label="Teléfono" lazy-rules :rules="[
+            (val) =>
+              (val && val.length > 0) ||
+              'Por favor, dígite el teléfono del aprndiz',
+          ]" />
+          <q-input outlined v-model="institutionalEmail" label="Email institucional" lazy-rules :rules="[
+            (val) =>
+              (val && val.length > 0) ||
+              'Por favor, dígite el correo institucional del aprendiz',
+          ]" />
+          <q-input outlined v-model="personalEmail" label="Email personal" lazy-rules :rules="[
+            (val) =>
+              (val && val.length > 0) ||
+              'Por favor, dígite el correo personal del aprendiz',
+          ]" />
           <div>
-            <q-btn
-              label="guardar"
-              type="submit"
-              color="primary"
-              :loading="loading"
-            />
-            <q-btn
-              label="cerrar"
-              type="reset"
-              color="primary"
-              flat
-              class="q-ml-sm"
-              v-close-popup
-            />
+            <q-btn label="guardar" type="submit" color="primary" :loading="loading" />
+            <q-btn label="cerrar" type="reset" color="primary" flat class="q-ml-sm" v-close-popup />
           </div>
         </q-form>
       </div>
@@ -178,6 +90,7 @@ let loading = ref(false);
 let title = "Aprendices";
 let btnLabel = "Crear";
 const showModal = ref(false);
+let searchTerm = ref("");
 let fiche = ref("");
 let modality = ref("");
 let tpDoc = ref("");
@@ -232,6 +145,23 @@ const columns = ref([
 onBeforeMount(() => {
   bring();
 });
+
+async function onSearch() {
+  loading.value = true;
+  try {
+    let response = await getData(`/apprentice/searchapprentice?term=${searchTerm.value}`);
+    console.log(response);
+
+    rows.value = response.results.map((apprentice) => ({
+      ...apprentice,
+      modality: apprentice.modality.name,
+    }));
+  } catch (error) {
+    console.log(error);
+  } finally {
+    loading.value = false;
+  }
+}
 
 async function bring() {
   loading.value = true;
@@ -386,9 +316,9 @@ async function filterModality(val, update) {
 
   align-items: center;
 }
+
 .title-table {
   text-align: center;
   margin-bottom: 0;
 }
-
 </style>

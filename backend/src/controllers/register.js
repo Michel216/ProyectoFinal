@@ -5,7 +5,7 @@ const register = {
     listallregister: async (req, res) => {
         try {
             const register = await Register.find()
-                .populate({ path: 'apprentice' })
+                // .populate({ path: 'apprentice' })
                 .populate({ path: 'modality' })
                 .exec();
             res.json({ register });

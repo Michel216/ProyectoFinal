@@ -54,7 +54,7 @@ async function bring() {
         month: formatMonth(followup.month)
       }
     })
-
+    
   } catch (error) {
     console.log(error);
   }

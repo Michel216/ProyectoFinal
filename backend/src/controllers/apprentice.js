@@ -5,8 +5,28 @@ const apprenticeController = {
     // Obtener todos los aprendices
     getListApprentices: async (req, res) => {
         try {
-            const listApprentice = await Apprentice.find().populate({ path: 'modality' })
+            const listApprentice = await Apprentice.find()
+                .populate({ path: 'modality' })
             res.status(200).json({ listApprentice });
+        } catch (error) {
+            res.status(400).json({ error });
+        }
+    },
+    getFilterApprentices: async (req, res) => {
+        try {
+            const searchTerm = req.query.term;
+            const results = await Apprentice.find({
+                $or: [
+                    { firstName: { $regex: searchTerm, $options: 'i' } },
+                    { lastName: { $regex: searchTerm, $options: 'i' } },
+                    { numDocument: { $regex: searchTerm, $options: 'i' } },
+                    { institutionalEmail: { $regex: searchTerm, $options: 'i' } },
+                    { personalEmail: { $regex: searchTerm, $options: 'i' } },
+                    { phone: { $regex: searchTerm, $options: 'i' } },
+                ],
+            });
+            res.status(200).json({ results });
+
         } catch (error) {
             res.status(400).json({ error });
         }
