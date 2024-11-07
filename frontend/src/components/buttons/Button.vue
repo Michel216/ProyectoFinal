@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="btn">
         <q-btn color="primary" @click="handleClick" :label="label" />
     </div>
 </template>

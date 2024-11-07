@@ -23,7 +23,7 @@ const followupController = {
         }
     },
     // Listar seguimientos por asignación
-    getListFollowUpInstructorByAssignment: async (req, res) => {
+    getListFollowUpByAssignment: async (req, res) => {
         try {
             const idAssignment = req.params.idAssignment;
             const listFollowupByAssignment = await Followup.findOne({ assignment: idAssignment });

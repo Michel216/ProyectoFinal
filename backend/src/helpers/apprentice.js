@@ -125,8 +125,8 @@ const apprenticeHelper = {
         return true;
     },
     // válida que el aprendiz exista en la base de datos
-    validateLogin: async (numDocument, email) => {
-        let existUser = await Apprentice.findOne({ email, numDocument });
+    validateLogin: async (numDocument, institutionalEmail) => {
+        let existUser = await Apprentice.findOne({ institutionalEmail, numDocument });
         if (!existUser) {
             throw new Error("El correo electrónico o el número de documento no es válido");
         } return true

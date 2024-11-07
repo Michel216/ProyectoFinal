@@ -1,6 +1,14 @@
 <template>
   <div class="home">
-    <div class="cards">
+ 
+    <div class="titulo" v-if="role === 'INSTRUCTOR'">
+      <h5>SEGUIMIENTO ETAPAS PRODUCTIVAS ASIGNADAS Y REGISTRO DE HORAS LABORADAS</h5>
+    </div>
+
+    <div class="titulo" v-if="role === 'ADMIN'">
+      <h5>REGISTRO Y ASIGNACION DE SEGUIMIENTO A ESTAPAS PRODUCTIVAS DE LOS APRENDICES</h5>
+    </div>
+    <div class="cards ">
       <UserCard
         v-for="(card, index) in filteredCards"
         :key="index"
@@ -14,11 +22,11 @@
 </template>
 
 <script setup>
-import UserCard from "../components/cards/cards.vue"; // Asegúrate de que esta ruta sea correcta
+import UserCard from "../components/cards/cards.vue"; 
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faCamera, faUsers, faTasks, faClipboardList, faBook, faChartLine } from "@fortawesome/free-solid-svg-icons";
-import { useAuthStore } from '../store/useAuth.js'; // Asegúrate de importar tu store
+import { useAuthStore } from '../store/useAuth.js'; 
 
 // Registra los íconos
 library.add(faCamera, faUsers, faTasks, faClipboardList, faBook, faChartLine);
@@ -40,7 +48,7 @@ const cards = [
     buttonLink: "/assignment",
     buttonText: "Ver",
     icon: ["fas", "tasks"], 
-    rol: ["ADMIN"],
+    rol: ["ADMIN","INSTRUCTOR"],
   },
   {
     title: "Seguimiento",
@@ -50,18 +58,39 @@ const cards = [
     rol: ["ADMIN", "INSTRUCTOR"],
   },
   {
+    title: "Registros",
+    buttonLink: "/register",
+    buttonText: "Ver",
+    icon: ["fas", "clipboard-list"], 
+    rol: ["ADMIN", ],
+  },
+  {
     title: "Bitacoras",
     buttonLink: "/binnacles",
     buttonText: "Ver",
     icon: ["fas", "book"], 
     rol: ["ADMIN", "INSTRUCTOR", "APRENDIZ"],
   },
+  // {
+  //   title: "Informes",
+  //   buttonLink: "/reports",
+  //   buttonText: "Ver",
+  //   icon: ["fas", "chart-line"], 
+  //   rol: ["ADMIN"],
+  // },
   {
-    title: "Informes",
+    title: "Registro de Horas",
     buttonLink: "/reports",
     buttonText: "Ver",
     icon: ["fas", "chart-line"], 
-    rol: ["ADMIN", "INSTRUCTOR"],
+    rol: [, "INSTRUCTOR"],
+  },
+  {
+    title: "Fichas",
+    buttonLink: "/reports",
+    buttonText: "Ver",
+    icon: ["fas", "chart-line"], 
+    rol: [, "ADMIN"],
   },
 ];
 
@@ -73,7 +102,7 @@ const filteredCards = cards.filter((item) => item.rol.includes(role));
 
 <style scoped>
 .cards {
-  width: 50%;
+  width: 90%;
   margin: auto;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(30%, 1fr));
@@ -82,5 +111,21 @@ const filteredCards = cards.filter((item) => item.rol.includes(role));
   justify-content: center;
   text-align: center;
   align-items: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Sombra básica */
+    margin-bottom: 20px; 
+}
+
+
+.titulo{
+  text-align: center;
+
+  max-width: 600px; /* Ajusta el ancho máximo según tus necesidades */
+  margin: 0 auto; /* Centra el contenedor horizontalmente */
+  line-height: 1.2; /* Ajusta el espaciado entre líneas */
+}
+h5{
+   font-weight: bold;
+  margin: 1;
+  /* margin-top: 80px; */
 }
 </style>

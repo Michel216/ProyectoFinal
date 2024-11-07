@@ -47,7 +47,7 @@ const props = defineProps({
 }
 
 .icon {
-  margin-top: -30%;
+  margin-top: -40%;
   font-size: 8em; /* Cambia el tamaño del ícono a lo que prefieras */
   margin-bottom: 50px; /* Espacio entre el ícono y el botón */
 }
@@ -60,4 +60,5 @@ const props = defineProps({
 #btn:hover {
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.493);
 }
+
 </style>

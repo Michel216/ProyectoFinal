@@ -57,8 +57,8 @@ const apprenticeController = {
                 modality,
                 status
             });
-            await newApprentice.save();
-            res.status(200).json({ newApprentice });
+            let apprenticeCreated = await newApprentice.save();
+            res.status(200).json({ apprenticeCreated });
         } catch (error) {
             res.status(400).json({ error });
         }
