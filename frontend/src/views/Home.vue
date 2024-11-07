@@ -71,13 +71,13 @@ const cards = [
     icon: ["fas", "book"], 
     rol: ["ADMIN", "INSTRUCTOR", "APRENDIZ"],
   },
-  // {
-  //   title: "Informes",
-  //   buttonLink: "/reports",
-  //   buttonText: "Ver",
-  //   icon: ["fas", "chart-line"], 
-  //   rol: ["ADMIN"],
-  // },
+  {
+    title: "Informes",
+    buttonLink: "/reports",
+    buttonText: "Ver",
+    icon: ["fas", "chart-line"], 
+    rol: ["ADMIN"],
+  },
   {
     title: "Registro de Horas",
     buttonLink: "/reports",
@@ -88,6 +88,13 @@ const cards = [
   {
     title: "Fichas",
     buttonLink: "/reports",
+    buttonText: "Ver",
+    icon: ["fas", "chart-line"], 
+    rol: [, "ADMIN"],
+  },
+  {
+    title: "Modalidades",
+    buttonLink: "/modality",
     buttonText: "Ver",
     icon: ["fas", "chart-line"], 
     rol: [, "ADMIN"],

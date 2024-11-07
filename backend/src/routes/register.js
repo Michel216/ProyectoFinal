@@ -45,7 +45,7 @@ registerRoute.get('/listregisterbymodality/:idmodality', [
         // validateJWT, 
         check('id', 'El id es obligatorio y debe ser un ID de MongoDB válido').notEmpty().isMongoId(),
         validateFields 
-    ], register.updateModalityregister);
+    ], register.updateregisterbyid);
   
 
 //obtener registros por fecha de inicio    

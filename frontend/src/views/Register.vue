@@ -1,5 +1,6 @@
 <template>
   <div class="q-pa-md q-gutter-md">
+    
     <Btn :label="btnLabel" :onClickFunction='bringIdAndOpenModal' :loading="loading" />
     <RegisterTable :title="title" :columns="columns" :rows="rows" :onToggleActivate="handleToggleActivate"
       :loading="loading" :onClickEdit="bringIdAndOpenModal" />

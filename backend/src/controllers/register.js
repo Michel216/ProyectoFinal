@@ -72,12 +72,11 @@ const register = {
         }
     },
 
-
-    // Listar registro por fecha de inicio
-    getlistregisterbystartdate: async (req, res) => {
-        try {
-            const { startDate, endDate } = req.query;
-            const query = {};
+   // Listar registro por fecha de inicio
+getlistregisterbystartdate: async (req, res) => {
+    try {
+        const { startDate, endDate } = req.query;
+        const query = {};
 
             if (startDate) {
                 query.startDate = { $gte: new Date(startDate) }; // Asumiendo que el campo es 'startDate'
@@ -117,7 +116,7 @@ const register = {
 
     postaddregister: async (req, res) => {
         try {
-            const { apprentice, modality, startDate, endDate, company, phonecompany, addresscompany, owner, docAlternative, hour } = req.body;
+            const { apprentice, modality, startDate, endDate, company, phonecompany, addresscompany, owner, docAlternative, hour, businnessProyectHour,assignment, certificationDoc } = req.body;
 
             const newregister = new Register({
                 apprentice,
