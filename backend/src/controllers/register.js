@@ -19,7 +19,6 @@ const register = {
     //listar registro por id  
 
     getlistregisterbyid: async (req, res) => {
-
         try {
             const id = req.params.id
             const listRegisterById = await Register.findById(id);
@@ -75,22 +74,6 @@ const register = {
         }
     },
 
-    updateModalityregister: async (req, res) => {
-        try {
-            const modalityId = req.params.id; // ID de la modalidad desde la URL
-            const newData = req.body; // Datos a actualizar
-
-
-            const updatedRegister = await Register.findOneAndUpdate({ modality: modalityId }, newData, { new: true }
-            );
-            res.json({ updatedRegister })
-
-        } catch (error) {
-            console.error(error);
-            res.status(400).json({ error: "Error al modificar los datos del registro" });
-        }
-    },
-
    // Listar registro por fecha de inicio
 getlistregisterbystartdate: async (req, res) => {
     try {
@@ -135,7 +118,7 @@ getlistregisterbyenddate: async (req, res) => {
 
     postaddregister: async (req, res) => {
         try {
-            const { apprentice, modality, startDate, endDate, company, phonecompany, addresscompany, owner, docAlternative, hour } = req.body;
+            const { apprentice, modality, startDate, endDate, company, phonecompany, addresscompany, owner, docAlternative, hour, businnessProyectHour,assignment, certificationDoc } = req.body;
 
             const newregister = new Register({
                 apprentice,
