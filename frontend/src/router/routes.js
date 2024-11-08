@@ -7,9 +7,11 @@ import Assignment from "./../views/Assignment.vue";
 import ForgotPassword from "./../views/ForgotPassword.vue";
 import Apprentice from "./../views/Apprentice.vue";
 import FollowUp from "./../views/FollowUp.vue";
+import Fiche  from './../views/Fiche.vue';
 import { createRouter, createWebHashHistory } from "vue-router";
 import Register from "../views/Register.vue";
 import { useAuthStore } from '../store/useAuth.js'; 
+import Instructors from "../views/Instructors.vue";
 
 // Definir la función de autenticación
 const auth = (to, from, next) => {
@@ -35,12 +37,14 @@ const routes = [
         children: [
             { path: "/Home", component: Home, beforeEnter: auth, meta: { rol: ["ADMIN", "INSTRUCTOR"] } },
             { path: "/Binnacles", component: Binnacles, beforeEnter: auth, meta: { rol: ["ADMIN", "INSTRUCTOR","APRENDIZ"] } },
+            { path: "/Instructors", component: Instructors, beforeEnter: auth, meta: { rol: ["ADMIN"] } },
             { path: "/Modality", component: Modality, beforeEnter: auth, meta: { rol: ["ADMIN"] } },
             { path: "/Assignment", component: Assignment, beforeEnter: auth, meta: { rol: ["ADMIN","INSTRUCTOR"] } },
             { path: "/Register", component: Register, beforeEnter: auth, meta: { rol: ["ADMIN"] } },
             { path: "/ForgotPassword", component: ForgotPassword, beforeEnter: auth, meta: { rol: ["ADMIN"] } },
             { path: "/Apprentice", component: Apprentice, beforeEnter: auth, meta: { rol: ["ADMIN"] } },
             { path: "/FollowUp", component: FollowUp, beforeEnter: auth, meta: { rol: ["ADMIN", "INSTRUCTOR"] } },
+            { path: "/fiches", component: Fiche, beforeEnter: auth, meta: { rol: ["ADMIN"] } },
         ]
     }
 ];

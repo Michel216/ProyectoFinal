@@ -6,7 +6,7 @@ const binnacleSchema = new mongoose.Schema({
     number: { type: Number, required: true, enum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] },
     document: { type: String, required: true },
     // month: { type: Date, required: true },
-    status: { type: Number, default: 3, enum: [1, 2, 3, 4]}, // valida que el tipo de la bitácora sea de 1 a 4. Programado: 1, Ejecutado: 2, Pendiente: 3, Verificado: 4
+    status: { type: Number, default: 1, enum: [1, 2, 3, 4]}, // valida que el tipo de la bitácora sea de 1 a 4. Programado: 1, Ejecutado: 2, Pendiente: 3, Verificado: 4
     observations: [{
         observation: { type: String, required: true },
         user: { type: mongoose.Schema.Types.ObjectId, required: true },
