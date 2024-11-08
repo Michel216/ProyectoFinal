@@ -75,8 +75,13 @@ const verifyDocAlternative= async (docAlternative) => {
 }
 module.exports = {
     validateDateRange,
-    validateCreateRegister,
-    validateUpdateRegister,
+
+    
+
+
+
+
+    
     verifyDocAlternative,
     registerExists
 };

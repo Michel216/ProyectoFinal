@@ -29,7 +29,7 @@ followupRoute.get('/listfollowupbyassignment/:idAssignment', [
     // check('idAssignment').custom(followUpHelper.validateAssignment),
     // check('idAssignment').custom(followUpHelper.validateAssignment),
     validateFields
-], followupController.getListFollowUpInstructorByAssignment);
+], followupController.getListFollowUpByAssignment);
 
 // Listar seguimientos por instructor
 followupRoute.get('/listfollowupbyinstructor/:idinstructor', [
