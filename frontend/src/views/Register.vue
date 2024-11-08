@@ -149,7 +149,7 @@ async function bring() {
     rows.value = data.register.map(register => {
       return {
         ...register,
-        apprentice: (register.apprentice.firstName + ' ' + register.apprentice.lastName),
+        // apprentice: (register.apprentice.firstName + ' ' + register.apprentice.lastName),
         modality: register.modality.name,
         startDate: formatDate(register.startDate),
         endDate: formatDate(register.endDate)

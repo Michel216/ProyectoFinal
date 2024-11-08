@@ -5,8 +5,8 @@ const followupController = {
     getListAllFollowup: async (req, res) => {
         try {
             const listallFollowup = await Followup.find()
-            .populate({ path: 'assignment' })
-            .exec();
+            // .populate({ path: 'assignment' })
+            // .exec();
             res.status(200).json({ listallFollowup });
         } catch (error) {
             res.status(400).json({ error });

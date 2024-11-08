@@ -75,6 +75,7 @@ const verifyDocAlternative= async (docAlternative) => {
 }
 module.exports = {
     validateDateRange,
+<<<<<<< HEAD
 
     
 
@@ -82,6 +83,10 @@ module.exports = {
 
 
     
+=======
+    // validateCreateRegister,
+    // validateUpdateRegister,
+>>>>>>> 8454387d91051cb989183ee2699f35ca1db21332
     verifyDocAlternative,
     registerExists
 };

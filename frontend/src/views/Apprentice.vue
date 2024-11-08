@@ -200,6 +200,7 @@ let loading = ref(false);
 let title = "Aprendices";
 let btnLabel = "Crear";
 const showModal = ref(false);
+let searchTerm = ref("");
 let fiche = ref("");
 let modality = ref("");
 let tpDoc = ref("");
@@ -275,6 +276,23 @@ const columns = ref([
 onBeforeMount(() => {
   bring();
 });
+
+async function onSearch() {
+  loading.value = true;
+  try {
+    let response = await getData(`/apprentice/searchapprentice?term=${searchTerm.value}`);
+    console.log(response);
+
+    rows.value = response.results.map((apprentice) => ({
+      ...apprentice,
+      modality: apprentice.modality.name,
+    }));
+  } catch (error) {
+    console.log(error);
+  } finally {
+    loading.value = false;
+  }
+}
 
 async function bring() {
   loading.value = true;
@@ -429,9 +447,9 @@ async function filterModality(val, update) {
 
   align-items: center;
 }
+
 .title-table {
   text-align: center;
   margin-bottom: 0;
 }
-
 </style>
