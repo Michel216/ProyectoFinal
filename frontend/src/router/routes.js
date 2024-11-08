@@ -36,7 +36,7 @@ const routes = [
             { path: "/Home", component: Home, beforeEnter: auth, meta: { rol: ["ADMIN", "INSTRUCTOR"] } },
             { path: "/Binnacles", component: Binnacles, beforeEnter: auth, meta: { rol: ["ADMIN", "INSTRUCTOR","APRENDIZ"] } },
             { path: "/Modality", component: Modality, beforeEnter: auth, meta: { rol: ["ADMIN"] } },
-            { path: "/Assignment", component: Assignment, beforeEnter: auth, meta: { rol: ["ADMIN"] } },
+            { path: "/Assignment", component: Assignment, beforeEnter: auth, meta: { rol: ["ADMIN","INSTRUCTOR"] } },
             { path: "/Register", component: Register, beforeEnter: auth, meta: { rol: ["ADMIN"] } },
             { path: "/ForgotPassword", component: ForgotPassword, beforeEnter: auth, meta: { rol: ["ADMIN"] } },
             { path: "/Apprentice", component: Apprentice, beforeEnter: auth, meta: { rol: ["ADMIN"] } },
