@@ -90,7 +90,9 @@ const menuItems = [
     { label: 'Asignaciones', path: '/Assignment', icon: ['fas', 'file-alt'], rol: ["ADMIN","ETAPA PRODUCTIVA"] },
     { label: 'Registros', path: '/Register', icon: ['fas', 'user'], rol: ["ADMIN","ETAPA PRODUCTIVA"] },
     { label: 'Aprendices', path: '/Apprentice', icon: ['fas', 'user-graduate'], rol: ["ADMIN","ETAPA PRODUCTIVA"] },
-    { label: 'Seguimientos', path: '/FollowUp', icon: ['fas', 'chart-line'], rol: ["ADMIN","ETAPA PRODUCTIVA", "INSTRUCTOR"] }
+    { label: 'Seguimientos', path: '/FollowUp', icon: ['fas', 'chart-line'], rol: ["ADMIN","ETAPA PRODUCTIVA", "INSTRUCTOR"] },
+    { label: 'Fichas', path: '/Fiche', icon: [''], rol: ["ADMIN"] }
+
 ];
 
 // Filtrar los elementos del menú según el rol del usuario
