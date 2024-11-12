@@ -5,17 +5,27 @@
     </router-link>
     <h3 class="title-table">Asignaciones</h3>
     <hr id="hr" class="bg-green-9" />
-    <div class="q-pa-md q-gutter-sm">
-      <q-btn class="btn" color="green-9" label="Crear" icon="add_circle_outline " style="width: auto" />
-    </div>
 
-    <div class="q-pa-md">
-      <q-form @submit="radiobtn" class="q-gutter-md">
-        <q-radio name="shape" v-model="shape" :val="'apprentice'" label="Aprendiz" />
-        <q-radio name="shape" v-model="shape" :val="'insFollowup'" label="Ins. Seguimiento" />
-        <q-radio name="shape" v-model="shape" :val="'insTec'" label="Ins. Técnico" />
-        <q-radio name="shape" v-model="shape" :val="'insProyect'" label="Ins. Proyecto" />
-      </q-form>
+    <!-- Contenedor de botón, formulario de radio y campo de entrada -->
+    <div class="q-pa-md q-gutter-sm" style="display: flex; align-items: center; justify-content: space-between;">
+
+      <!-- Botón en el extremo izquierdo -->
+      <q-btn class="btn" color="green-9" label="Crear" icon="add_circle_outline" style="width: auto" />
+
+      <!-- Formulario de radio centrado -->
+      <div style="display: flex; justify-content: center;">
+        <q-form @submit="radiobtn" class="q-gutter-md" style="display: flex;">
+          <q-radio name="shape" v-model="shape" :val="'apprentice'" label="Aprendiz" />
+          <q-radio name="shape" v-model="shape" :val="'insFollowup'" label="Ins. Seguimiento" />
+          <q-radio name="shape" v-model="shape" :val="'insTec'" label="Ins. Técnico" />
+          <q-radio name="shape" v-model="shape" :val="'insProyect'" label="Ins. Proyecto" />
+        </q-form>
+      </div>
+      <div class="q-pa-md">
+    <div class="q-gutter-md" style="max-width: 400px">
+      <q-input outlined v-model="text" label="Ingrese el nombre o número de documento " />
+    </div>
+  </div>
       <q-card
       v-if="submitResult.length > 0"
       flat bordered
@@ -33,11 +43,7 @@
       </q-card-section>
     </q-card>
     </div>
-    <div class="q-pa-md">
-    <div class="q-gutter-md" style="max-width: 400px">
-      <q-input outlined v-model="text" label="Ingrese el nombre o número de documento " />
-    </div>
-  </div>
+   
     <ApprenticeTable :title="title" :rows="rows" :columns="columns" :onToggleActivate="handleToggleActivate"
       :loading="loading" :onClickEdit="bringIdAndOpenModal" />
     <Modal :isVisible="showModal" @update:isVisible="showModal = $event" :label="btnLabel">
