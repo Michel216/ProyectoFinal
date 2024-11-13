@@ -41,7 +41,7 @@ const props = defineProps({
 // Combinar las columnas pasadas con las columnas de acciones "editar" y "activar"
 const combinedColumns = computed(() => [
   ...props.columns,
-  { name: "options", label: "Editar", align: "center", field: "status" }
+  // { name: "options", label: "Editar", align: "center", field: "status" }
 ]);
 
 // Manejador para la acción de activar/desactivar

@@ -68,7 +68,7 @@ const combinedColumns = computed(() => [
   ...props.columns,
   { name: 'status', label: 'ESTADO', align: 'center', field: 'status' },
   // { name: "editar", label: "Editar", align: "center" },
-  // { name: "activar", label: "Activar/Desactivar", align: "center" }
+  { name: "activar", label: "Activar/Desactivar", align: "center" }
 ]);
 
 // // Manejador para la acción de activar/desactivar

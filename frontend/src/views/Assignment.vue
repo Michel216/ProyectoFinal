@@ -381,4 +381,9 @@ const filterInstructorSeguimiento = async (val, update) => {
   text-align: center;
   margin-bottom: 0;
 }
+h3 {
+  text-align: center;
+  margin-bottom: 0;
+  font-weight: bold;
+}
 </style>

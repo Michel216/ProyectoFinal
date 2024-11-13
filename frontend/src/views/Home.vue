@@ -99,7 +99,7 @@ const cards = [
   },
   {
     title: "Fichas",
-    buttonLink: "/reports",
+    buttonLink: "/fiches",
     buttonText: "Ver",
     icon: ["fas", "chart-line"],
     rol: [, "ADMIN"],
@@ -116,7 +116,14 @@ const cards = [
     buttonLink: "/reports",
     buttonText: "Ver",
     icon: ["fas", "chart-line"], 
-    rol: [, "INSTRUCTOR"],
+    rol: [, "INSTRUCTOR","ADMIN"],
+  },
+  {
+    title: "Programas",
+    buttonLink: "/reports",
+    buttonText: "Ver",
+    icon: ["fas", "chart-line"], 
+    rol: [, "INSTRUCTOR","ADMIN"],
   }
 ];
 

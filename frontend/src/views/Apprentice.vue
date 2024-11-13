@@ -25,13 +25,14 @@
     >
       <div class="q-pa-md" style="max-width: 600px">
         <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md" style="
-            max-height: none;
-            max-width: 100%;
-            width: 100vw;
-            margin: auto;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-            border-radius: 50px;">
+          display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  row-gap: 2px; /* Ajusta la separación vertical entre filas */
+  column-gap: 20px; /* Espacio entre columnas */
+  border-radius: 50px;
+  max-width: 100%;
+  width: 100vw;
+  margin: auto">
 
           <q-select
             outlined
@@ -68,6 +69,7 @@
                 'Por favor, dígite el apellido del aprendiz',
             ]"
           />
+       
           <q-input
             outlined
             v-model="institutionalEmail"
@@ -76,7 +78,7 @@
             :rules="[
               (val) =>
                 (val && val.length > 0) ||
-                'Por favor, dígite el correo institucional del aprendiz',
+                'Por favor, dígite el correo personal del aprendiz',
             ]"
           />
           <q-input
@@ -156,7 +158,9 @@
             </template>
           </q-select>
           <div class="q" style="display: flex; justify-content: center; align-items: center;">
-  <q-btn 
+ 
+</div>
+<q-btn 
     label="Guardar" 
     type="submit"       
     icon="save"
@@ -177,7 +181,6 @@
       box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
     "
   />
-</div>
         </q-form>
       </div>
     </Modal>
@@ -245,12 +248,7 @@ const columns = ref([
     align: "center",
     field: "personalEmail",
   },
-  {
-    name: "institutionalEmail",
-    label: "Email Institucional",
-    align: "center",
-    field: "institutionalEmail",
-  },
+
   {
     name: "phone",
     label: "Teléfono",
@@ -264,11 +262,18 @@ const columns = ref([
     field: "fiche",
   },
   {
-    name: "modality",
+    name: "cod.ficha",
     label: "Cod. Ficha",
+    align: "center",
+    field: "cod.ficha",
+  },
+  {
+    name: "modality",
+    label: "Modalidad",
     align: "center",
     field: "modality",
   },
+
 
 
 ]);
@@ -451,5 +456,10 @@ async function filterModality(val, update) {
 .title-table {
   text-align: center;
   margin-bottom: 0;
+}
+h3 {
+  text-align: center;
+  margin-bottom: 0;
+  font-weight: bold;
 }
 </style>
