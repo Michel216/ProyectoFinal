@@ -1,6 +1,13 @@
 <template>
     <div>
-        <q-table :title="title" :rows="rows" :columns="columns" :loading="loading" />
+        <q-table :title="title" :rows="rows" :columns="columns" :loading="loading">
+            <template v-slot:body-cell-status="scope">
+                <q-td :props="scope">
+                    <strong style="color: green" v-if="scope.row.status === 1">Activo</strong>
+                    <strong style="color: red" v-else>Inactivo</strong>
+                </q-td>
+            </template>
+        </q-table>
     </div>
 </template>
 
