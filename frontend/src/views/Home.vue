@@ -1,14 +1,18 @@
 <template>
   <div class="home">
- 
     <div class="titulo" v-if="role === 'INSTRUCTOR'">
-      <h5>SEGUIMIENTO ETAPAS PRODUCTIVAS ASIGNADAS Y REGISTRO DE HORAS LABORADAS</h5>
+      <h5>
+        SEGUIMIENTO ETAPAS PRODUCTIVAS ASIGNADAS Y REGISTRO DE HORAS LABORADAS
+      </h5>
     </div>
 
     <div class="titulo" v-if="role === 'ADMIN'">
-      <h5>REGISTRO Y ASIGNACION DE SEGUIMIENTO A ESTAPAS PRODUCTIVAS DE LOS APRENDICES</h5>
+      <h5>
+        REGISTRO Y ASIGNACION DE SEGUIMIENTO A ESTAPAS PRODUCTIVAS DE LOS
+        APRENDICES
+      </h5>
     </div>
-    <div class="cards ">
+    <div class="cards">
       <UserCard
         v-for="(card, index) in filteredCards"
         :key="index"
@@ -16,17 +20,25 @@
         :buttonLink="card.buttonLink"
         :buttonText="card.buttonText"
         :icon="card.icon"
+        class="card-item"
       />
     </div>
   </div>
 </template>
 
 <script setup>
-import UserCard from "../components/cards/cards.vue"; 
+import UserCard from "../components/cards/cards.vue";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { faCamera, faUsers, faTasks, faClipboardList, faBook, faChartLine } from "@fortawesome/free-solid-svg-icons";
-import { useAuthStore } from '../store/useAuth.js'; 
+import {
+  faCamera,
+  faUsers,
+  faTasks,
+  faClipboardList,
+  faBook,
+  faChartLine,
+} from "@fortawesome/free-solid-svg-icons";
+import { useAuthStore } from "../store/useAuth.js";
 
 // Registra los íconos
 library.add(faCamera, faUsers, faTasks, faClipboardList, faBook, faChartLine);
@@ -40,56 +52,56 @@ const cards = [
     title: "Aprendices",
     buttonLink: "/apprentice",
     buttonText: "Ver",
-    icon: ["fas", "users"], 
-    rol: ["ADMIN",],
+    icon: ["fas", "users"],
+    rol: ["ADMIN"],
   },
   {
     title: "Asignación",
     buttonLink: "/assignment",
     buttonText: "Ver",
-    icon: ["fas", "tasks"], 
-    rol: ["ADMIN","INSTRUCTOR"],
+    icon: ["fas", "tasks"],
+    rol: ["ADMIN", "INSTRUCTOR"],
   },
   {
     title: "Seguimiento",
     buttonLink: "/followup",
     buttonText: "Ver",
-    icon: ["fas", "clipboard-list"], 
+    icon: ["fas", "clipboard-list"],
     rol: ["ADMIN", "INSTRUCTOR"],
   },
   {
     title: "Registros",
     buttonLink: "/register",
     buttonText: "Ver",
-    icon: ["fas", "clipboard-list"], 
-    rol: ["ADMIN", ],
+    icon: ["fas", "clipboard-list"],
+    rol: ["ADMIN"],
   },
   {
     title: "Bitacoras",
     buttonLink: "/binnacles",
     buttonText: "Ver",
-    icon: ["fas", "book"], 
+    icon: ["fas", "book"],
     rol: ["ADMIN", "INSTRUCTOR", "APRENDIZ"],
   },
   {
     title: "Informes",
     buttonLink: "/reports",
     buttonText: "Ver",
-    icon: ["fas", "chart-line"], 
+    icon: ["fas", "chart-line"],
     rol: ["ADMIN"],
   },
   {
     title: "Registro de Horas",
     buttonLink: "/reports",
     buttonText: "Ver",
-    icon: ["fas", "chart-line"], 
+    icon: ["fas", "chart-line"],
     rol: [, "INSTRUCTOR"],
   },
   {
     title: "Fichas",
-    buttonLink: "/reports",
+    buttonLink: "/fiches",
     buttonText: "Ver",
-    icon: ["fas", "chart-line"], 
+    icon: ["fas", "chart-line"],
     rol: [, "ADMIN"],
   },
   {
@@ -103,9 +115,23 @@ const cards = [
     title: "Modalidades",
     buttonLink: "/modality",
     buttonText: "Ver",
-    icon: ["fas", "chart-line"], 
+    icon: ["fas", "chart-line"],
     rol: [, "ADMIN"],
   },
+  {
+    title: "Certificados",
+    buttonLink: "/reports",
+    buttonText: "Ver",
+    icon: ["fas", "chart-line"], 
+    rol: [, "INSTRUCTOR","ADMIN"],
+  },
+  {
+    title: "Programas",
+    buttonLink: "/reports",
+    buttonText: "Ver",
+    icon: ["fas", "chart-line"], 
+    rol: [, "INSTRUCTOR","ADMIN"],
+  }
 ];
 
 // Filtra las tarjetas según el rol del usuario
@@ -116,29 +142,42 @@ const filteredCards = cards.filter((item) => item.rol.includes(role));
 
 <style scoped>
 .cards {
-  width: 90%;
   margin: auto;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(30%, 1fr));
-  gap: 40px;
-  margin-top: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(30%, 1fr)); 
+  gap: 30px; 
+  justify-items: center;  
+  align-items: center;  
+  margin-bottom: 20px; 
+  text-align: center;  
+}
+
+
+.card-item {
+  /* background-color: #fff; */
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); 
+  border-radius: 8px;
+  /* padding: 16px; */
+  width: 90%; 
   justify-content: center;
   text-align: center;
   align-items: center;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Sombra básica */
-    margin-bottom: 20px; 
+
 }
 
-
-.titulo{
+.titulo {
   text-align: center;
 
-  max-width: 600px; /* Ajusta el ancho máximo según tus necesidades */
-  margin: 0 auto; /* Centra el contenedor horizontalmente */
-  line-height: 1.2; /* Ajusta el espaciado entre líneas */
+  max-width: 600px;
+  /* Ajusta el ancho máximo según tus necesidades */
+  margin: 0 auto;
+  /* Centra el contenedor horizontalmente */
+  line-height: 1.2;
+  /* Ajusta el espaciado entre líneas */
 }
-h5{
-   font-weight: bold;
+
+h5 {
+  font-weight: bold;
   margin: 1;
   /* margin-top: 80px; */
 }

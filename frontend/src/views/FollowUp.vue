@@ -269,5 +269,9 @@ async function filterAssignment(val, update) {
   margin-bottom: 0;
   font-size: 45px;
 }
-
+h3 {
+  text-align: center;
+  margin-bottom: 0;
+  font-weight: bold;
+}
 </style>

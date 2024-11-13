@@ -1,37 +1,57 @@
 <template>
   <div class="q-pa-md q-gutter-md">
-    <router-link to="/home" class="iconExit" style="display: flex; text-decoration: none;">
-  <q-btn dense unelevated round color="primary" icon="arrow_back" text-color="white" />
-</router-link>
-    <h3 class="title-table">Mis Asignaciones</h3>
+    <router-link to="/home" class="iconExit" style="display: flex; text-decoration: none">
+      <q-btn dense unelevated round color="primary" icon="arrow_back" text-color="white" />
+    </router-link>
+    <h3 class="title-table">Asignaciones</h3>
     <hr id="hr" class="bg-green-9" />
-    <ApprenticeTable
-      :title="title"
-      :rows="rows"
-      :columns="columns"
-      :onToggleActivate="handleToggleActivate"
-      :loading="loading"
-      :onClickEdit="bringIdAndOpenModal"
-    />
-    <Modal
-      :isVisible="showModal"
-      @update:isVisible="showModal = $event"
-      :label="btnLabel"
+
+    <!-- Contenedor de botón, formulario de radio y campo de entrada -->
+    <div class="q-pa-md q-gutter-sm" style="display: flex; align-items: center; justify-content: space-between;">
+
+      <!-- Botón en el extremo izquierdo -->
+      <q-btn class="btn" color="green-9" label="Crear" icon="add_circle_outline" style="width: auto" />
+
+      <!-- Formulario de radio centrado -->
+      <div style="display: flex; justify-content: center;">
+        <q-form @submit="radiobtn" class="q-gutter-md" style="display: flex;">
+          <q-radio name="shape" v-model="shape" :val="'apprentice'" label="Aprendiz" />
+          <q-radio name="shape" v-model="shape" :val="'insFollowup'" label="Ins. Seguimiento" />
+          <q-radio name="shape" v-model="shape" :val="'insTec'" label="Ins. Técnico" />
+          <q-radio name="shape" v-model="shape" :val="'insProyect'" label="Ins. Proyecto" />
+        </q-form>
+      </div>
+      <div class="q-pa-md">
+    <div class="q-gutter-md" style="max-width: 400px">
+      <q-input outlined v-model="text" label="Ingrese el nombre o número de documento " />
+    </div>
+  </div>
+      <q-card
+      v-if="submitResult.length > 0"
+      flat bordered
+      class="q-mt-md"
+      :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-2'"
     >
+      <q-card-section>Submitted form contains the following formData (key = value):</q-card-section>
+      <q-separator />
+      <q-card-section class="row q-gutter-sm items-center">
+        <div
+          v-for="(item, index) in submitResult"
+          :key="index"
+          class="q-px-sm q-py-xs bg-grey-8 text-white rounded-borders text-center text-no-wrap"
+        >{{ item.name }} = {{ item.value }}</div>
+      </q-card-section>
+    </q-card>
+    </div>
+   
+    <ApprenticeTable :title="title" :rows="rows" :columns="columns" :onToggleActivate="handleToggleActivate"
+      :loading="loading" :onClickEdit="bringIdAndOpenModal" />
+    <Modal :isVisible="showModal" @update:isVisible="showModal = $event" :label="btnLabel">
       <div class="q-pa-md" style="max-width: 400px">
         <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
-          <q-select
-            clearable
-            outlined
-            v-model="fichaRegistro"
-            label="Registro"
-            :options="options"
-            style="width: 100%; margin-bottom: 20px; border-radius: 8px"
-            behavior="menu"
-            emit-value
-            map-options
-            lazy-rules
-          >
+          <q-select clearable outlined v-model="fichaRegistro" label="Registro" :options="options"
+            style="width: 100%; margin-bottom: 20px; border-radius: 8px" behavior="menu" emit-value map-options
+            lazy-rules>
             <template v-slot:no-option>
               <q-item>
                 <q-item-section class="text-grey"> No results </q-item-section>
@@ -39,20 +59,9 @@
             </template>
           </q-select>
 
-          <q-select
-            clearable
-            outlined
-            v-model="filterInstructorFollowUp"
-            label="Instructor de Seguimiento"
-            use-input
-            input-debounce="0"
-            :options="options"
-            @filter="filterInstructorSeguimiento"
-            style="width: 100%; margin-bottom: 20px; border-radius: 8px"
-            behavior="menu"
-            emit-value
-            map-options
-          >
+          <q-select clearable outlined v-model="filterInstructorFollowUp" label="Instructor de Seguimiento" use-input
+            input-debounce="0" :options="options" @filter="filterInstructorSeguimiento"
+            style="width: 100%; margin-bottom: 20px; border-radius: 8px" behavior="menu" emit-value map-options>
             <template v-slot:no-option>
               <q-item>
                 <q-item-section class="text-grey"> No results </q-item-section>
@@ -85,28 +94,12 @@
             </template>
           </q-select> -->
 
-          <q-input
-            outlined
-            v-model="textCertificacion"
-            label="Documento Certificación"
-          />
-          <q-input
-            outlined
-            type="text"
-            v-model="textFotoJudicial"
-            label="Foto Judicial"
-          />
+          <q-input outlined v-model="textCertificacion" label="Documento Certificación" />
+          <q-input outlined type="text" v-model="textFotoJudicial" label="Foto Judicial" />
 
           <div>
             <q-btn label="Guardar" type="submit" color="primary" />
-            <q-btn
-              label="Cerrar"
-              type="reset"
-              color="primary"
-              flat
-              class="q-ml-sm"
-              v-close-popup
-            />
+            <q-btn label="Cerrar" type="reset" color="primary" flat class="q-ml-sm" v-close-popup />
           </div>
         </q-form>
       </div>
@@ -139,40 +132,60 @@ const fichaRegistro = ref("");
 const filterInstructorFollowUp = ref("");
 const filterInstructorTecnico = ref("");
 const filterInstructorProyecto = ref("");
+const submitResult = ref([]);
 
+const shape =ref('apprentice')
+
+function radiobtn(evt) {
+  const formData = new FormData(evt.target)
+  const data = []
+
+  for (const [name, value] of formData.entries()) {
+    data.push({ name, value })
+  }
+  
+  submitResult.value = data
+}
+const text = ref('')
 let change = ref(); // true: crear, false: modificar
 let idAssignment = ref();
 const columns = ref([
-  { name: "register", label: "Registro", align: "center", field: "register" },
-  {
-    name: "followInstructor",
-    label: "Instructor Seguimiento",
-    align: "center",
-    field: "followInstructor",
-  },
+  { name: "register", label: "N°", align: "center", field: "register" },
   {
     name: "technicalInstructor",
-    label: "Instructor Técnico",
+    label: "NOMBRE APRENDIZ",
     align: "center",
     field: "technicalInstructor",
   },
   {
     name: "proyectInstructor",
-    label: "Instructor Proyecto",
+    label: "PROGRAMA",
     align: "center",
     field: "proyectInstructor",
   },
   {
     name: "certificationdoc",
-    label: "Certificado",
+    label: "MODALIDAD",
     align: "center",
     field: "certificationdoc",
   },
   {
     name: "judymenthphoto",
-    label: "Foto Juicio",
+    label: "INS. SEGUIMIENTO",
     align: "center",
     field: "judymenthphoto",
+  },
+  {
+    name: "",
+    label: "INS. TÉCNICO",
+    align: "center",
+    field: "",
+  },
+  {
+    name: "",
+    label: "INS. PROYECTO",
+    align: "center",
+    field: "",
   },
 ]);
 
@@ -363,9 +376,14 @@ const filterInstructorSeguimiento = async (val, update) => {
 
   align-items: center;
 }
+
 .title-table {
   text-align: center;
   margin-bottom: 0;
 }
-
+h3 {
+  text-align: center;
+  margin-bottom: 0;
+  font-weight: bold;
+}
 </style>

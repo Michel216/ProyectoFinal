@@ -25,7 +25,7 @@
 import { ref } from 'vue';
 import Header from '../components/layouts/header.vue';
 import Menu from '../components/layouts/menu.vue';
-import Footer from '../components/layouts/footer.vue';
+// import Footer from '../components/layouts/Footer.vue';
 import { useRoute } from 'vue-router';
 
 const leftDrawerOpen = ref(false);
@@ -41,8 +41,7 @@ const menuItems = [
   { label: 'Aprendices', path: '/Apprentice', icon: ['fas', 'user-graduate'], rol: ["ADMIN", "ETAPA PRODUCTIVA"] },
   { label: 'Seguimientos', path: '/FollowUp', icon: ['fas', 'chart-line'], rol: ["ADMIN", "ETAPA PRODUCTIVA", "INSTRUCTOR"] },
   { label: 'Informes', path: '/reports', icon: ['fas', 'user-graduate'], rol: ["ADMIN", "ETAPA PRODUCTIVA"] },
-  { label: 'Fichas', path: '/reports', icon: ['fas', 'chart-line'], rol: ["ADMIN", "ETAPA PRODUCTIVA", ] },
-  { label: 'Instructores', path: '/Instructors', icon: ['fas', 'chart-line'], rol: ["ADMIN", "ETAPA PRODUCTIVA", ] }
+  { label: 'Fichas', path: '/fiches', icon: ['fas', 'chart-line'], rol: ["ADMIN" ] }
 ];
 
 
