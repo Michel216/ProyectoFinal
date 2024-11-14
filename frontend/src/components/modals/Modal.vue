@@ -3,7 +3,7 @@
         <q-dialog :model-value="isVisible" @update:model-value="(val) => emits('update:isVisible', val)" persistent>
             <q-card>
                 <q-card-section class="bg-primary row items-center">
-                    <div class="text-h6 text-white">{{ label }}</div>
+                    <div class="text-h6 text-white" >{{ label }}</div>
                 </q-card-section>
 
                 <q-card-section>

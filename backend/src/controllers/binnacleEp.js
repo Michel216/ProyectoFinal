@@ -4,9 +4,14 @@ const binnacleController = {
     // listar todas las bitácoras
     getListAllBinnacles: async (req, res) => {
         try {
-            const ListAllBinnacles = await Binnacle.find()
-            .populate({ path: 'assignment' })
-            res.status(200).json({ ListAllBinnacles  })
+            const ListAllBinnacles = await Binnacle.find().populate({
+                path: 'assignment',
+                populate: {
+                    path: 'apprentice',
+                    select: 'firstName lastName'
+                }
+            })
+            res.status(200).json({ ListAllBinnacles })
         } catch (error) {
             res.status(400).json({ error })
         }
@@ -59,6 +64,16 @@ const binnacleController = {
             const id = req.params.id;
             const newData = req.body
             const updatedBinnacle = await Binnacle.findByIdAndUpdate(id, newData, { new: true })
+            res.status(200).json({ updatedBinnacle })
+        } catch (error) {
+            res.status(400).json({ error })
+        }
+    },
+    putAddObservation: async (req, res) => {
+        try {
+            const id = req.params.id;
+            const observations = req.body.observations
+            const updatedBinnacle = await Binnacle.findByIdAndUpdate(id, { $push: { observations } }, { new: true })
             res.status(200).json({ updatedBinnacle })
         } catch (error) {
             res.status(400).json({ error })

@@ -5,7 +5,7 @@
         <q-td :props="scope">
           <div class="q-pa-md" align="center">
             <q-select outlined v-model="scope.row.status" style="width: 200px;" :options="options" label="Estado"
-              emit-value map-options @update:model-value="updateStatus($event, scope.row._id)" default="Ejecutada"/>
+              emit-value map-options @update:model-value="updateStatus($event, scope.row._id)" default="Ejecutada" />
           </div>
           <!-- <div>
             <strong v-if="scope.row.status === 1">Programado</strong>
@@ -27,8 +27,8 @@
       <template v-slot:body-cell-observations="scope">
         <q-td :props="scope">
           <div class="q-pa-md q-gutter-xs">
-            <q-btn round color="primary" icon="search"/>
-            <q-btn round color="primary" icon="add_circle_outline" />
+            <q-btn round color="primary" icon="search" @click="handleClick(scope.row._id)"/>
+            <q-btn round color="primary" icon="add_circle_outline" @click="handleClick(scope.row._id)"/>
           </div>
 
         </q-td>
@@ -67,6 +67,9 @@ const props = defineProps({
   },
   val: {
     type: String
+  },
+  onClickFunction: {
+    type: Function
   }
 });
 
@@ -86,5 +89,9 @@ const props = defineProps({
 // Manejador para la acción de activar/desactivar
 function updateStatus(status, row) {
   props.onUpdateStatus(status, row);
+}
+
+function handleClick(row) {
+  props.onClickFunction(row)
 }
 </script>
