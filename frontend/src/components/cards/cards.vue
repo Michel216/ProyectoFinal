@@ -1,11 +1,13 @@
 <template>
   <q-card class="my-card">
     <q-img :src="imageSrc" class="card-image">
-      <div class="text-subtitle2 absolute-top text-center" style="font-weight: bold; font-size: 15px; background-color: green;">{{ title }}
-      </div>
+     
     </q-img>
+    <div class="text-subtitle2 absolute-top text-center" style="font-weight: bold; font-size: 18px; background-color: green;  border-radius: 8px 8px 0 0; height: 50px; color: white; text-align: center; ">
+        <p style="margin-top: 15px">{{ title }}</p>
+      </div>
+    
     <q-card-section class="card-section">
-      <font-awesome-icon :icon="icon" class="icon" /> <!-- Agrega una clase para el ícono -->
       <q-btn id="btn" color="primary" clickable :to="buttonLink" v-ripple>
         {{ buttonText }}
       </q-btn>
@@ -14,8 +16,7 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue'; // Importa defineProps
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'; // Importa el componente
+import { defineProps } from 'vue';
 
 // Define las propiedades
 const props = defineProps({
@@ -23,9 +24,9 @@ const props = defineProps({
     type: String,
     default: 'USUARIOS',
   },
-  icon: {
-    type: Array,
-    required: true, // El ícono es requerido
+  imageSrc: {
+    type: String,
+    required: true, 
   },
   buttonLink: {
     type: String,
@@ -39,26 +40,30 @@ const props = defineProps({
 </script>
 
 <style scoped>
-.card-section {
-  display: flex;
-  flex-direction: column; /* Para apilar el ícono y el botón verticalmente */
-  align-items: center; /* Centrar el contenido horizontalmente */
-  text-align: center; /* Asegurarse de que el texto esté centrado */
+.card-image {
+  height: 150px; /* Ajusta la altura de la imagen a 120px o el valor que prefieras */
+
+  width: 200px;
+  align-items: center;
+  margin-top: 60px;
 }
 
-.icon {
-  margin-top: -40%;
-  font-size: 8em; /* Cambia el tamaño del ícono a lo que prefieras */
-  margin-bottom: 50px; /* Espacio entre el ícono y el botón */
+.card-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 16px; /* Espaciado para el contenido */
+  
 }
 
 #btn {
-  width: 55%;
+  width: 80%; /* Aumenté el tamaño del botón */
   border-radius: 5px;
+  margin-top: 8px; /* Añadí un margen superior */
 }
 
 #btn:hover {
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.493);
 }
-
 </style>

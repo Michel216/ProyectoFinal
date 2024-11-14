@@ -199,6 +199,12 @@ const columns = ref([
   { name: "index", label: "#", align: "center", field: 'index' },
   { name: "register", label: "Etapa Productiva Asignada", align: "center", field: "register" },
   { name: "number", label: "N° Seguimiento", align: "center", field: "number" },
+  {
+    name: "options",
+    label: "Estado",
+    align: "center",
+    field: "status"
+  },
   { name: "observations", label: "Observaciones", align: "center", field: "observations" },
   { name: "options", label: "Estado", align: "center", field: "status" },
   { name: "month", label: "Mes", align: "center", field: "month" }
@@ -414,4 +420,13 @@ h3 {
   margin-bottom: 0;
   font-weight: bold;
 }
+
+  .observation-box {
+    background-color: #f9f9f9; /* Fondo gris claro */
+
+    padding: 10px; /* Espaciado interno */
+    margin-bottom: 10px; /* Espaciado entre los cuadros */
+    border-radius: 8px; /* Bordes redondeados */
+
+  }
 </style>
