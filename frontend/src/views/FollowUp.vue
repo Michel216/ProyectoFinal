@@ -159,6 +159,7 @@ const columns = ref([
   { name: "observations", label: "Observaciones", align: "center", field: "observations" },
   { name: "add", label: "Añadir", align: "center", field: "add" },
   { name: "nextFollowup", label: "Próximo Seguimiento", align: "center", field: "nextFollowup" },
+  { name: "options", label: "Estado", align: "center", field: "status" },
   { name: "details", label: "Detalles", align: "center", field: "details" },
 ]);
 const options = ref([

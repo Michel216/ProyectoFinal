@@ -25,7 +25,7 @@
 import { ref } from 'vue';
 import Header from '../components/layouts/header.vue';
 import Menu from '../components/layouts/menu.vue';
-import Footer from '../components/layouts/Footer.vue';
+// import Footer from '../components/layouts/Footer.vue';
 import { useRoute } from 'vue-router';
 
 const leftDrawerOpen = ref(false);

@@ -1,34 +1,14 @@
 <template>
   <div class="q-pa-md q-gutter-md">
-    <q-btn
-  to="/home"
-  dense
-  unelevated
-  round
-  color="primary"
-  icon="arrow_back"
-  text-color="white"
-
-  class="iconExit"
-/>
+    <q-btn to="/home" dense unelevated round color="primary" icon="arrow_back" text-color="white" class="iconExit" />
     <h3 class="title-table">Bitacoras</h3>
     <hr id="hr" class="bg-green-9" />
 
-    <Btn :label="btnLabel" :onClickFunction="openModal" :loading="loading"    />
-    <binnacleTable
-      :title="title"
-      :columns="columns"
-      :rows="rows"
-      :options="options"
-      :onUpdateStatus="handleUpdateStatus"
-      :loading="loading"
-    />
-    <Modal
-      :isVisible="showModal"
-      @update:isVisible="showModal = $event"
-      :label="'DILIGENCIA LA INFORMACION'" 
-    >
-    <div class="q-pa-md" style="max-width: 600px">
+    <Btn :label="btnLabel" :onClickFunction="openModal" :loading="loading" />
+    <binnacleTable :title="title" :columns="columns" :rows="rows" :options="options"
+      :onUpdateStatus="handleUpdateStatus" :loading="loading" :val="true" />
+    <Modal :isVisible="showModal" @update:isVisible="showModal = $event" :label="'DILIGENCIA LA INFORMACION'">
+      <div class="q-pa-md" style="max-width: 600px">
         <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md" style="
             max-height: none;
             max-width: 100%;
@@ -37,80 +17,43 @@
            
             gap: 20px;
             border-radius: 50px;
-          "
->
-         
+          ">
 
-          <q-input
-            outlined
-            type="number"
-            v-model="num"
-            label="N° Bitacora"
-            lazy-rules
-            :rules="[ (val) => (val && val.length > 0) || 'Por favor, dígite el número de la bitácora' ]"
-          >
-          <template v-slot:prepend>
-    <q-icon name="123" />
-  </template>
-</q-input>
 
-          <q-input
-            outlined
-            v-model="document"
-            label="Documento"
-            lazy-rules
-            :rules="[ (val) => (val && val.length > 0) || 'Por favor, ingrese un documento' ]"
-          >
-          <template v-slot:prepend>
-    <q-icon name="description" /> 
-  </template>
-</q-input>
-          <q-select
-            outlined
-            v-model="assignment"
-            label="Seleccione un estado"
-            :options="options"
-            emit-value
-            map-options
-            clearable
-            use-input
-            input-debounce="0"
-            behavior="menu"
-            lazy-rules
-            :rules="[ (val) => (val && val.length > 0) || 'Por favor, seleccione un estado' ]"
-          >
-          
+          <q-input outlined type="number" v-model="num" label="N° Bitacora" lazy-rules
+            :rules="[(val) => (val && val.length > 0) || 'Por favor, dígite el número de la bitácora']">
+            <template v-slot:prepend>
+              <q-icon name="123" />
+            </template>
+          </q-input>
+
+          <q-input outlined v-model="document" label="Documento" lazy-rules
+            :rules="[(val) => (val && val.length > 0) || 'Por favor, ingrese un documento']">
+            <template v-slot:prepend>
+              <q-icon name="description" />
+            </template>
+          </q-input>
+          <q-select outlined v-model="assignment" label="Seleccione un estado" :options="options" emit-value map-options
+            clearable use-input input-debounce="0" behavior="menu" lazy-rules
+            :rules="[(val) => (val && val.length > 0) || 'Por favor, seleccione un estado']">
+
             <template v-slot:no-option>
               <q-item>
                 <q-item-section class="text-grey"> No results </q-item-section>
               </q-item>
             </template>
-           
+
 
           </q-select>
           <div class="q" style="display: flex; justify-content: center; align-items: center;">
-  <q-btn 
-    label="Guardar" 
-    type="submit"       
-    icon="save"
-    color="primary" 
-    :loading="loading" 
-  />
-  
-  <q-btn 
-    label="Cerrar" 
-    type="reset"     
-    icon="close"
-    flat 
-    class="q-ml-sm" 
-    v-close-popup 
-    style="
+            <q-btn label="Guardar" type="submit" icon="save" color="primary" :loading="loading" />
+
+            <q-btn label="Cerrar" type="reset" icon="close" flat class="q-ml-sm" v-close-popup style="
       background-color: white;
       color: black;
       box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
-    "
-  />
-</div>
+    " />
+          </div>
         </q-form>
       </div>
     </Modal>
@@ -144,51 +87,53 @@ let optionsInstructor = ref(["6704a1cb514834375739c7a0"]);
 const rows = ref([]);
 let columns = ref([
   {
+    name: "index",
+    label: "#",
+    align: "center",
+    field: 'index'
+  },
+  {
     name: "assignment",
-    label: "Etapa Productiva Asignada", 
+    label: "Etapa Productiva Asignada",
     align: "center",
     field: "assignment",
   },
   {
     name: "number",
-    label: "N° Bitácora",  
+    label: "N° Bitácora",
     align: "center",
     field: "number",
     sortable: true,
   },
   {
-    name: "status",
-    label: "Estado",  
+    name: "instructor",
+    label: "Instructor",
     align: "center",
-    field: "status",
+    field: "instructor"
+  },
+  {
+    name: "options",
+    label: "Estado",
+    align: "center",
+    field: "status"
   },
   {
     name: "observations",
-    label: "Observaciones",  
+    label: "Observaciones",
     align: "center",
     field: "observations",
   },
   {
-    name: "add",
-    label: "Añadir",  
+    name: "validateHours",
+    label: "Validar horas",
     align: "center",
-    field: "add",
-  },
-  {
-    name: "details",
-    label: "Detalles",  
-    align: "center",
-    field: "details",
+    field: "validateHours",
   },
 ]);
 
 
-// valida que el tipo de la bitácora sea de 1 a 4. Programado: 1, Ejecutado: 2, Pendiente: 3, Verificado: 4
+// valida que el tipo de la bitácora sea de 1 a 4. Programado: 1, Ejecutado: 2, Pendiente: 3, Verificado: 4// valida que el tipo de la bitácora sea de 1 a 4. Programado: 1, Ejecutado: 2, Pendiente: 3, Verificado: 4, Verificado técnico: 5, Verificado proyecto: 6
 let options = ref([
-  {
-    label: "Programado",
-    value: 1,
-  },
   {
     label: "Ejecutado",
     value: 2,
@@ -201,6 +146,14 @@ let options = ref([
     label: "Verificado",
     value: 4,
   },
+  {
+    label: "Verificado técnico",
+    value: 5,
+  },
+  {
+    label: "Verificado proyecto",
+    value: 6,
+  },
 ]);
 
 onBeforeMount(() => {
@@ -211,7 +164,10 @@ async function bring() {
   try {
     let data = await getData("/binnacles/listallbinnacles");
     console.log(data);
-    rows.value = data.ListAllBinnacles;
+    rows.value = data.ListAllBinnacles.map((item, idx) => ({
+      ...item,
+      index: idx + 1, // Añade el índice manualmente
+    }));
   } catch (error) {
     console.log(error);
   }
@@ -306,6 +262,7 @@ async function filterAssignment(val, update) {
 
   align-items: center;
 }
+
 .title-table {
   text-align: center;
   margin-bottom: 0;

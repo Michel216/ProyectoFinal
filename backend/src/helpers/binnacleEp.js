@@ -28,10 +28,10 @@ const binnacleHelper = {
             return true
         }
     },
-    // valida que el tipo de la bitácora sea de 1 a 4. Programado: 1, Ejecutado: 2, Pendiente: 3, Verificado: 4
+    // valida que el tipo de la bitácora sea de 1 a 4. Programado: 1, Ejecutado: 2, Pendiente: 3, Verificado: 4, Verificado técnico: 5, Verificado proyecto: 6
     validateStatus: (status) => {
-        if (status < 1 || status > 4) {
-            throw new Error("El número de la bitácora debe ser de 1 a 4")
+        if (status < 1 || status > 6) {
+            throw new Error("El número de la bitácora debe ser de 1 a 6")
         } else {
             return true
         }

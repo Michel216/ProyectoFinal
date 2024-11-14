@@ -105,6 +105,13 @@ const cards = [
     rol: [, "ADMIN"],
   },
   {
+    title: "Instructores",
+    buttonLink: "/Instructors",
+    buttonText: "Ver",
+    icon: ["fas", "chart-line"], 
+    rol: [, "ADMIN"],
+  },
+  {
     title: "Modalidades",
     buttonLink: "/modality",
     buttonText: "Ver",
