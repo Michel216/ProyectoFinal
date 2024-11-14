@@ -206,7 +206,6 @@ const columns = ref([
     field: "status"
   },
   { name: "observations", label: "Observaciones", align: "center", field: "observations" },
-  { name: "options", label: "Estado", align: "center", field: "status" },
   { name: "month", label: "Mes", align: "center", field: "month" }
 ]);
 
