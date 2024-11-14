@@ -10,6 +10,7 @@ const assignmentController = {
             .populate({path: "followInstructor"})
             .populate({path:"technicalInstructor"})
             .populate({path:"proyectInstructor"})
+            .populate({path:"apprentice"})
             .exec();
             res.json({assignments});
         } catch (error) {

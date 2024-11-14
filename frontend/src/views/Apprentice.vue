@@ -1,28 +1,14 @@
 <template>
   <div class="q-pa-md q-gutter-md">
     <router-link to="/home" class="iconExit" style="display: flex; text-decoration: none;">
-  <q-btn dense unelevated round color="primary" icon="arrow_back" text-color="white" />
-</router-link>
+      <q-btn dense unelevated round color="primary" icon="arrow_back" text-color="white" />
+    </router-link>
     <h3 class="title-table">Aprendices</h3>
     <hr id="hr" class="bg-green-9" />
-    <Btn
-      :label="btnLabel"
-      :onClickFunction="bringIdAndOpenModal"
-      :loading="loading"
-    />
-    <apprenticeTable
-      :title="title"
-      :rows="rows"
-      :columns="columns"
-      :onToggleActivate="handleToggleActivate"
-      :loading="loading"
-      :onClickEdit="bringIdAndOpenModal"
-    />
-    <Modal
-      :isVisible="showModal"
-      @update:isVisible="showModal = $event"
-      :label="'CREAR APRENDIZ SENA'"
-    >
+    <Btn :label="btnLabel" :onClickFunction="bringIdAndOpenModal" :loading="loading" />
+    <apprenticeTable :title="title" :rows="rows" :columns="columns" :onToggleActivate="handleToggleActivate"
+      :loading="loading" :onClickEdit="bringIdAndOpenModal" />
+    <Modal :isVisible="showModal" @update:isVisible="showModal = $event" :label="'CREAR APRENDIZ SENA'">
       <div class="q-pa-md" style="max-width: 600px">
         <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md" style="
           display: grid;
@@ -34,123 +20,58 @@
   width: 100vw;
   margin: auto">
 
-          <q-select
-            outlined
-            v-model="fiche"
-            label="Ficha"
-            :options="optionsIdFiche"
-            lazy-rules
-            :rules="[
-              (val) =>
-                (val && val.length > 0) ||
-                'Por favor, dígite el código de la ficha',
-            ]"
-          />
-        
-          <q-input
-            outlined
-            v-model="firstName"
-            label="Nombres Aprendiz"
-            lazy-rules
-            :rules="[
-              (val) =>
-                (val && val.length > 0) ||
-                'Por favor, dígite el nombre del aprendiz',
-            ]"
-          />
-          <q-input
-            outlined
-            v-model="lastName"
-            label="Apellidos Aprendiz"
-            lazy-rules
-            :rules="[
-              (val) =>
-                (val && val.length > 0) ||
-                'Por favor, dígite el apellido del aprendiz',
-            ]"
-          />
-       
-          <q-input
-            outlined
-            v-model="institutionalEmail"
-            label="Email institucional"
-            lazy-rules
-            :rules="[
-              (val) =>
-                (val && val.length > 0) ||
-                'Por favor, dígite el correo personal del aprendiz',
-            ]"
-          />
-          <q-input
-            outlined
-            v-model="personalEmail"
-            label="Email personal"
-            lazy-rules
-            :rules="[
-              (val) =>
-                (val && val.length > 0) ||
-                'Por favor, dígite el correo personal del aprendiz',
-            ]"
-          />
-          <q-input
-            outlined
-            type="number"
-            v-model="phone"
-            label="Teléfono"
-            lazy-rules
-            :rules="[
-              (val) =>
-                (val && val.length > 0) ||
-                'Por favor, dígite el teléfono del aprndiz',
-            ]"
-          />
-          <q-select
-            outlined
-            v-model="tpDoc"
-            label="Tipo de documento"
-            :options="optionsTpDoc"
-            emit-value
-            map-options
-            lazy-rules
-            :rules="[
+          <q-select outlined v-model="fiche" label="Ficha" :options="optionsIdFiche" lazy-rules :rules="[
+            (val) =>
+              (val && val.length > 0) ||
+              'Por favor, dígite el código de la ficha',
+          ]" />
+
+          <q-input outlined v-model="firstName" label="Nombres Aprendiz" lazy-rules :rules="[
+            (val) =>
+              (val && val.length > 0) ||
+              'Por favor, dígite el nombre del aprendiz',
+          ]" />
+          <q-input outlined v-model="lastName" label="Apellidos Aprendiz" lazy-rules :rules="[
+            (val) =>
+              (val && val.length > 0) ||
+              'Por favor, dígite el apellido del aprendiz',
+          ]" />
+
+          <q-input outlined v-model="institutionalEmail" label="Email institucional" lazy-rules :rules="[
+            (val) =>
+              (val && val.length > 0) ||
+              'Por favor, dígite el correo personal del aprendiz',
+          ]" />
+          <q-input outlined v-model="personalEmail" label="Email personal" lazy-rules :rules="[
+            (val) =>
+              (val && val.length > 0) ||
+              'Por favor, dígite el correo personal del aprendiz',
+          ]" />
+          <q-input outlined type="number" v-model="phone" label="Teléfono" lazy-rules :rules="[
+            (val) =>
+              (val && val.length > 0) ||
+              'Por favor, dígite el teléfono del aprndiz',
+          ]" />
+          <q-select outlined v-model="tpDoc" label="Tipo de documento" :options="optionsTpDoc" emit-value map-options
+            lazy-rules :rules="[
               (val) =>
                 (val && val.length > 0) ||
                 'Por favor, dígite el tipo de documento',
-            ]"
-          />
-          <q-input
-            outlined
-            type="number"
-            v-model="numDoc"
-            label="Número de documento"
-            lazy-rules
-            :rules="[
-              (val) =>
-                (val && val.length > 0) ||
-                'Por favor, dígite el número de documento',
-            ]"
-          />
-         
-       
-         
-          <q-select
-            outlined
-            v-model="modality"
-            label="Modalidad Etapa Productiva"
-            :options="optionsModality"
-            emit-value
-            map-options
-            clearable
-            use-input
-            input-debounce="0"
-            behavior="menu"
-            @filter="filterModality"
-            lazy-rules
+            ]" />
+          <q-input outlined type="number" v-model="numDoc" label="Número de documento" lazy-rules :rules="[
+            (val) =>
+              (val && val.length > 0) ||
+              'Por favor, dígite el número de documento',
+          ]" />
+
+
+
+          <q-select outlined v-model="modality" label="Modalidad Etapa Productiva" :options="optionsModality" emit-value
+            map-options clearable use-input input-debounce="0" behavior="menu" @filter="filterModality" lazy-rules
             :rules="[
               (val) =>
                 (val && val.length > 0) || 'Por favor, dígite la modalidad',
-            ]"
-          >
+            ]">
             <template v-slot:no-option>
               <q-item>
                 <q-item-section class="text-grey"> No results </q-item-section>
@@ -158,29 +79,15 @@
             </template>
           </q-select>
           <div class="q" style="display: flex; justify-content: center; align-items: center;">
- 
-</div>
-<q-btn 
-    label="Guardar" 
-    type="submit"       
-    icon="save"
-    color="primary" 
-    :loading="loading" 
-  />
-  
-  <q-btn 
-    label="Cerrar" 
-    type="reset"     
-    icon="close"
-    flat 
-    class="q-ml-sm" 
-    v-close-popup 
-    style="
+
+          </div>
+          <q-btn label="Guardar" type="submit" icon="save" color="primary" :loading="loading" />
+
+          <q-btn label="Cerrar" type="reset" icon="close" flat class="q-ml-sm" v-close-popup style="
       background-color: white;
       color: black;
       box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
-    "
-  />
+    " />
         </q-form>
       </div>
     </Modal>
@@ -224,7 +131,7 @@ let optionsTpDoc = ref([
 let optionsIdFiche = ref(["671016f171e7d8e0b4b7cf5b"]);
 let optionsModality = ref([]);
 const columns = ref([
-{
+  {
     name: "firstName",
     label: "Nombre Aprendiz",
     align: "center",
@@ -282,22 +189,23 @@ onBeforeMount(() => {
   bring();
 });
 
-async function onSearch() {
-  loading.value = true;
-  try {
-    let response = await getData(`/apprentice/searchapprentice?term=${searchTerm.value}`);
-    console.log(response);
+// async function onSearch() {
+//   loading.value = true;
+//   try {
+//     let response = await getData(`/apprentice/searchapprentice?term=${searchTerm.value}`);
+//     console.log(response);
 
-    rows.value = response.results.map((apprentice) => ({
-      ...apprentice,
-      modality: apprentice.modality.name,
-    }));
-  } catch (error) {
-    console.log(error);
-  } finally {
-    loading.value = false;
-  }
-}
+//     rows.value = response.results.map((apprentice) => ({
+//       ...apprentice,
+//       firstName: (apprentice.firstName + " " + apprentice.lastName),
+//       modality: apprentice.modality.name,
+//     }));
+//   } catch (error) {
+//     console.log(error);
+//   } finally {
+//     loading.value = false;
+//   }
+// }
 
 async function bring() {
   loading.value = true;
@@ -307,6 +215,7 @@ async function bring() {
     rows.value = url.listApprentice.map((apprentice) => {
       return {
         ...apprentice,
+        firstName: (apprentice.firstName + " " + apprentice.lastName),
         modality: apprentice.modality.name,
       };
     });
@@ -457,9 +366,10 @@ async function filterModality(val, update) {
   text-align: center;
   margin-bottom: 0;
 }
+
 h3 {
   text-align: center;
   margin-bottom: 0;
-  font-weight: bold;
+  font-weight: bold;
 }
 </style>

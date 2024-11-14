@@ -18,12 +18,12 @@
           <q-btn class="q-pa-sm" v-else @click="toggleActivate(scope.row._id, scope.row.status)">✅</q-btn>
         </q-td>
       </template>
-      <!-- <template v-slot:body-cell-status="scope">
+      <template v-slot:body-cell-status="scope">
         <q-td :props="scope">
           <strong style="color: green" v-if="scope.row.status === 1">Activo</strong>
           <strong style="color: red" v-else>Inactivo</strong>
         </q-td>
-      </template> -->
+      </template>
     </q-table>
   </div>
 </template>

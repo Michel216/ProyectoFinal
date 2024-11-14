@@ -5,7 +5,7 @@ const register = {
     listallregister: async (req, res) => {
         try {
             const register = await Register.find()
-                // .populate({ path: 'apprentice' })
+                .populate({ path: 'apprentice' })
                 .populate({ path: 'modality' })
                 .exec();
             res.json({ register });
@@ -116,7 +116,7 @@ getlistregisterbystartdate: async (req, res) => {
 
     postaddregister: async (req, res) => {
         try {
-            const { apprentice, modality, startDate, endDate, company, phonecompany, addresscompany, owner, docAlternative, hour, businnessProyectHour,assignment, certificationDoc } = req.body;
+            const { apprentice, modality, startDate, endDate, company, phonecompany, addresscompany, owner, docAlternative, hour, businessProyectHour,assignment, certificationDoc, judymentPhoto } = req.body;
 
             const newregister = new Register({
                 apprentice,
@@ -128,7 +128,11 @@ getlistregisterbystartdate: async (req, res) => {
                 addresscompany,
                 owner,
                 docAlternative,
-                hour
+                hour,
+                businessProyectHour,
+                assignment,
+                certificationDoc,
+                judymentPhoto
             });
 
             await newregister.save();

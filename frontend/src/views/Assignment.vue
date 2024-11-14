@@ -152,40 +152,40 @@ let idAssignment = ref();
 const columns = ref([
   { name: "register", label: "N°", align: "center", field: "register" },
   {
-    name: "technicalInstructor",
+    name: "apprentice",
     label: "NOMBRE APRENDIZ",
+    align: "center",
+    field: "apprentice",
+  },
+  {
+    name: "fiche",
+    label: "PROGRAMA",
+    align: "center",
+    field: "fiche",
+  },
+  {
+    name: "modality",
+    label: "MODALIDAD",
+    align: "center",
+    field: "modality",
+  },
+  {
+    name: "followUpInstructor",
+    label: "INS. SEGUIMIENTO",
+    align: "center",
+    field: "followUpInstructor",
+  },
+  {
+    name: "technicalInstructor",
+    label: "INS. TÉCNICO",
     align: "center",
     field: "technicalInstructor",
   },
   {
-    name: "proyectInstructor",
-    label: "PROGRAMA",
-    align: "center",
-    field: "proyectInstructor",
-  },
-  {
-    name: "certificationdoc",
-    label: "MODALIDAD",
-    align: "center",
-    field: "certificationdoc",
-  },
-  {
-    name: "judymenthphoto",
-    label: "INS. SEGUIMIENTO",
-    align: "center",
-    field: "judymenthphoto",
-  },
-  {
-    name: "",
-    label: "INS. TÉCNICO",
-    align: "center",
-    field: "",
-  },
-  {
-    name: "",
+    name: "projectInstructor",
     label: "INS. PROYECTO",
     align: "center",
-    field: "",
+    field: "projectInstructor",
   },
 ]);
 
@@ -195,12 +195,17 @@ onBeforeMount(() => {
 
 async function bring() {
   try {
-    let data = await getData("/assignment/listallassignment");
+    let data = await getData("/register/listallregister");
     console.log(data); // Asegúrate de que `data.assignments` exista
-    rows.value = data.assignments.map((assignment) => {
+    rows.value = data.register.map((register) => {
       return {
-        ...assignment,
-        register: assignment.register.apprentice,
+        ...register,
+        apprentice: (register.apprentice.firstName + " " + register.apprentice.lastName),
+        register: register.register.apprentice,
+        modality: register.modality.name,
+        projectInstructor: register.assignment.projectInstructor,
+        technicalInstructor: register.assignment.technicalInstructor,
+        followUpInstructor: register.assignment.followUpInstructor,
       };
     });
   } catch (error) {
