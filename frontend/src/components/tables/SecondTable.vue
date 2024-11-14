@@ -27,8 +27,8 @@
       <template v-slot:body-cell-observations="scope">
         <q-td :props="scope">
           <div class="q-pa-md q-gutter-xs">
-            <q-btn round color="primary" icon="search" @click="handleClick(scope.row._id)"/>
-            <q-btn round color="primary" icon="add_circle_outline" @click="handleClick(scope.row._id)"/>
+            <q-btn round color="primary" icon="search" @click="handleClick(scope.row._id, true)"/>
+            <q-btn round color="primary" icon="add_circle_outline" @click="handleClick(scope.row._id, false)"/>
           </div>
 
         </q-td>
@@ -91,7 +91,7 @@ function updateStatus(status, row) {
   props.onUpdateStatus(status, row);
 }
 
-function handleClick(row) {
-  props.onClickFunction(row)
+function handleClick(row, change) {
+  props.onClickFunction(row, change)
 }
 </script>

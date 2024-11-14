@@ -31,7 +31,14 @@ const followUpHelper = {
             throw new Error("El estado debe ser 1, 2,3,4");
         }
         return true;
-    }
+    },
+    validateNumber: (number) => {
+        if (number < 1 || number > 3) {
+            throw new Error("El número del seguimiento debe ser de 1 a 3")
+        } else {
+            return true
+        }
+    },
 }
 
 module.exports = followUpHelper;

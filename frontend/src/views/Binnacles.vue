@@ -20,9 +20,9 @@
             border-radius: 50px;
           ">
 
-          <q-select outlined v-model="assignment" label="Seleccione una asignación" :options="optionsAssignment" emit-value map-options
-            clearable use-input input-debounce="0" behavior="menu" @filter="filterAssignment" lazy-rules
-            :rules="[(val) => (val && val.length > 0) || 'Por favor, seleccione una asignación']">
+          <q-select outlined v-model="assignment" label="Seleccione una asignación" :options="optionsAssignment"
+            emit-value map-options clearable use-input input-debounce="0" behavior="menu" @filter="filterAssignment"
+            lazy-rules :rules="[(val) => (val && val.length > 0) || 'Por favor, seleccione una asignación']">
 
             <template v-slot:no-option>
               <q-item>
@@ -33,9 +33,9 @@
 
           </q-select>
 
-          <q-select outlined v-model="instructor" label="Seleccione un instructor" :options="optionsInstructor" emit-value map-options
-            clearable lazy-rules
-            :rules="[(val) => (val && val.length > 0) || 'Por favor, seleccione un instructor']">
+          <q-select outlined v-model="instructor" label="Seleccione un instructor" :options="optionsInstructor"
+            emit-value map-options clearable use-input input-debounce="0" behavior="menu" @filter="filterInstructor"
+            lazy-rules :rules="[(val) => (val && val.length > 0) || 'Por favor, seleccione un instructor']">
 
             <template v-slot:no-option>
               <q-item>
@@ -86,7 +86,7 @@
     <Modal :isVisible="showModalObservations" @update:isVisible="showModalObservations = $event"
       :label="'OBSERVACIONES'">
       <div class="q-pa-md" style="max-width: 600px">
-        <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md" style="
+        <q-form v-if="!change" @submit="onSubmitObservation" @reset="onReset" class="q-gutter-md" style="
             max-height: none;
             max-width: 100%;
             width: 100vw;
@@ -95,11 +95,56 @@
             gap: 20px;
             border-radius: 50px;
           ">
-          <q-card class="bg-grey-9 text-white shadow-2 rounded-borders" style="max-width: 250px; width: 100%;">
-            {{ listObservations }}
-          </q-card>
+          <q-input outlined v-model="observation" label="Observación" lazy-rules
+            :rules="[(val) => (val && val.length > 0) || 'Por favor, ingrese una observación']" />
+
+          <q-select outlined v-model="user" label="Seleccione un usuario" :options="optionsInstructor" emit-value
+            map-options clearable use-input input-debounce="0" behavior="menu" @filter="filterInstructor" lazy-rules
+            :rules="[(val) => (val && val.length > 0) || 'Por favor, seleccione un usuario']">
+
+            <template v-slot:no-option>
+              <q-item>
+                <q-item-section class="text-grey"> No results </q-item-section>
+              </q-item>
+            </template>
+
+
+          </q-select>
+          <q-input outlined v-model="observationDate" label="Fecha de observación" mask="date"
+            :rules="[val => val && val.length > 0 || 'Por favor, ingrese la fecha de la observación']">
+            <template v-slot:append>
+              <q-icon name="event" class="cursor-pointer">
+                <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                  <q-date v-model="observationDate" today-btn>
+                    <div class="row items-center justify-end">
+                      <q-btn v-close-popup label="Close" color="primary" flat />
+                    </div>
+                  </q-date>
+                </q-popup-proxy>
+              </q-icon>
+            </template>
+          </q-input>
           <div class="q" style="display: flex; justify-content: center; align-items: center;">
             <q-btn label="Guardar" type="submit" icon="save" color="primary" :loading="loading" />
+
+            <q-btn label="Cerrar" type="reset" icon="close" flat class="q-ml-sm" v-close-popup style="
+      background-color: white;
+      color: black;
+      box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
+    " />
+          </div>
+        </q-form>
+        <q-form v-if="change" @submit="onSubmitObservation" @reset="onReset" class="q-gutter-md" style="
+            max-height: none;
+            max-width: 100%;
+            width: 100vw;
+            margin: auto;
+           
+            gap: 20px;
+            border-radius: 50px;
+          ">
+          <p>{{ listObservations }}</p>
+          <div class="q" style="display: flex; justify-content: center; align-items: center;">
 
             <q-btn label="Cerrar" type="reset" icon="close" flat class="q-ml-sm" v-close-popup style="
       background-color: white;
@@ -126,6 +171,7 @@ import {
 } from "../composables/Notify";
 
 let loading = ref(false);
+let change = ref()
 let title = "Bitácoras";
 let btnLabel = "Crear ";
 let assignment = ref("");
@@ -134,12 +180,13 @@ let numBinnacle = ref("");
 let document = ref("");
 let observation = ref("");
 let observationDate = ref("");
+let user = ref("")
 let listObservations = ref("")
+let idBinnacle = ref("")
 const showModalCreate = ref(false);
 const showModalObservations = ref(false);
-// const showModalCreateObs = ref(false);
 let optionsAssignment = ref();
-let optionsInstructor = ref(["6704a1cb514834375739c7a0"]);
+let optionsInstructor = ref();
 const rows = ref([]);
 let columns = ref([
   {
@@ -190,7 +237,7 @@ let columns = ref([
 
 // valida que el tipo de la bitácora sea de 1 a 4. Programado: 1, Ejecutado: 2, Pendiente: 3, Verificado: 4// valida que el tipo de la bitácora sea de 1 a 4. Programado: 1, Ejecutado: 2, Pendiente: 3, Verificado: 4, Verificado técnico: 5, Verificado proyecto: 6
 let options = ref([
-{
+  {
     label: "Programado",
     value: 1,
   },
@@ -224,9 +271,12 @@ async function bring() {
   try {
     let data = await getData("/binnacles/listallbinnacles");
     console.log(data);
+    // let instructors = await getData('http://89.116.49.65:4500/api/instructors');
+    
     rows.value = data.ListAllBinnacles.map((item, idx) => ({
       ...item,
       assignment: (item.assignment.apprentice.firstName + ' ' + item.assignment.apprentice.lastName),
+      // instructor: instructors.find((i), i.id === item.instructor).name,
       index: idx + 1,
     }));
   } catch (error) {
@@ -287,14 +337,42 @@ function openModalCreate() {
   showModalCreate.value = true;
 }
 
-async function openModalObservations(row) {
-  showModalObservations.value = true;
+async function onSubmitObservation() {
+  loading.value = true
   try {
-    let data = await getData(`/binnacles/listbinnaclesbyid/${row}` );
+    let data = {
+      observations: [
+        {
+          observation: observation.value,
+          observationDate: observationDate.value,
+          user: user.value
+        }
+      ]
+    }
+    let url = await putData(`/binnacles/addobservation/${idBinnacle.value}`, data)
+    notifySuccessRequest("Observación guardada exitosamente");
+    showModalObservations.value = false;
+    bring();
+    onReset();
+  } catch (error) {
+    console.log(error);
+    notifyErrorRequest(error?.response?.data?.errors?.[0]?.msg || "Error desconocido");
+  } finally {
+    loading.value = false
+  }
+}
+
+async function openModalObservations(id, changes) {
+  showModalObservations.value = true;
+  idBinnacle.value = id
+  change.value = changes
+
+  try {
+    let data = await getData(`/binnacles/listbinnaclesbyid/${id}`);
     console.log(data);
     listObservations.value = data.listBinnacleById.observations
     console.log(listObservations.value);
-    
+
   } catch (error) {
     console.log(error);
   }
@@ -322,6 +400,29 @@ async function filterAssignment(val, update) {
         label: assignment.apprentice.numDocument,
         value: assignment._id,
       }))
+      .filter((option) => option.label.toLowerCase().includes(needle));
+  });
+}
+
+async function filterInstructor(val, update) {
+  let instructor = await getData('http://89.116.49.65:4500/api/instructors');
+  console.log(instructor);
+  if (val === "") {
+    update(() => {
+      optionsInstructor.value = instructor.map((instructor) => ({
+        label: instructor.name,
+        value: instructor._id,
+      }));
+    });
+    return;
+  }
+
+  update(() => {
+    const needle = val.toLowerCase();
+    optionsInstructor.value = instructor.map((instructor) => ({
+      label: instructor.name,
+      value: instructor._id,
+    }))
       .filter((option) => option.label.toLowerCase().includes(needle));
   });
 }

@@ -4,9 +4,13 @@ const followupController = {
     // Listar todos los seguimientos
     getListAllFollowup: async (req, res) => {
         try {
-            const listallFollowup = await Followup.find()
-            // .populate({ path: 'assignment' })
-            // .exec();
+            const listallFollowup = await Followup.find().populate({
+                path: 'assignment',
+                populate: {
+                    path: 'apprentice',
+                    select: 'firstName lastName'
+                }
+            })
             res.status(200).json({ listallFollowup });
         } catch (error) {
             res.status(400).json({ error });
@@ -41,7 +45,7 @@ const followupController = {
         } catch (error) {
             res.status(400).json({ error });
         }
-    }, 
+    },
     // Añadir seguimiento
     postAddFollowup: async (req, res) => {
         try {
@@ -72,6 +76,16 @@ const followupController = {
         } catch (error) {
             console.error(error);
             res.status(400).json({ error });
+        }
+    },
+    putAddObservation: async (req, res) => {
+        try {
+            const id = req.params.id;
+            const observations = req.body.observations
+            const updatedBinnacle = await Followup.findByIdAndUpdate(id, { $push: { observations } }, { new: true })
+            res.status(200).json({ updatedBinnacle })
+        } catch (error) {
+            res.status(400).json({ error })
         }
     },
     // modifica el estado de la bitácora
