@@ -46,12 +46,23 @@ binnacleRoutes.post("/addbinnacles", [
     check('number').custom(binnacleHelper.validateNumber),
     check('status').optional().custom(binnacleHelper.validateStatus),
     check('document', 'El documento es obligatorio').notEmpty(),
+    // check('observations', 'Las observaciones son obligatorias').notEmpty(),
+    // check('observations.*.observation', 'Cada observación es obligatoria').notEmpty(),
+    // check('observations.*.user', 'El usuario en cada observación es obligatorio y debe ser un ID de MongoDB válido').notEmpty().isMongoId(),
+    // check('observations.*.observationDate', 'La fecha en cada observación es obligatoria y debe ser una fecha válida').notEmpty(),
+    validateFields
+], binnacleController.postAddBinnacle)
+
+binnacleRoutes.put("/addobservation/:id", [
+    // validateJWT,
+    check('id', 'El id es obligatorio y debe ser un ID de MongoDB válido').notEmpty().isMongoId(),
+    check('id').custom(binnacleHelper.validateId),
     check('observations', 'Las observaciones son obligatorias').notEmpty(),
     check('observations.*.observation', 'Cada observación es obligatoria').notEmpty(),
     check('observations.*.user', 'El usuario en cada observación es obligatorio y debe ser un ID de MongoDB válido').notEmpty().isMongoId(),
     check('observations.*.observationDate', 'La fecha en cada observación es obligatoria y debe ser una fecha válida').notEmpty(),
     validateFields
-], binnacleController.postAddBinnacle)
+], binnacleController.putAddObservation)
 
 binnacleRoutes.put("/updatestatus/:id/:status", [
     // validateJWT,

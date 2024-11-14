@@ -150,7 +150,12 @@ const text = ref('')
 let change = ref(); // true: crear, false: modificar
 let idAssignment = ref();
 const columns = ref([
-  { name: "register", label: "N°", align: "center", field: "register" },
+{
+    name: "index",
+    label: "#",
+    align: "center",
+    field: 'index'
+  },
   {
     name: "apprentice",
     label: "NOMBRE APRENDIZ",
@@ -197,15 +202,17 @@ async function bring() {
   try {
     let data = await getData("/register/listallregister");
     console.log(data); // Asegúrate de que `data.assignments` exista
-    rows.value = data.register.map((register) => {
+    rows.value = data.register.map((register, idx) => {
       return {
         ...register,
         apprentice: (register.apprentice.firstName + " " + register.apprentice.lastName),
-        register: register.register.apprentice,
+        fiche: register.apprentice.fiche,
+        // register: register.register.apprentice,
         modality: register.modality.name,
-        projectInstructor: register.assignment.projectInstructor,
-        technicalInstructor: register.assignment.technicalInstructor,
-        followUpInstructor: register.assignment.followUpInstructor,
+        projectInstructor: register.assignment.map(assign => assign.projectInstructor).join(", "),
+    technicalInstructor: register.assignment.map(assign => assign.technicalInstructor).join(", "),
+    followUpInstructor: register.assignment.map(assign => assign.followUpInstructor).join(", "),
+        index: idx + 1, // Añade el índice manualmente
       };
     });
   } catch (error) {
