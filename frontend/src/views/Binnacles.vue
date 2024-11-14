@@ -391,7 +391,7 @@ async function openModalObservations(id, changes) {
   change.value = changes
 
   try {
-    let data = await getData(`/binnacles/listbinnaclesbyid/${row}`);
+    let data = await getData(`/binnacles/listbinnaclesbyid/${id}`);
     console.log(data);
     listObservations.value = data.listBinnacleById.observations
     console.log(listObservations.value);

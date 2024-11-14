@@ -25,36 +25,13 @@
         </q-td>
       </template>
       <template v-slot:body-cell-observations="scope">
-<!-- <<<<<<< HEAD
-  <q-td :props="scope">
-    <div class="q-pa-md q-gutter-xs">
-      <!-- Botón para ver observaciones 
-      <q-btn 
-        round 
-        color="primary" 
-        icon="search" 
-        @click="handleClick(scope.row._id, true)" 
-      />
-      <!-- Botón para agregar observación 
-      <q-btn 
-        round 
-        color="primary" 
-        icon="add_circle_outline" 
-        @click="handleClick(scope.row._id, false)" 
-      />
-    </div>
-  </q-td>
-</template>
--->
         <q-td :props="scope">
           <div class="q-pa-md q-gutter-xs">
-            <q-btn round color="primary" icon="search" @click="handleClick(scope.row._id)"/>
-            <q-btn round color="primary" icon="add_circle_outline" @click="handleClick(scope.row._id)"/>
+            <q-btn round color="primary" icon="search" @click="handleClick(scope.row._id, true)" />
+            <q-btn round color="primary" icon="add_circle_outline" @click="handleClick(scope.row._id, false)" />
           </div>
-
         </q-td>
       </template>
-<!-- >>>>>>> 2bb3d3b695f599f9c6863ac1a77111c9d83b0ff0 -->
     </q-table>
   </div>
 </template>
@@ -115,13 +92,16 @@ function updateStatus(status, row) {
   props.onUpdateStatus(status, row);
 }
 
-const emit = defineEmits(['openModal']);
+function handleClick(row, change) {
+  props.onClickFunction(row, change) // Emite el evento al componente padre
+}
+// const emit = defineEmits(['openModal']);
 
-// Función para abrir el modal con la observación seleccionada
-function openModalWithObservation(observation) {
-  emit('openModal', observation); // Emite el evento al componente padre
-}
-function openAddModal(row) {
-  emit('openModal'); // Emite el evento al componente padre
-}
+// // Función para abrir el modal con la observación seleccionada
+// function openModalWithObservation(observation) {
+//   emit('openModal', observation); // Emite el evento al componente padre
+// }
+// function openAddModal(row) {
+//   emit('openModal'); // Emite el evento al componente padre
+// }
 </script>
