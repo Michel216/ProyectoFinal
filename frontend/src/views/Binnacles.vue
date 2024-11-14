@@ -166,6 +166,7 @@ async function bring() {
     console.log(data);
     rows.value = data.ListAllBinnacles.map((item, idx) => ({
       ...item,
+      // apprentice: (register.apprentice.firstName + ' ' + register.apprentice.lastName),
       index: idx + 1, // Añade el índice manualmente
     }));
   } catch (error) {

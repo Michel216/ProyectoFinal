@@ -1,78 +1,120 @@
 <template>
-    <div class="q-pa-md q-gutter-md">
-        <router-link
-      to="/home"
-      class="iconExit"
-      style="display: flex; text-decoration: none"
-    >
-      <q-btn
-        dense
-        unelevated
-        round
-        color="primary"
-        icon="arrow_back"
-        text-color="white"
-      />
-    </router-link>
+  <div class="q-pa-md q-gutter-md">
+
       <h3 class="title-table">Fichas</h3>
       <hr id="hr" class="bg-green-9" />
-      
-      <fichesTable
-        :title="title"
-        :columns="columns"
-        :rows="rows"
-      />
-    </div>
-  </template>
-  
-  <script setup>
-  import { ref, onBeforeMount } from "vue";
-  import { getData } from "../services/apiClient.js";
-  import fichesTable from "../components/tables/SecondTable.vue";
 
-  
-  let title = "fichas";
-  let btnLabel = "Crear";
-  const rows = ref([]);
-  const columns = [
-  { name: "name", align: "center", label: "Nombre ficha", field: "name", sortable: true },
-  { name: "codeFicha", align: "center", label: "Cod/Ficha", field: "codeFicha" },
-  { name: 'status', label: 'ESTADO', align: 'center', field: 'status' },
-  { name: "viewStudents", align: "center", label: "Ver aprendices", field: "viewStudents" },
-];
+      <binnacleTable
+:title="title"
+:columns="columns"
+:rows="rows"
+:options="options"
+:onUpdateStatus="handleUpdateStatus"
+:loading="loading"
+>
+<!-- Scoped slot para la columna 'apprentice' -->
+<template v-slot:body-cell-apprentice="props">
+  <q-td :props="props" align="center">
+    <Btn
+      icon="fa-eye"
+      color="primary"
+      @click="handleViewApprentices(props.row)"
+      label="Ver"
+    />
+  </q-td>
+</template>
+</binnacleTable>
+  </div>
+</template>
 
-  onBeforeMount(() => {
-    bring();
-  });
-  
-  async function bring() {
-  
-  }
-  
-  function openModal() {
+<script setup>
+import { ref, onBeforeMount } from "vue";
+import { useRouter } from 'vue-router';
+import { getDataRepfora } from "../services/apiRepfora.js";
+import binnacleTable from "../components/tables/SecondTable.vue";
+import Btn from "../components/buttons/Button.vue";
+import Modal from "../components/modals/Modal.vue";
+"../composables/Notify";
 
+let loading = ref(false);
+let title = "Fichas";
+let btnLabel = "Crear ";
+import { useAuthStore } from '../store/useAuth.js';
+
+const router = useRouter();
+const authStore = useAuthStore();
+const rows = ref([]);
+let columns = ref([
+  {
+      name: "name",
+      label: "NOMBRE FICHA",
+      align: "center",
+      field: "name",
+  },
+  {
+      name: "code",
+      label: "COD. FICHA",
+      align: "center",
+      field: "code",
+      sortable: true,
+  },
+  {
+      name: "status",
+      label: "Estado",
+      align: "center",
+      field: "status",
+  },
+
+  {
+      name: "apprentice",
+      label: "VER APRENDICES",
+      align: "center",
+      field: "apprentice",
   }
-  </script>
-  
-  <style scoped>
-  .bg-green-9 {
-    color: green;
-    width: 99%;
-    height: 3.5px;
-    border-radius: 10px;
-    align-items: center;
+]);
+
+
+
+
+onBeforeMount(() => {
+  bring();
+});
+
+async function bring() {
+  try {
+      let response = await getDataRepfora("/fiches");
+      console.log(response); // Verifica la estructura de la respuesta completa
+
+      // Accede al array dentro de la respuesta
+      let data = response.data;
+
+      rows.value = data.map(item => item.program);
+  } catch (error) {
+      console.log(error);
   }
-  
-  .title-table {
-    text-align: center;
-    margin-bottom: 0;
-    font-size: 45px;
-  }
-  h3 {
+}
+
+function handleViewApprentices(row) {
+console.log("Detalles de la fila:", row);
+router.replace("./Apprentice");
+}
+
+
+</script>
+
+<style scoped>
+.bg-green-9 {
+  color: green;
+  width: 99%;
+  height: 3.5px;
+  border-radius: 10px;
+
+  align-items: center;
+}
+
+.title-table {
   text-align: center;
   margin-bottom: 0;
-  font-weight: bold;
+  font-size: 45px;
 }
-  </style>
-  
-  
+</style>
