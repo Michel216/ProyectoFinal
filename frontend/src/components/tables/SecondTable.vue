@@ -25,25 +25,13 @@
         </q-td>
       </template>
       <template v-slot:body-cell-observations="scope">
-  <q-td :props="scope">
-    <div class="q-pa-md q-gutter-xs">
-      <!-- Botón para ver observaciones -->
-      <q-btn 
-        round 
-        color="primary" 
-        icon="search" 
-        @click="handleClick(scope.row._id, true)" 
-      />
-      <!-- Botón para agregar observación -->
-      <q-btn 
-        round 
-        color="primary" 
-        icon="add_circle_outline" 
-        @click="handleClick(scope.row._id, false)" 
-      />
-    </div>
-  </q-td>
-</template>
+        <q-td :props="scope">
+          <div class="q-pa-md q-gutter-xs">
+            <q-btn round color="primary" icon="search" @click="handleClick(scope.row._id, true)" />
+            <q-btn round color="primary" icon="add_circle_outline" @click="handleClick(scope.row._id, false)" />
+          </div>
+        </q-td>
+      </template>
     </q-table>
   </div>
 </template>
@@ -105,6 +93,15 @@ function updateStatus(status, row) {
 }
 
 function handleClick(row, change) {
-  props.onClickFunction(row, change)
+  props.onClickFunction(row, change) // Emite el evento al componente padre
 }
+// const emit = defineEmits(['openModal']);
+
+// // Función para abrir el modal con la observación seleccionada
+// function openModalWithObservation(observation) {
+//   emit('openModal', observation); // Emite el evento al componente padre
+// }
+// function openAddModal(row) {
+//   emit('openModal'); // Emite el evento al componente padre
+// }
 </script>
