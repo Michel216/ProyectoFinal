@@ -43,38 +43,50 @@ followupRoute.get('/listfollowupbyinstructor/:idinstructor', [
 followupRoute.post('/addfollowup', [
     // validateJWT,
     check('assignment', 'El campo asignaciones es obligatorio').notEmpty().trim(),
-    check('assignment','El campo debe ser un mongoId').isMongoId().trim(),
+    // check('assignment','El campo debe ser un mongoId').isMongoId().trim(),
     check('instructor', 'El campo instructor es obligatorio').notEmpty().trim(),
-    check('instructor','El campo debe ser un mongoId').isMongoId().trim(),
-    check('instructor').custom(followUpHelper.validateInstrustor),
-    check('instructor').custom(followUpHelper.validateInstrustor),
+    // check('instructor','El campo debe ser un mongoId').isMongoId().trim(),
+    // check('instructor').custom(followUpHelper.validateInstrustor),
+    // check('instructor').custom(followUpHelper.validateInstrustor),
     check('number', 'El campo número es obligatorio y debe ser un número entero').isNumeric().trim(),
-    check('month', 'El campo mes es obligatorio y debe ser un mes válido').not().isEmpty().trim(),
-    check('document', 'El campo documento es obligatorio').notEmpty().trim(),
-    check('status', 'El campo estado es obligatorio').notEmpty(),
-    check('status').custom(followUpHelper.validateStatus),
-    check('users', 'El campo Usuario es obligatorio').notEmpty().trim(),
-    check('observations', 'El campo observaciones es obligatorio').notEmpty(),
-    validateFields
-], followupController.postAddFollowup);
-
-// Actualizar seguimiento por ID
-followupRoute.put('/updatefollowupbyid/:id', [
-    // validateJWT,
-    check('assignment', 'El campo asignaciones es obligatorio').notEmpty().trim(),
-    check('assignment','El campo debe ser un mongoId').isMongoId().trim(),
-    check('instructor', 'El campo instructor es obligatorio').notEmpty().trim(),
-    check('instructor','El campo debe ser un mongoId').isMongoId().trim(),
-    check('number', 'El campo número es obligatorio y debe ser un número entero').isNumeric().trim(),
+    check('number').custom(followUpHelper.validateNumber),
     check('month', 'El campo mes es obligatorio y debe ser un mes válido').not().isEmpty().trim(),
     check('document', 'El campo documento es obligatorio').notEmpty().trim(),
     // check('status', 'El campo estado es obligatorio').notEmpty(),
-    check('users', 'El campo Usuario es obligatorio').notEmpty().trim(),
-    check('observations', 'El campo observaciones es obligatorio').notEmpty(),
-    check('id').custom(followUpHelper.validateId).trim(),
-    // Validar que `createdAt` no esté incluido en los campos a actualizar
+    check('status').optional().custom(followUpHelper.validateStatus),
+    // check('users', 'El campo Usuario es obligatorio').notEmpty().trim(),
+    // check('observations', 'El campo observaciones es obligatorio').notEmpty(),
     validateFields
-], followupController.putUpdateFollowupById);
+], followupController.postAddFollowup);
+
+// // Actualizar seguimiento por ID
+// followupRoute.put('/updatefollowupbyid/:id', [
+//     // validateJWT,
+//     check('assignment', 'El campo asignaciones es obligatorio').notEmpty().trim(),
+//     check('assignment','El campo debe ser un mongoId').isMongoId().trim(),
+//     check('instructor', 'El campo instructor es obligatorio').notEmpty().trim(),
+//     check('instructor','El campo debe ser un mongoId').isMongoId().trim(),
+//     check('number', 'El campo número es obligatorio y debe ser un número entero').isNumeric().trim(),
+//     check('month', 'El campo mes es obligatorio y debe ser un mes válido').not().isEmpty().trim(),
+//     check('document', 'El campo documento es obligatorio').notEmpty().trim(),
+//     // check('status', 'El campo estado es obligatorio').notEmpty(),
+//     check('users', 'El campo Usuario es obligatorio').notEmpty().trim(),
+//     check('observations', 'El campo observaciones es obligatorio').notEmpty(),
+//     check('id').custom(followUpHelper.validateId).trim(),
+//     // Validar que `createdAt` no esté incluido en los campos a actualizar
+//     validateFields
+// ], followupController.putUpdateFollowupById);
+
+followupRoute.put("/addobservation/:id", [
+    // validateJWT,
+    check('id', 'El id es obligatorio y debe ser un ID de MongoDB válido').notEmpty().isMongoId(),
+    check('id').custom(followUpHelper.validateId),
+    check('observations', 'Las observaciones son obligatorias').notEmpty(),
+    check('observations.*.observation', 'Cada observación es obligatoria').notEmpty(),
+    check('observations.*.user', 'El usuario en cada observación es obligatorio y debe ser un ID de MongoDB válido').notEmpty().isMongoId(),
+    check('observations.*.observationDate', 'La fecha en cada observación es obligatoria y debe ser una fecha válida').notEmpty(),
+    validateFields
+], followupController.putAddObservation)
 
 // Modificar estado de segimiento
 followupRoute.put('/updatestatus/:id/:status', [

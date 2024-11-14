@@ -33,14 +33,14 @@
         round 
         color="primary" 
         icon="search" 
-        @click="openModalWithObservation(scope.row.observations)" 
+        @click="handleClick(scope.row._id, true)" 
       />
       <!-- Botón para agregar observación 
       <q-btn 
         round 
         color="primary" 
         icon="add_circle_outline" 
-        @click="openAddModal(scope.row)" 
+        @click="handleClick(scope.row._id, false)" 
       />
     </div>
   </q-td>
