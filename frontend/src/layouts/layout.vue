@@ -40,7 +40,7 @@ const menuItems = [
   { label: 'Registros', path: '/Register', icon: ['fas', 'user'], rol: ["ADMIN", "ETAPA PRODUCTIVA"] },
   { label: 'Aprendices', path: '/Apprentice', icon: ['fas', 'user-graduate'], rol: ["ADMIN", "ETAPA PRODUCTIVA"] },
   { label: 'Seguimientos', path: '/FollowUp', icon: ['fas', 'chart-line'], rol: ["ADMIN", "ETAPA PRODUCTIVA", "INSTRUCTOR"] },
-  { label: 'Informes', path: '/reports', icon: ['fas', 'user-graduate'], rol: ["ADMIN", "ETAPA PRODUCTIVA"] },
+  // { label: 'Informes', path: '/reports', icon: ['fas', 'user-graduate'], rol: ["ADMIN", "ETAPA PRODUCTIVA"] },
   { label: 'Fichas', path: '/fiches', icon: ['fas', 'chart-line'], rol: ["ADMIN" ] }
 ];
 
