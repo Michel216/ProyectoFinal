@@ -20,9 +20,9 @@
             border-radius: 50px;
           ">
 
-          <q-select outlined v-model="assignment" label="Seleccione una asignación" :options="optionsAssignment" emit-value map-options
-            clearable use-input input-debounce="0" behavior="menu" @filter="filterAssignment" lazy-rules
-            :rules="[(val) => (val && val.length > 0) || 'Por favor, seleccione una asignación']">
+          <q-select outlined v-model="assignment" label="Seleccione una asignación" :options="optionsAssignment"
+            emit-value map-options clearable use-input input-debounce="0" behavior="menu" @filter="filterAssignment"
+            lazy-rules :rules="[(val) => (val && val.length > 0) || 'Por favor, seleccione una asignación']">
 
             <template v-slot:no-option>
               <q-item>
@@ -33,8 +33,8 @@
 
           </q-select>
 
-          <q-select outlined v-model="instructor" label="Seleccione un instructor" :options="optionsInstructor" emit-value map-options
-            clearable lazy-rules
+          <q-select outlined v-model="instructor" label="Seleccione un instructor" :options="optionsInstructor"
+            emit-value map-options clearable lazy-rules
             :rules="[(val) => (val && val.length > 0) || 'Por favor, seleccione un instructor']">
 
             <template v-slot:no-option>
@@ -115,6 +115,7 @@
 
 <script setup>
 import { ref, onBeforeMount } from "vue";
+import { getDataRepfora } from '../services/apiRepfora.js'
 import { getData, putData, postData } from "../services/apiClient.js";
 import binnacleTable from "../components/tables/SecondTable.vue";
 import Btn from "../components/buttons/Button.vue";
@@ -190,7 +191,7 @@ let columns = ref([
 
 // valida que el tipo de la bitácora sea de 1 a 4. Programado: 1, Ejecutado: 2, Pendiente: 3, Verificado: 4// valida que el tipo de la bitácora sea de 1 a 4. Programado: 1, Ejecutado: 2, Pendiente: 3, Verificado: 4, Verificado técnico: 5, Verificado proyecto: 6
 let options = ref([
-{
+  {
     label: "Programado",
     value: 1,
   },
@@ -224,15 +225,38 @@ async function bring() {
   try {
     let data = await getData("/binnacles/listallbinnacles");
     console.log(data);
-    rows.value = data.ListAllBinnacles.map((item, idx) => ({
-      ...item,
-      assignment: (item.assignment.apprentice.firstName + ' ' + item.assignment.apprentice.lastName),
-      index: idx + 1,
-    }));
+
+    // Verificar que la propiedad 'ListAllBinnacles' exista y sea un array
+    if (Array.isArray(data.ListAllBinnacles) && data.ListAllBinnacles.length > 0) {
+      rows.value = await Promise.all(data.ListAllBinnacles.map(async (item, idx) => {
+        // Obtener los datos del instructor desde su ID
+        const instructorId = item.instructor;  // Accedemos al 'instructor' de cada 'item'
+        const instructorData = await getDataRepfora(`/instructors/${instructorId}`);  // Obtener datos del instructor por ID
+        console.log(instructorData)
+
+        // Verificar que 'assignment' y 'apprentice' existen antes de acceder a ellos
+        const assignmentApprentice = item.assignment && item.assignment.apprentice
+          ? item.assignment.apprentice
+          : { firstName: 'N/A', lastName: 'N/A' };  // Valores por defecto si no existen
+
+        return {
+          ...item,
+          assignment: `${assignmentApprentice.firstName} ${assignmentApprentice.lastName}`,  // Concatenar nombres
+          instructor: instructorData.data.name,  // Nombre del instructor
+          index: idx + 1,  // Índice de la fila
+        };
+      }));
+    } else {
+      console.log("El campo 'ListAllBinnacles' no es un array o está vacío.");
+      // Puedes también asignar un mensaje de error a la interfaz de usuario si es necesario
+    }
   } catch (error) {
     console.log(error);
   }
 }
+
+
+
 
 async function handleUpdateStatus(status, row) {
   try {
@@ -290,11 +314,11 @@ function openModalCreate() {
 async function openModalObservations(row) {
   showModalObservations.value = true;
   try {
-    let data = await getData(`/binnacles/listbinnaclesbyid/${row}` );
+    let data = await getData(`/binnacles/listbinnaclesbyid/${row}`);
     console.log(data);
     listObservations.value = data.listBinnacleById.observations
     console.log(listObservations.value);
-    
+
   } catch (error) {
     console.log(error);
   }

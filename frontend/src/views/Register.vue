@@ -1,6 +1,6 @@
 <template>
   <div class="q-pa-md q-gutter-md">
-    
+
     <Btn :label="btnLabel" :onClickFunction='bringIdAndOpenModal' :loading="loading" />
     <RegisterTable :title="title" :columns="columns" :rows="rows" :onToggleActivate="handleToggleActivate"
       :loading="loading" :onClickEdit="bringIdAndOpenModal" />
@@ -98,6 +98,7 @@
 <script setup>
 import { ref, onBeforeMount } from 'vue';
 import { getData, putData, postData } from '../services/apiClient.js';
+import {getDataRepfora} from '../services/apiRepfora.js'
 import RegisterTable from "../components/tables/BasicTable.vue";
 import { formatDate } from '../utils/formatDate.js';
 import Btn from "../components/buttons/Button.vue"
@@ -124,16 +125,22 @@ const optionsApprentice = ref()
 const optionsModality = ref()
 const rows = ref([])
 const columns = ref([
-  { name: 'apprentice', label: 'Aprendiz', align: 'center', field: 'apprentice' },
-  { name: 'program', label: 'Modalidad', align: 'center', field: 'modality' },
-  { name: 'modality', label: 'Fecha de Inicio', align: 'center', field: 'startDate' },
-  { name: 'endDate', label: 'Fecha de Fin', align: 'center', field: 'endDate' },
-  { name: 'company', label: 'Empresa', align: 'center', field: 'company' },
-  { name: 'phonecompany', label: 'Teléfono de Empresa', align: 'center', field: 'phonecompany' },
-  { name: 'addresscompany', label: 'Dirección de Empresa', align: 'center', field: 'addresscompany' },
-  { name: 'owner', label: 'Propietario', align: 'center', field: 'owner' },
-  { name: 'docAlternative', label: 'Documento Alternativo', align: 'center', field: 'docAlternative' },
-  { name: 'hour', label: 'Hora', align: 'center', field: 'hour' }
+  {
+    name: "index",
+    label: "N°",
+    align: "center",
+    field: 'index'
+  },
+  { name: 'apprentice', label: 'NOMBRE APRENDIZ', align: 'center', field: 'apprentice' },
+  { name: 'program', label: 'PROGRAMA', align: 'center', field: 'program' },
+  { name: 'modality', label: 'MODALIDAD', align: 'center', field: 'modality' },
+  { name: 'assignment', label: 'ASIGNACIÓN', align: 'center', field: 'assignment' },
+  { name: 'startDate', label: 'FECHA INICIO', align: 'center', field: 'startDate' },
+  { name: 'endDate', label: 'FECHA FIN', align: 'center', field: 'endDate' },
+  { name: 'details', label: 'DETALLES', align: 'center', field: 'details' },
+  { name: 'hour', label: 'REGISTRO HORAS', align: 'center', field: 'hour' },
+  { name: 'state', label: 'ESTADO', align: 'center', field: 'state' },
+  { name: 'options', label: 'OPCIONES', align: 'center', field: 'options' },
 ])
 
 onBeforeMount(() => {
@@ -142,28 +149,32 @@ onBeforeMount(() => {
 
 async function bring() {
   try {
+    // Obtener los datos de los registros
     let data = await getData('/register/listallregister');
     console.log(data);
 
-
-    rows.value = data.register.map(register => {
+    // Iterar sobre los registros y obtener los datos de 'fiche'
+    rows.value = await Promise.all(data.register.map(async (register, idx) => {
+      // Obtener los datos de la ficha (fiche) desde su ID
+      const ficheId = register.apprentice.fiche;  // El ID de 'fiche' está en apprentice.fiche
+      const ficheData = await getDataRepfora(`/fiches/${ficheId}`);  // Obtener 'fiche' por ID
       return {
         ...register,
-        apprentice: (register.apprentice.firstName + ' ' + register.apprentice.lastName),
+        index: idx + 1,
+        apprentice: `${register.apprentice.firstName} ${register.apprentice.lastName}`,
+        program: ficheData.data.program.code,  // Acceder al código del programa desde 'fiche'
         modality: register.modality.name,
         startDate: formatDate(register.startDate),
         endDate: formatDate(register.endDate)
-      }
-
-
-
-
-    })
+      };
+    }));
 
   } catch (error) {
     console.log(error);
   }
 }
+
+
 
 async function handleToggleActivate(rows, status) {
   try {
@@ -186,7 +197,6 @@ async function onSubmit() {
       "apprentice": apprentice.value,
       "modality": modality.value,
       "startDate": startDate.value,
-      "endDate": endDate.value,
       "company": company.value,
       "phonecompany": phoneCompany.value,
       "addresscompany": addressCompany.value,
