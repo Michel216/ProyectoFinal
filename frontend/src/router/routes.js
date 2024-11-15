@@ -1,5 +1,4 @@
 import Logs from "./../views/Logs.vue";
-import Base from "./../layouts/Layout.vue";
 import Home from "./../views/Home.vue";
 import Binnacles from "./../views/Binnacles.vue";
 import Modality from "./../views/Modality.vue";
@@ -12,6 +11,7 @@ import { createRouter, createWebHashHistory } from "vue-router";
 import Register from "../views/Register.vue";
 import { useAuthStore } from '../store/useAuth.js'; 
 import Instructors from "../views/Instructors.vue";
+import Layout from "./../layouts/layout.vue";
 
 // Definir la función de autenticación
 const auth = (to, from, next) => {
@@ -33,7 +33,7 @@ const routes = [
     { path: "/", component: Logs },
     {
         path: "/Base",
-        component: Base,
+        component: Layout,
         children: [
             { path: "/Home", component: Home, beforeEnter: auth, meta: { rol: ["ADMIN", "INSTRUCTOR"] } },
             { path: "/Binnacles", component: Binnacles, beforeEnter: auth, meta: { rol: ["ADMIN", "INSTRUCTOR","APRENDIZ"] } },
