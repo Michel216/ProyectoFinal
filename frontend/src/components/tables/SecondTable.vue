@@ -32,6 +32,15 @@
           </div>
         </q-td>
       </template>
+      <template v-slot:body-cell-apprentice="props">
+        <q-td :props="props" align="center">
+          <Btn color="primary" @click="handleViewApprentices(props.row)" label=" ">
+            <template v-slot:prepend>
+              <font-awesome-icon icon="eye" />
+            </template>
+          </Btn>
+        </q-td>
+      </template>
     </q-table>
   </div>
 </template>
@@ -40,9 +49,13 @@
 import { ref, computed } from 'vue';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { useRouter } from 'vue-router';
+import { faMagnifyingGlass, faEye } from '@fortawesome/free-solid-svg-icons';
+import Btn from "./../buttons/Button.vue";
+import  {getData} from './../../services/apiClient'
 
-library.add(faMagnifyingGlass);
+library.add(faMagnifyingGlass, faEye);
+const router = useRouter();
 let loading = ref(false)
 const props = defineProps({
   title: {
@@ -74,6 +87,11 @@ const props = defineProps({
   }
 });
 
+
+function handleViewApprentices(row) {
+  console.log("Detalles de la fila:", row);
+  router.push({ path: `/apprentice/${row._id}` });
+}
 // Combinar las columnas pasadas con las columnas de acciones "editar" y "activar"
 // const combinedColumns = computed(() => [
 //   ...props.columns,

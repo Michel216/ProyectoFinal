@@ -101,6 +101,8 @@ import { getData, putData, postData } from "../services/apiClient.js";
 import apprenticeTable from "../components/tables/BasicTable.vue";
 import Btn from "../components/buttons/Button.vue";
 import Modal from "../components/modals/Modal.vue";
+import { useRoute } from 'vue-router';
+import { getData } from './../../services/apiClient';
 import {
   notifyErrorRequest,
   notifySuccessRequest,
@@ -237,6 +239,19 @@ async function bring() {
   }
 }
 
+const ficheId = route.params.idFiche;
+onMounted(async () => {
+  loading.value = true;
+  try {
+    // Aquí debes usar el ID de la ficha para obtener los aprendices
+    const response = await getData(`/apprentices/fiche/${ficheId}`);
+    apprentices.value = response.data; // Asegúrate de que esta sea la estructura correcta
+  } catch (error) {
+    console.error("Error al obtener los aprendices:", error);
+  } finally {
+    loading.value = false;
+  }
+});
 
 async function handleToggleActivate(id, status) {
   try {
