@@ -10,7 +10,8 @@
     <div class="q-pa-md q-gutter-sm" style="display: flex; align-items: center; justify-content: space-between;">
 
       <!-- Botón en el extremo izquierdo -->
-      <q-btn class="btn" color="green-9" label="Crear" icon="add_circle_outline" style="width: auto" />
+      <!-- <q-btn class="btn" color="green-9" label="Crear" icon="add_circle_outline" style="width: auto" /> -->
+      <Btn :label="btnLabel" :onClickFunction="bringIdAndOpenModal" :loading="loading" />
 
       <!-- Formulario de radio centrado -->
       <div style="display: flex; justify-content: center;">

@@ -3,7 +3,7 @@
     <q-btn to="/home" dense unelevated round color="primary" icon="arrow_back" text-color="white" class="iconExit" />
     <h3 class="title-table">Bitacoras</h3>
     <hr id="hr" class="bg-green-9" />
-    <div class="q-pa-md q-gutter-sm" style="display: flex; align-items: center; justify-content: space-between;">
+    <div class="q-pa-md q-gutter-sm" style="display: flex">
       <div style="display: flex; justify-content: center;">
         <div class="text-primary">Realizar filtro por</div>
         <q-form @submit="radiobtn" class="q-gutter-md" style="display: flex;">
@@ -12,7 +12,7 @@
         </q-form>
       </div>
       <div class="q-pa-md">
-        <div class="q-gutter-md" style="max-width: 400px">
+        <div class="q-gutter-md" style="width: 400px">
           <q-input outlined v-model="text" label="Ingrese el nombre o número de documento " />
         </div>
       </div>

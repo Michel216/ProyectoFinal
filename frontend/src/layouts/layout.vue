@@ -41,7 +41,9 @@ const menuItems = [
   { label: 'Aprendices', path: '/Apprentice', icon: ['fas', 'user-graduate'], rol: ["ADMIN", "ETAPA PRODUCTIVA"] },
   { label: 'Seguimientos', path: '/FollowUp', icon: ['fas', 'chart-line'], rol: ["ADMIN", "ETAPA PRODUCTIVA", "INSTRUCTOR"] },
   // { label: 'Informes', path: '/reports', icon: ['fas', 'user-graduate'], rol: ["ADMIN", "ETAPA PRODUCTIVA"] },
-  { label: 'Fichas', path: '/fiches', icon: ['fas', 'chart-line'], rol: ["ADMIN" ] }
+  { label: 'Fichas', path: '/fiches', icon: ['fas', 'chart-line'], rol: ["ADMIN" ] },
+  { label: 'Registro de Horas', path: '/reports', icon: ['fas', 'user-graduate'], rol: ["INSTRUCTOR" ] },
+  { label: 'Certificaciones', path: '/reports', icon: ['fas', 'user-graduate'], rol: ["INSTRUCTOR" ] }
 ];
 
 

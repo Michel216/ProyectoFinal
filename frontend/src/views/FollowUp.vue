@@ -1,6 +1,6 @@
 <template>
   <div class="q-pa-md q-gutter-md">
-    <router-link to="/home" class="iconExit" style="display: flex; text-decoration: none;">
+    <router-link to="/home" class="iconExit" style="display: flex; text-decoration: none">
       <q-btn dense unelevated round color="primary" icon="arrow_back" text-color="white" />
     </router-link>
     <h3 class="title-table">Seguimientos</h3>
@@ -13,46 +13,48 @@
 
     <Modal :isVisible="showModalCreate" @update:isVisible="showModalCreate = $event"
       :label="'DILIGENCIA LA INFORMACION'">
-
       <div class="q-pa-md" style="max-width: 600px">
         <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md" style="
             max-height: none;
             max-width: 100%;
             width: 100vw;
             margin: auto;
-           
+
             gap: 20px;
             border-radius: 50px;
           ">
-
           <q-select outlined v-model="assignment" label="Seleccione una asignación" :options="optionsAssignment"
             emit-value map-options clearable use-input input-debounce="0" behavior="menu" @filter="filterAssignment"
-            lazy-rules :rules="[(val) => (val && val.length > 0) || 'Por favor, seleccione una asignación']">
-
+            lazy-rules :rules="[
+              (val) =>
+                (val && val.length > 0) ||
+                'Por favor, seleccione una asignación',
+            ]">
             <template v-slot:no-option>
               <q-item>
                 <q-item-section class="text-grey"> No results </q-item-section>
               </q-item>
             </template>
-
-
           </q-select>
 
           <q-select outlined v-model="instructor" label="Seleccione un instructor" :options="optionsInstructor"
             emit-value map-options clearable use-input input-debounce="0" behavior="menu" @filter="filterInstructor"
-            lazy-rules :rules="[(val) => (val && val.length > 0) || 'Por favor, seleccione un instructor']">
-
+            lazy-rules :rules="[
+              (val) =>
+                (val && val.length > 0) ||
+                'Por favor, seleccione un instructor',
+            ]">
             <template v-slot:no-option>
               <q-item>
                 <q-item-section class="text-grey"> No results </q-item-section>
               </q-item>
             </template>
-
-
           </q-select>
 
-          <q-input outlined v-model="month" label="Fecha inicial" mask="date"
-            :rules="[val => val && val.length > 0 || 'Por favor, dígite la fecha inicio']">
+          <q-input outlined v-model="month" label="Fecha inicial" mask="date" :rules="[
+            (val) =>
+              (val && val.length > 0) || 'Por favor, dígite la fecha inicio',
+          ]">
             <template v-slot:append>
               <q-icon name="event" class="cursor-pointer">
                 <q-popup-proxy cover transition-show="scale" transition-hide="scale">
@@ -66,28 +68,33 @@
             </template>
           </q-input>
 
-          <q-input outlined type="number" v-model="numFollowUp" label="N° seguimiento" lazy-rules
-            :rules="[(val) => (val && val.length > 0) || 'Por favor, dígite el número de la bitácora']">
+          <q-input outlined type="number" v-model="numFollowUp" label="N° seguimiento" lazy-rules :rules="[
+            (val) =>
+              (val && val.length > 0) ||
+              'Por favor, dígite el número de la bitácora',
+          ]">
             <template v-slot:prepend>
               <q-icon name="123" />
             </template>
           </q-input>
 
-          <q-input outlined v-model="document" label="Documento" lazy-rules
-            :rules="[(val) => (val && val.length > 0) || 'Por favor, ingrese un documento']">
+          <q-input outlined v-model="document" label="Documento" lazy-rules :rules="[
+            (val) =>
+              (val && val.length > 0) || 'Por favor, ingrese un documento',
+          ]">
             <template v-slot:prepend>
               <q-icon name="description" />
             </template>
           </q-input>
 
-          <div class="q" style="display: flex; justify-content: center; align-items: center;">
+          <div class="q" style="display: flex; justify-content: center; align-items: center">
             <q-btn label="Guardar" type="submit" icon="save" color="primary" :loading="loading" />
 
             <q-btn label="Cerrar" type="reset" icon="close" flat class="q-ml-sm" v-close-popup style="
-      background-color: white;
-      color: black;
-      box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
-    " />
+                background-color: white;
+                color: black;
+                box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
+              " />
           </div>
         </q-form>
       </div>
@@ -100,27 +107,32 @@
             max-width: 100%;
             width: 100vw;
             margin: auto;
-           
+
             gap: 20px;
             border-radius: 50px;
           ">
-          <q-input outlined v-model="observation" label="Observación" lazy-rules
-            :rules="[(val) => (val && val.length > 0) || 'Por favor, ingrese una observación']" />
+          <q-input outlined v-model="observation" label="Escriba la observacion para esta Bitácora" lazy-rules :rules="[
+            (val) =>
+              (val && val.length > 0) || 'Por favor, ingrese una observación',
+          ]" />
 
-            <q-select outlined v-model="user" label="Seleccione un usuario" :options="optionsInstructor"
-            emit-value map-options clearable use-input input-debounce="0" behavior="menu" @filter="filterInstructor"
-            lazy-rules :rules="[(val) => (val && val.length > 0) || 'Por favor, seleccione un usuario']">
-
+          <!-- <q-select outlined v-model="user" label="Seleccione un usuario" :options="optionsInstructor" emit-value
+            map-options clearable use-input input-debounce="0" behavior="menu" @filter="filterInstructor" lazy-rules
+            :rules="[
+              (val) =>
+                (val && val.length > 0) || 'Por favor, seleccione un usuario',
+            ]">
             <template v-slot:no-option>
               <q-item>
                 <q-item-section class="text-grey"> No results </q-item-section>
               </q-item>
             </template>
-
-
           </q-select>
-          <q-input outlined v-model="observationDate" label="Fecha de observación" mask="date"
-            :rules="[val => val && val.length > 0 || 'Por favor, ingrese la fecha de la observación']">
+          <q-input outlined v-model="observationDate" label="Fecha de observación" mask="date" :rules="[
+            (val) =>
+              (val && val.length > 0) ||
+              'Por favor, ingrese la fecha de la observación',
+          ]">
             <template v-slot:append>
               <q-icon name="event" class="cursor-pointer">
                 <q-popup-proxy cover transition-show="scale" transition-hide="scale">
@@ -132,15 +144,15 @@
                 </q-popup-proxy>
               </q-icon>
             </template>
-          </q-input>
-          <div class="q" style="display: flex; justify-content: center; align-items: center;">
+          </q-input> -->
+          <div class="q" style="display: flex; justify-content: center; align-items: center">
             <q-btn label="Guardar" type="submit" icon="save" color="primary" :loading="loading" />
 
             <q-btn label="Cerrar" type="reset" icon="close" flat class="q-ml-sm" v-close-popup style="
-      background-color: white;
-      color: black;
-      box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
-    " />
+                background-color: white;
+                color: black;
+                box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
+              " />
           </div>
         </q-form>
         <q-form v-if="change" @submit="onSubmitObservation" @reset="onReset" class="q-gutter-md" style="
@@ -148,18 +160,17 @@
             max-width: 100%;
             width: 100vw;
             margin: auto;
-           
+
             gap: 20px;
             border-radius: 50px;
           ">
           <p>{{ listObservations }}</p>
-          <div class="q" style="display: flex; justify-content: center; align-items: center;">
-
+          <div class="q" style="display: flex; justify-content: center; align-items: center">
             <q-btn label="Cerrar" type="reset" icon="close" flat class="q-ml-sm" v-close-popup style="
-      background-color: white;
-      color: black;
-      box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
-    " />
+                background-color: white;
+                color: black;
+                box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
+              " />
           </div>
         </q-form>
       </div>
@@ -173,42 +184,54 @@ import { getData, putData, postData } from "../services/apiClient.js";
 import FollowupTable from "../components/tables/SecondTable.vue";
 import Btn from "../components/buttons/Button.vue";
 import Modal from "../components/modals/Modal.vue";
-import { notifyErrorRequest, notifySuccessRequest } from "../composables/Notify";
+import {
+  notifyErrorRequest,
+  notifySuccessRequest,
+} from "../composables/Notify";
 import { formatMonth } from "../utils/formatMonth.js";
 
 const title = "Seguimientos";
 const rows = ref([]);
 let loading = ref(false);
-let change = ref()
+let change = ref();
 let btnLabel = "Crear";
 let assignment = ref("");
 let instructor = ref("");
 let numFollowUp = ref("");
 let document = ref("");
-let month = ref("")
+let month = ref("");
 let observation = ref("");
 let observationDate = ref("");
-let user = ref("")
+let user = ref("");
 let showModalCreate = ref(false);
 let showModalObservations = ref(false);
-let listObservations = ref([])
-let idFollowUp = ref("")
+let listObservations = ref([]);
+let idFollowUp = ref("");
 let optionsAssignment = ref();
 let optionsInstructor = ref();
 const columns = ref([
-  { name: "index", label: "#", align: "center", field: 'index' },
-  { name: "register", label: "Etapa Productiva Asignada", align: "center", field: "register" },
+  { name: "index", label: "#", align: "center", field: "index" },
+  {
+    name: "register",
+    label: "Etapa Productiva Asignada",
+    align: "center",
+    field: "register",
+  },
   { name: "number", label: "N° Seguimiento", align: "center", field: "number" },
   {
     name: "options",
     label: "Estado",
     align: "center",
-    field: "status"
+    field: "status",
   },
-  { name: "observations", label: "Observaciones", align: "center", field: "observations" },
-  { name: "month", label: "Mes", align: "center", field: "month" }
+  {
+    name: "observations",
+    label: "Observaciones",
+    align: "center",
+    field: "observations",
+  },
+  { name: "month", label: "Mes", align: "center", field: "month" },
 ]);
-
 
 // valida que el tipo de la bitácora sea de 1 a 4. Programado: 1, Ejecutado: 2, Pendiente: 3, Verificado: 4// valida que el tipo de la bitácora sea de 1 a 4. Programado: 1, Ejecutado: 2, Pendiente: 3, Verificado: 4, Verificado técnico: 5, Verificado proyecto: 6
 let options = ref([
@@ -238,7 +261,6 @@ let options = ref([
   },
 ]);
 
-
 onBeforeMount(() => {
   bring();
 });
@@ -250,7 +272,10 @@ async function bring() {
 
     rows.value = data.listallFollowup.map((followup, idx) => ({
       ...followup,
-      register: (followup.assignment.apprentice.firstName + ' ' + followup.assignment.apprentice.lastName),
+      register:
+        followup.assignment.apprentice.firstName +
+        " " +
+        followup.assignment.apprentice.lastName,
       month: formatMonth(followup.month),
       index: idx + 1,
     }));
@@ -276,7 +301,7 @@ async function onSubmit() {
       instructor: instructor.value,
       number: numFollowUp.value,
       document: document.value,
-      month: month.value
+      month: month.value,
     };
     await postData(`/followup/addfollowup`, data);
     notifySuccessRequest("Seguimiento creado exitosamente");
@@ -285,34 +310,41 @@ async function onSubmit() {
     onReset();
   } catch (error) {
     console.log(error);
-    notifyErrorRequest(error?.response?.data?.errors?.[0]?.msg || "Error desconocido");
+    notifyErrorRequest(
+      error?.response?.data?.errors?.[0]?.msg || "Error desconocido"
+    );
   } finally {
     loading.value = false;
   }
 }
 
 async function onSubmitObservation() {
-  loading.value = true
+  loading.value = true;
   try {
     let data = {
       observations: [
         {
           observation: observation.value,
           observationDate: observationDate.value,
-          user: user.value
-        }
-      ]
-    }
-    let url = await putData(`/followup/addobservation/${idFollowUp.value}`, data)
+          user: user.value,
+        },
+      ],
+    };
+    let url = await putData(
+      `/followup/addobservation/${idFollowUp.value}`,
+      data
+    );
     notifySuccessRequest("Observación guardada exitosamente");
     showModalObservations.value = false;
     bring();
     onReset();
   } catch (error) {
     console.log(error);
-    notifyErrorRequest(error?.response?.data?.errors?.[0]?.msg || "Error desconocido");
+    notifyErrorRequest(
+      error?.response?.data?.errors?.[0]?.msg || "Error desconocido"
+    );
   } finally {
-    loading.value = false
+    loading.value = false;
   }
 }
 
@@ -325,32 +357,30 @@ function onReset() {
   observation.value = "";
   observationDate.value = "";
   user.value = "";
-  idFollowUp.value = ""
+  idFollowUp.value = "";
 }
 
 function openModalCreate() {
   showModalCreate.value = true;
 }
 
-
 async function openModalObservations(id, changes) {
   showModalObservations.value = true;
-  idFollowUp.value = id
-  change.value = changes
+  idFollowUp.value = id;
+  change.value = changes;
 
   try {
     let data = await getData(`/followup/listfollowupbyid/${id}`);
     console.log(data);
-    listObservations.value = data.listFollowupById.observations
+    listObservations.value = data.listFollowupById.observations;
     console.log(listObservations.value);
-
   } catch (error) {
     console.log(error);
   }
 }
 
 async function filterAssignment(val, update) {
-  let assignment = await getData('/register/listallregister');
+  let assignment = await getData("/register/listallregister");
   console.log(assignment);
 
   let theAssignment = assignment.register;
@@ -376,7 +406,7 @@ async function filterAssignment(val, update) {
 }
 
 async function filterInstructor(val, update) {
-  let instructor = await getData('http://89.116.49.65:4500/api/instructors');
+  let instructor = await getData("http://89.116.49.65:4500/api/instructors");
   console.log(instructor);
   if (val === "") {
     update(() => {
@@ -390,10 +420,11 @@ async function filterInstructor(val, update) {
 
   update(() => {
     const needle = val.toLowerCase();
-    optionsInstructor.value = instructor.map((instructor) => ({
-      label: instructor.name,
-      value: instructor._id,
-    }))
+    optionsInstructor.value = instructor
+      .map((instructor) => ({
+        label: instructor.name,
+        value: instructor._id,
+      }))
       .filter((option) => option.label.toLowerCase().includes(needle));
   });
 }
@@ -420,12 +451,15 @@ h3 {
   font-weight: bold;
 }
 
-  .observation-box {
-    background-color: #f9f9f9; /* Fondo gris claro */
+.observation-box {
+  background-color: #f9f9f9;
+  /* Fondo gris claro */
 
-    padding: 10px; /* Espaciado interno */
-    margin-bottom: 10px; /* Espaciado entre los cuadros */
-    border-radius: 8px; /* Bordes redondeados */
-
-  }
+  padding: 10px;
+  /* Espaciado interno */
+  margin-bottom: 10px;
+  /* Espaciado entre los cuadros */
+  border-radius: 8px;
+  /* Bordes redondeados */
+}
 </style>
