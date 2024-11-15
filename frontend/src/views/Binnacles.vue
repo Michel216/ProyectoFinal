@@ -153,7 +153,21 @@
             gap: 20px;
             border-radius: 50px;
           ">
-          <p>{{ listObservations }}</p>
+          <div v-for="(item, index) in listObservations" :key="index">
+            <q-card bordered class="my-card">
+
+              <q-card-section v-if="listObservations.length != 0">
+                <p><span class="text-h7">Observación:</span> <span class="text-h7">{{ item.observation
+                    }}</span> </p>
+                <p><span class="text-h7">Fecha de observación:</span> <span class="text-h7">{{ formatDate(item.observationDate)
+                    }}</span>
+                </p>
+              </q-card-section>
+              <q-card-section v-else>
+                <p>No hay observaciones para mostrar</p>
+              </q-card-section>
+            </q-card>
+          </div>
           <div class="q" style="display: flex; justify-content: center; align-items: center;">
 
             <q-btn label="Cerrar" type="reset" icon="close" flat class="q-ml-sm" v-close-popup style="
@@ -180,6 +194,8 @@ import {
   notifySuccessRequest,
   notifyWarningRequest,
 } from "../composables/Notify";
+import { formatDate } from "../utils/formatDate.js";
+
 
 let loading = ref(false);
 let change = ref()
@@ -201,7 +217,7 @@ let optionsInstructor = ref();
 const rows = ref([]);
 const submitResult = ref([]);
 
-const shape =ref('apprentice')
+const shape = ref('apprentice')
 
 function radiobtn(evt) {
   const formData = new FormData(evt.target)
@@ -210,7 +226,7 @@ function radiobtn(evt) {
   for (const [name, value] of formData.entries()) {
     data.push({ name, value })
   }
-  
+
   submitResult.value = data
 }
 let columns = ref([
@@ -256,7 +272,7 @@ let columns = ref([
 
 // valida que el tipo de la bitácora sea de 1 a 4. Programado: 1, Ejecutado: 2, Pendiente: 3, Verificado: 4// valida que el tipo de la bitácora sea de 1 a 4. Programado: 1, Ejecutado: 2, Pendiente: 3, Verificado: 4, Verificado técnico: 5, Verificado proyecto: 6
 let options = ref([
-  
+
   {
     label: "Pendiente",
     value: 1,

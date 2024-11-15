@@ -152,7 +152,21 @@
             gap: 20px;
             border-radius: 50px;
           ">
-          <p>{{ listObservations }}</p>
+          <div v-for="(item, index) in listObservations" :key="index">
+            <q-card bordered class="my-card">
+
+              <q-card-section v-if="listObservations.length != 0">
+                <p><span class="text-h7">Observación:</span> <span class="text-h7">{{ item.observation
+                    }}</span> </p>
+                <p><span class="text-h7">Fecha de observación:</span> <span class="text-h7">{{ formatDate(item.observationDate)
+                    }}</span>
+                </p>
+              </q-card-section>
+              <q-card-section v-else>
+                <p>No hay observaciones para mostrar</p>
+              </q-card-section>
+            </q-card>
+          </div>
           <div class="q" style="display: flex; justify-content: center; align-items: center;">
 
             <q-btn label="Cerrar" type="reset" icon="close" flat class="q-ml-sm" v-close-popup style="
