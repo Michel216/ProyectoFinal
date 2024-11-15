@@ -3,8 +3,21 @@
     <q-btn to="/home" dense unelevated round color="primary" icon="arrow_back" text-color="white" class="iconExit" />
     <h3 class="title-table">Bitacoras</h3>
     <hr id="hr" class="bg-green-9" />
-
-    <Btn :label="btnLabel" :onClickFunction="openModalCreate" :loading="loading" />
+    <div class="q-pa-md q-gutter-sm" style="display: flex; align-items: center; justify-content: space-between;">
+      <div style="display: flex; justify-content: center;">
+        <div class="text-primary">Realizar filtro por</div>
+        <q-form @submit="radiobtn" class="q-gutter-md" style="display: flex;">
+          <q-radio name="shape" v-model="shape" :val="'apprentice'" label="Instructor" />
+          <q-radio name="shape" v-model="shape" :val="'insFollowup'" label="Aprendiz" />
+        </q-form>
+      </div>
+      <div class="q-pa-md">
+        <div class="q-gutter-md" style="max-width: 400px">
+          <q-input outlined v-model="text" label="Ingrese el nombre o número de documento " />
+        </div>
+      </div>
+    </div>
+    <!-- <Btn :label="btnLabel" :onClickFunction="openModalCreate" :loading="loading" /> -->
     <binnacleTable :title="title" :columns="columns" :rows="rows" :options="options"
       :onUpdateStatus="handleUpdateStatus" :loading="loading" :val="true" :onClickFunction="openModalObservations" />
     <Modal :isVisible="showModalCreate" @update:isVisible="showModalCreate = $event"
@@ -24,16 +37,12 @@
           <q-select outlined v-model="assignment" label="Seleccione una asignación" :options="optionsAssignment"
             emit-value map-options clearable use-input input-debounce="0" behavior="menu" @filter="filterAssignment"
             lazy-rules :rules="[(val) => (val && val.length > 0) || 'Por favor, seleccione una asignación']">
-
             <template v-slot:no-option>
               <q-item>
                 <q-item-section class="text-grey"> No results </q-item-section>
               </q-item>
             </template>
-
-
           </q-select>
-
           <q-select outlined v-model="instructor" label="Seleccione un instructor" :options="optionsInstructor"
             emit-value map-options clearable lazy-rules
             :rules="[(val) => (val && val.length > 0) || 'Por favor, seleccione un instructor']">
@@ -190,10 +199,24 @@ const showModalObservations = ref(false);
 let optionsAssignment = ref();
 let optionsInstructor = ref();
 const rows = ref([]);
+const submitResult = ref([]);
+
+const shape =ref('apprentice')
+
+function radiobtn(evt) {
+  const formData = new FormData(evt.target)
+  const data = []
+
+  for (const [name, value] of formData.entries()) {
+    data.push({ name, value })
+  }
+  
+  submitResult.value = data
+}
 let columns = ref([
   {
     name: "index",
-    label: "#",
+    label: "N°",
     align: "center",
     field: 'index'
   },
@@ -228,12 +251,6 @@ let columns = ref([
     align: "center",
     field: "observations",
   },
-  {
-    name: "validateHours",
-    label: "Validar horas",
-    align: "center",
-    field: "validateHours",
-  },
 ]);
 
 
@@ -241,28 +258,16 @@ let columns = ref([
 let options = ref([
   
   {
-    label: "Programado",
+    label: "Pendiente",
     value: 1,
   },
   {
-    label: "Ejecutado",
+    label: "Ejecutada",
     value: 2,
   },
   {
-    label: "Pendiente",
+    label: "Verificada",
     value: 3,
-  },
-  {
-    label: "Verificado",
-    value: 4,
-  },
-  {
-    label: "Verificado técnico",
-    value: 5,
-  },
-  {
-    label: "Verificado proyecto",
-    value: 6,
   },
 ]);
 
@@ -274,6 +279,14 @@ async function bring() {
   try {
     let data = await getData("/binnacles/listallbinnacles");
     console.log(data);
+    // let instructors = await getData('http://89.116.49.65:4500/api/instructors');
+
+    rows.value = data.ListAllBinnacles.map((item, idx) => ({
+      ...item,
+      assignment: (item.assignment.apprentice.firstName + ' ' + item.assignment.apprentice.lastName),
+      // instructor: instructors.find((i), i.id === item.instructor).name,
+      index: idx + 1,
+    }));
 
     // Verificar que la propiedad 'ListAllBinnacles' exista y sea un array
     if (Array.isArray(data.ListAllBinnacles) && data.ListAllBinnacles.length > 0) {

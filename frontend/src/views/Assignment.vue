@@ -24,7 +24,7 @@
       <div class="q-pa-md">
     <div class="q-gutter-md" style="max-width: 400px">
       <q-input outlined v-model="text" label="Ingrese el nombre o número de documento " />
-    </div>
+    </div> 
   </div>
       <q-card
       v-if="submitResult.length > 0"
