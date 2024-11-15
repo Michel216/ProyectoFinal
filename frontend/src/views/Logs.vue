@@ -97,7 +97,7 @@ const handleSubmit = async () => {
         }
 
         // Almacena el token y el rol en el store
-        authStore.setToken(data.token, rol.value);
+        authStore.setToken(data.token, rol.value, data.name, data.email);
 
         // Redirigir a la página de inicio
         router.replace("/Home");

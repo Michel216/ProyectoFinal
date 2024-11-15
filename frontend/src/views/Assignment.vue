@@ -203,11 +203,14 @@ async function bring() {
   try {
     let data = await getData("/register/listallregister");
     console.log(data); // Asegúrate de que `data.assignments` exista
-    rows.value = data.register.map((register, idx) => {
+    rows.value = data.register.map(async(register, idx) => {
+      const ficheId = apprentice.fiche; // El ID de 'fiche' está en apprentice.fiche
+        const ficheData = await getDataRepfora(`/fiches/${ficheId}`);
+        console.log(ficheData);
       return {
         ...register,
         apprentice: (register.apprentice.firstName + " " + register.apprentice.lastName),
-        fiche: register.apprentice.fiche,
+        fiche: ficheData.data.program.code,
         // register: register.register.apprentice,
         modality: register.modality.name,
         projectInstructor: register.assignment.map(assign => assign.projectInstructor).join(", "),

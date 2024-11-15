@@ -6,7 +6,6 @@
       <q-list padding class="drawer-content">
         <q-item clickable v-ripple v-for="item in filteredMenuItems" :key="item.label" :to="item.path"
           active-class="active-item" class="custom-button">
-
           <q-item-section avatar>
             <font-awesome-icon :icon="item.icon" class="icon" />
           </q-item-section>
@@ -25,6 +24,7 @@
       <div class="absolute-bottom bg-transparent">
         <div class="logo"
           style="display: flex; justify-content: center; align-items: center; width: 25%; height: 100%;">
+
           <img src="https://senasofiaplus.xyz/wp-content/uploads/2023/10/logo-del-sena-01.png"
             style="max-width: 100%; max-height: 100%; margin-left: 195px;">
         </div>
@@ -35,11 +35,10 @@
         <div class="titulo" v-if="role === 'ADMIN'"
           style="display: flex; justify-content: center; align-items: center; color: black; font-size: 14px;">USUARIO EP
         </div>
-        <div class="titulo" v-if="role === 'ADMIN', 'INSTRUCTOR'"
-          style="display: flex; justify-content: center; align-items: center; color: black; font-size: 10px;">NOMBRE DE
-          USUARIO</div>
+        <div class="titulo" v-if="role === 'ADMIN' || role === 'INSTRUCTOR'"
+          style="display: flex; justify-content: center; align-items: center; color: black; font-size: 10px;">{{ nombre }}</div>
         <div style="display: flex; justify-content: center; align-items: center; color: black;font-size: 12px;">
-          @rstoenescu</div>
+          {{ correo }}</div>
       </div>
     </q-img>
   </q-drawer>
@@ -47,7 +46,14 @@
 
 <script setup>
 import { computed } from 'vue';
-import { useAuthStore } from '../../store/useAuth'; // Adjust the path as necessary
+import { useAuthStore } from '../../store/useAuth'; // Ajusta la ruta según sea necesario
+
+const authStore = useAuthStore();
+const role = computed(() => authStore.getRole()); // Asegúrate de que esto devuelva el rol correctamente
+
+// Computados para nombre y correo
+const nombre = computed(() => authStore.getName());
+const correo = computed(() => authStore.getEmail());
 
 const props = defineProps({
   leftDrawerOpen: Boolean,
@@ -55,13 +61,11 @@ const props = defineProps({
   isActiveRoute: Function
 });
 
-const authStore = useAuthStore();
-const role = authStore.getRole();
-
 const filteredMenuItems = computed(() =>
-  props.menuItems.filter(item => item.rol.includes(role))
+  props.menuItems.filter(item => item.rol.includes(role.value))
 );
 </script>
+
 <style scoped>
 .custom-button {
   background-color: green;
