@@ -158,7 +158,7 @@
 </template>
 
 <script setup>
-import { ref, onBeforeMount } from "vue";
+import { ref, onBeforeMount, computed } from "vue";
 import { getDataRepfora } from '../services/apiRepfora.js'
 import { getData, putData, postData } from "../services/apiClient.js";
 import binnacleTable from "../components/tables/SecondTable.vue";
@@ -171,8 +171,9 @@ import {
 } from "../composables/Notify";
 import { formatDate } from "../utils/formatDate.js";
 import moment from "moment-timezone"
+import { useAuthStore } from './../store/useAuth.js'
 
-
+const authStore = useAuthStore();
 let loading = ref(false);
 let change = ref()
 let title = "Bitácoras";
@@ -182,8 +183,8 @@ let instructor = ref("");
 let numBinnacle = ref("");
 let document = ref("");
 let observation = ref("");
-let observationDate = moment().tz('America/Bogota').format('YYYY-MM-DD HH:mm:ss');
-let user = ref("66f1c8f171e7d8e0b4b64050")
+let observationDate = moment().tz('America/Bogota').format('YYYY-MM-DD HH:mm:ss')
+const user = computed(() => authStore.getEmail());
 let listObservations = ref("")
 let idBinnacle = ref("")
 const showModalCreate = ref(false);
@@ -358,7 +359,6 @@ function onReset() {
   numBinnacle.value = "";
   document.value = "";
   observation.value = "";
-  observationDate = "";
 }
 
 function openModalCreate() {
@@ -377,6 +377,7 @@ async function onSubmitObservation() {
         }
       ]
     }
+    
     let url = await putData(`/binnacles/addobservation/${idBinnacle.value}`, data)
     notifySuccessRequest("Observación guardada exitosamente");
     showModalObservations.value = false;

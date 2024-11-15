@@ -10,7 +10,7 @@ const followupSchema = new mongoose.Schema({
     observations:[
         { 
             observation:{ type: String},
-            user: { type: mongoose.Schema.Types.ObjectId},
+            user: { type: String},
             observationDate:{type: Date}
         }
     ]

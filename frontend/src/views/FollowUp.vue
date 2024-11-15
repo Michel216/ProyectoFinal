@@ -1,11 +1,11 @@
 <template>
   <div class="q-pa-md q-gutter-md">
+
     <router-link to="/home" class="iconExit" style="display: flex; text-decoration: none">
       <q-btn dense unelevated round color="primary" icon="arrow_back" text-color="white" />
     </router-link>
     <h3 class="title-table">Seguimientos</h3>
     <hr id="hr" class="bg-green-9" />
-
     <Btn :label="btnLabel" :onClickFunction="openModalCreate" :loading="loading" />
 
     <FollowupTable :title="title" :columns="columns" :rows="rows" :options="options"
@@ -140,6 +140,8 @@
               <q-card-section v-if="listObservations.length != 0">
                 <p><span class="text-h7">Observación:</span> <span class="text-h7">{{ item.observation
                     }}</span> </p>
+                    <p><span class="text-h7">Usuario:</span> <span class="text-h7">{{ item.user
+                    }}</span> </p>
                 <p><span class="text-h7">Fecha de observación:</span> <span class="text-h7">{{ formatDate(item.observationDate)
                     }}</span>
                 </p>
@@ -164,7 +166,7 @@
 </template>
 
 <script setup>
-import { ref, onBeforeMount } from "vue";
+import { ref, onBeforeMount, computed } from "vue";
 import { getData, putData, postData } from "../services/apiClient.js";
 import FollowupTable from "../components/tables/SecondTable.vue";
 import Btn from "../components/buttons/Button.vue";
@@ -176,8 +178,10 @@ import {
 import { formatMonth } from "../utils/formatMonth.js";
 import moment from "moment-timezone";
 import { formatDate } from "../utils/formatDate.js";
+import { useAuthStore } from './../store/useAuth.js'
 
 const title = "Seguimientos";
+const authStore = useAuthStore();
 const rows = ref([]);
 let loading = ref(false);
 let change = ref();
@@ -189,7 +193,8 @@ let document = ref("");
 let month = ref("");
 let observation = ref("");
 let observationDate = moment().tz('America/Bogota').format('YYYY-MM-DD HH:mm:ss')
-let user = ref("66f1c8f171e7d8e0b4b64050")
+const user = computed(() => authStore.getEmail());
+
 let showModalCreate = ref(false);
 let showModalObservations = ref(false);
 let listObservations = ref([]);
@@ -317,6 +322,8 @@ async function onSubmitObservation() {
         },
       ],
     };
+    
+    
     let url = await putData(
       `/followup/addobservation/${idFollowUp.value}`,
       data
@@ -342,7 +349,6 @@ function onReset() {
   document.value = "";
   month.value = "";
   observation.value = "";
-  observationDate = "";
   user.value = "";
   idFollowUp.value = "";
 }
