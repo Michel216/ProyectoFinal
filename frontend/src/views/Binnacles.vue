@@ -134,6 +134,8 @@
               <q-card-section v-if="listObservations.length != 0">
                 <p><span class="text-h7">Observación:</span> <span class="text-h7">{{ item.observation
                     }}</span> </p>
+                    <p><span class="text-h7">Usuario:</span> <span class="text-h7">{{ item.user
+                    }}</span> </p>
                 <p><span class="text-h7">Fecha de observación:</span> <span class="text-h7">{{ formatDate(item.observationDate)
                     }}</span>
                 </p>

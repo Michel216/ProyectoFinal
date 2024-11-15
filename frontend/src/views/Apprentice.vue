@@ -102,7 +102,6 @@ import apprenticeTable from "../components/tables/BasicTable.vue";
 import Btn from "../components/buttons/Button.vue";
 import Modal from "../components/modals/Modal.vue";
 import { useRoute } from 'vue-router';
-import { getData } from './../../services/apiClient';
 import {
   notifyErrorRequest,
   notifySuccessRequest,
