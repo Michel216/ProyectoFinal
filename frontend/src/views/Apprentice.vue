@@ -96,6 +96,7 @@
 
 <script setup>
 import { ref, onBeforeMount } from "vue";
+import {getDataRepfora} from '../services/apiRepfora.js'
 import { getData, putData, postData } from "../services/apiClient.js";
 import apprenticeTable from "../components/tables/BasicTable.vue";
 import Btn from "../components/buttons/Button.vue";
@@ -169,10 +170,10 @@ const columns = ref([
     field: "fiche",
   },
   {
-    name: "cod.ficha",
+    name: "code",
     label: "Cod. Ficha",
     align: "center",
-    field: "cod.ficha",
+    field: "code",
   },
   {
     name: "modality",
@@ -212,19 +213,30 @@ async function bring() {
   try {
     let url = await getData("/apprentice/listallapprentice");
     console.log(url);
-    rows.value = url.listApprentice.map((apprentice) => {
-      return {
-        ...apprentice,
-        firstName: (apprentice.firstName + " " + apprentice.lastName),
-        modality: apprentice.modality.name,
-      };
-    });
+    
+    // Usamos Promise.all para esperar a que todas las promesas se resuelvan
+    rows.value = await Promise.all(
+      url.listApprentice.map(async (apprentice) => {
+        const ficheId = apprentice.fiche; // El ID de 'fiche' está en apprentice.fiche
+        const ficheData = await getDataRepfora(`/fiches/${ficheId}`);
+        console.log(ficheData);
+        
+        return {
+          ...apprentice,
+          firstName: (apprentice.firstName + " " + apprentice.lastName),
+          modality: apprentice.modality.name,
+          fiche: ficheData.data.program.name,
+          code: ficheData.data.program.code
+        };
+      })
+    );
   } catch (error) {
     console.log(error);
   } finally {
     loading.value = false;
   }
 }
+
 
 async function handleToggleActivate(id, status) {
   try {
