@@ -107,52 +107,22 @@
             max-width: 100%;
             width: 100vw;
             margin: auto;
-
+           
             gap: 20px;
             border-radius: 50px;
           ">
-          <q-input outlined v-model="observation" label="Escriba la observacion para esta Bitácora" lazy-rules :rules="[
-            (val) =>
-              (val && val.length > 0) || 'Por favor, ingrese una observación',
-          ]" />
+          <q-input outlined type="textarea" v-model="observation" label="Observación" lazy-rules
+            :rules="[(val) => (val && val.length > 0) || 'Por favor, ingrese una observación']" />
 
-          <!-- <q-select outlined v-model="user" label="Seleccione un usuario" :options="optionsInstructor" emit-value
-            map-options clearable use-input input-debounce="0" behavior="menu" @filter="filterInstructor" lazy-rules
-            :rules="[
-              (val) =>
-                (val && val.length > 0) || 'Por favor, seleccione un usuario',
-            ]">
-            <template v-slot:no-option>
-              <q-item>
-                <q-item-section class="text-grey"> No results </q-item-section>
-              </q-item>
-            </template>
-          </q-select>
-          <q-input outlined v-model="observationDate" label="Fecha de observación" mask="date" :rules="[
-            (val) =>
-              (val && val.length > 0) ||
-              'Por favor, ingrese la fecha de la observación',
-          ]">
-            <template v-slot:append>
-              <q-icon name="event" class="cursor-pointer">
-                <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                  <q-date v-model="observationDate" today-btn>
-                    <div class="row items-center justify-end">
-                      <q-btn v-close-popup label="Close" color="primary" flat />
-                    </div>
-                  </q-date>
-                </q-popup-proxy>
-              </q-icon>
-            </template>
-          </q-input> -->
-          <div class="q" style="display: flex; justify-content: center; align-items: center">
+
+          <div class="q" style="display: flex; justify-content: center; align-items: center;">
             <q-btn label="Guardar" type="submit" icon="save" color="primary" :loading="loading" />
 
             <q-btn label="Cerrar" type="reset" icon="close" flat class="q-ml-sm" v-close-popup style="
-                background-color: white;
-                color: black;
-                box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
-              " />
+      background-color: white;
+      color: black;
+      box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
+    " />
           </div>
         </q-form>
         <q-form v-if="change" @submit="onSubmitObservation" @reset="onReset" class="q-gutter-md" style="
@@ -160,7 +130,7 @@
             max-width: 100%;
             width: 100vw;
             margin: auto;
-
+           
             gap: 20px;
             border-radius: 50px;
           ">
@@ -182,10 +152,10 @@
           <div class="q" style="display: flex; justify-content: center; align-items: center;">
 
             <q-btn label="Cerrar" type="reset" icon="close" flat class="q-ml-sm" v-close-popup style="
-                background-color: white;
-                color: black;
-                box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
-              " />
+      background-color: white;
+      color: black;
+      box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
+    " />
           </div>
         </q-form>
       </div>
@@ -204,6 +174,8 @@ import {
   notifySuccessRequest,
 } from "../composables/Notify";
 import { formatMonth } from "../utils/formatMonth.js";
+import moment from "moment-timezone";
+import { formatDate } from "../utils/formatDate.js";
 
 const title = "Seguimientos";
 const rows = ref([]);
@@ -216,8 +188,8 @@ let numFollowUp = ref("");
 let document = ref("");
 let month = ref("");
 let observation = ref("");
-let observationDate = ref("");
-let user = ref("");
+let observationDate = moment().tz('America/Bogota').format('YYYY-MM-DD HH:mm:ss')
+let user = ref("66f1c8f171e7d8e0b4b64050")
 let showModalCreate = ref(false);
 let showModalObservations = ref(false);
 let listObservations = ref([]);
@@ -340,8 +312,8 @@ async function onSubmitObservation() {
       observations: [
         {
           observation: observation.value,
-          observationDate: observationDate.value,
-          user: user.value,
+          observationDate:  observationDate,
+          user: user.value
         },
       ],
     };
@@ -370,7 +342,7 @@ function onReset() {
   document.value = "";
   month.value = "";
   observation.value = "";
-  observationDate.value = "";
+  observationDate = "";
   user.value = "";
   idFollowUp.value = "";
 }

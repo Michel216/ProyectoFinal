@@ -105,35 +105,10 @@
             gap: 20px;
             border-radius: 50px;
           ">
-          <q-input outlined v-model="observation" label="Observación" lazy-rules
+          <q-input outlined type="textarea" v-model="observation" label="Observación" lazy-rules
             :rules="[(val) => (val && val.length > 0) || 'Por favor, ingrese una observación']" />
 
-          <q-select outlined v-model="user" label="Seleccione un usuario" :options="optionsInstructor" emit-value
-            map-options clearable use-input input-debounce="0" behavior="menu" @filter="filterInstructor" lazy-rules
-            :rules="[(val) => (val && val.length > 0) || 'Por favor, seleccione un usuario']">
 
-            <template v-slot:no-option>
-              <q-item>
-                <q-item-section class="text-grey"> No results </q-item-section>
-              </q-item>
-            </template>
-
-
-          </q-select>
-          <q-input outlined v-model="observationDate" label="Fecha de observación" mask="date"
-            :rules="[val => val && val.length > 0 || 'Por favor, ingrese la fecha de la observación']">
-            <template v-slot:append>
-              <q-icon name="event" class="cursor-pointer">
-                <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                  <q-date v-model="observationDate" today-btn>
-                    <div class="row items-center justify-end">
-                      <q-btn v-close-popup label="Close" color="primary" flat />
-                    </div>
-                  </q-date>
-                </q-popup-proxy>
-              </q-icon>
-            </template>
-          </q-input>
           <div class="q" style="display: flex; justify-content: center; align-items: center;">
             <q-btn label="Guardar" type="submit" icon="save" color="primary" :loading="loading" />
 
@@ -195,6 +170,7 @@ import {
   notifyWarningRequest,
 } from "../composables/Notify";
 import { formatDate } from "../utils/formatDate.js";
+import moment from "moment-timezone"
 
 
 let loading = ref(false);
@@ -206,8 +182,8 @@ let instructor = ref("");
 let numBinnacle = ref("");
 let document = ref("");
 let observation = ref("");
-let observationDate = ref("");
-let user = ref("")
+let observationDate = moment().tz('America/Bogota').format('YYYY-MM-DD HH:mm:ss');
+let user = ref("66f1c8f171e7d8e0b4b64050")
 let listObservations = ref("")
 let idBinnacle = ref("")
 const showModalCreate = ref(false);
@@ -310,7 +286,7 @@ async function bring() {
         // Obtener los datos del instructor desde su ID
         const instructorId = item.instructor;  // Accedemos al 'instructor' de cada 'item'
         const instructorData = await getDataRepfora(`/instructors/${instructorId}`);  // Obtener datos del instructor por ID
-        console.log(instructorData)
+        // console.log(instructorData)
 
         // Verificar que 'assignment' y 'apprentice' existen antes de acceder a ellos
         const assignmentApprentice = item.assignment && item.assignment.apprentice
@@ -382,7 +358,7 @@ function onReset() {
   numBinnacle.value = "";
   document.value = "";
   observation.value = "";
-  observationDate.value = "";
+  observationDate = "";
 }
 
 function openModalCreate() {
@@ -396,7 +372,7 @@ async function onSubmitObservation() {
       observations: [
         {
           observation: observation.value,
-          observationDate: observationDate.value,
+          observationDate:  observationDate,
           user: user.value
         }
       ]

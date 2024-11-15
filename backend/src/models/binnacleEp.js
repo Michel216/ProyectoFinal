@@ -9,7 +9,7 @@ const binnacleSchema = new mongoose.Schema({
     status: { type: Number, default: 1, enum: [1, 2, 3, 4, 5, 6]}, // valida que el tipo de la bitácora sea de 1 a 4. Programado: 1, Ejecutado: 2, Pendiente: 3, Verificado: 4, Verificado técnico: 5, Verificado proyecto: 6
     observations: [{
         observation: { type: String },
-        user: { type: mongoose.Schema.Types.ObjectId },
+        user: { type: String },
         observationDate: { type: Date }
     }]
 }, { timestamps: true })
