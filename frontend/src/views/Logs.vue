@@ -106,7 +106,7 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import Btn from "../components/buttons/Button.vue";
+import { Notify } from "quasar"; 
 import { postDataLogin } from "../services/apiRepfora.js";
 import { postLogin } from "../services/apiClient.js";
 import { useAuthStore } from "../store/useAuth.js";
@@ -123,19 +123,29 @@ const isPwd = ref(true);
 const isLoading = ref(false); 
 
 const handleSubmit = async () => {
- 
-  if (!rol.value) {
-    alert("Por favor selecciona un rol.");
+  if (!email.value.trim() || !password.value.trim()) {
+    Notify.create({
+      type: 'negative',
+      message: 'Por favor ingresa todos los campos.',
+    });
     return;
   }
+
+  if (!rol.value) {
+    Notify.create({
+      type: 'negative',
+      message: 'Por favor selecciona un rol.',
+    });
+    return;
+  }
+
   console.log(
     "Inicio de sesión con rol:",
     rol.value,
     email.value,
-    "y contraseña:",
-    password.value
+    "y contraseña:", password.value
   );
-  isLoading.value = true; 
+  isLoading.value = true;
 
   try {
     let endpoint;
@@ -164,7 +174,10 @@ const handleSubmit = async () => {
     }
 
     if (!data) {
-      console.error("No se recibió respuesta válida del servidor");
+      Notify.create({
+        type: 'negative',
+        message: 'No se recibió respuesta válida del servidor.',
+      });
       return;
     }
 
@@ -173,8 +186,18 @@ const handleSubmit = async () => {
 
     // Redirigir a la página de inicio
     router.replace("/Home");
+
+    Notify.create({
+      type: 'positive',
+      message: 'Inicio de sesión exitoso.',
+    });
   } catch (error) {
     console.error("Error durante el inicio de sesión:", error);
+    isLoading.value = false;
+    Notify.create({
+      type: 'negative',
+      message: 'Hubo un error al intentar iniciar sesión.',
+    });
   }
 };
 
