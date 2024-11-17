@@ -29,7 +29,7 @@
           >
             <q-input
               outlined
-              class="q-mt-sm"
+              class="q-mt-sm" 
               v-model="email"
               label="Correo Electrónico"
               :rules="[
@@ -217,7 +217,6 @@ const ClickFunctionLogin = async () => {
   justify-content: center;
   align-items: center;
   height: 100vh;
-
   background-color: #f0f0f0;
 }
 
@@ -228,63 +227,60 @@ const ClickFunctionLogin = async () => {
 }
 
 .container-form {
-  padding: 20px !important;
+  padding: 10px !important; 
 }
 
 .login-box {
-  width: 40%;
-  /* padding: 20px; */
+  width: 40%; 
+
   border-radius: 10px;
   background-color: #fff;
   box-shadow: 0 5px 5px -3px #0003, 0 8px 10px 1px #00000024,
     0 3px 14px 2px #0000001f;
   text-align: center;
-  /* margin: 40% 0; */
   height: auto;
 }
 
 .login-header {
   background-color: green;
-  padding: 30px;
+  padding: 20px; 
   border-radius: 8px 8px 0 0;
 }
 
 .login-header h5 {
   color: white;
-  /* font-size: 40px; */
   font-weight: bold;
   margin: 0;
 }
 
 .logo {
-  width: 100px;
-  /* margin: 20px 0; */
+  width: 80px; 
 }
 
 .login-title {
-  font-size: 25px;
-  /* margin-bottom: 10px; */
+  font-size: 20px; 
   font-weight: bold;
   margin: 0;
 }
 
 .form-group {
-  margin-bottom: 20px;
+  margin-bottom: 15px; 
 }
+
 .form-group label {
   font-weight: bold !important;
 }
 
 .input-field {
   width: 100%;
-  padding: 10px;
+  padding: 8px; 
   border: 1px solid #ccc;
   border-radius: 5px;
   font-size: 14px;
 }
 
 .login-button {
-  width: 30%;
+  width: 40%; 
   padding: 10px;
   background-color: green;
   color: white;
