@@ -82,11 +82,8 @@
           <div class="q" style="display: flex; justify-content: center; align-items: center;">
             <q-btn label="Guardar" type="submit" icon="save" color="primary" :loading="loading" />
 
-            <q-btn label="Cerrar" type="reset" icon="close" flat class="q-ml-sm" v-close-popup style="
-      background-color: white;
-      color: black;
-      box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
-    " />
+            <q-btn label="Cerrar"  type="reset" icon="close"  class="full-width"  v-close-popup
+            style="background-color: white; color: black; box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);" />
           </div>
         </q-form>
       </div>
@@ -108,13 +105,10 @@
 
 
           <div class="q" style="display: flex; justify-content: center; align-items: center;">
-            <q-btn label="Guardar" type="submit" icon="save" color="primary" :loading="loading" />
+            <q-btn label="Guardar"  class="full-width"  type="submit" icon="save" color="primary" :loading="loading" />
 
-            <q-btn label="Cerrar" type="reset" icon="close" flat class="q-ml-sm" v-close-popup style="
-      background-color: white;
-      color: black;
-      box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
-    " />
+            <q-btn label="Cerrar"  type="reset" icon="close"  class="full-width"  v-close-popup
+            style="background-color: white; color: black; box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);" />
           </div>
         </q-form>
         <q-form v-if="change" @submit="onSubmitObservation" @reset="onReset" class="q-gutter-md" style="
@@ -143,13 +137,10 @@
               </q-card-section>
             </q-card>
           </div>
-          <div class="q" style="display: flex; justify-content: center; align-items: center;">
+          <div class="full-width" style="display: flex; justify-content: center; align-items: center;">
 
-            <q-btn label="Cerrar" type="reset" icon="close" flat class="q-ml-sm" v-close-popup style="
-      background-color: white;
-      color: black;
-      box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
-    " />
+            <q-btn label="Cerrar"  type="reset" icon="close"  class="full-width"  v-close-popup
+            style="background-color: white; color: black; box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);" />
           </div>
         </q-form>
       </div>
@@ -480,4 +471,13 @@ h3 {
   margin-bottom: 0;
   font-weight: bold;
 }
+.full-width{
+  transition: box-shadow 0.3s ease;
+}
+.full-width:hover{
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+
+  text-shadow: 0px 0px 10px white;
+}
+
 </style>

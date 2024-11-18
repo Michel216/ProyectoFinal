@@ -86,8 +86,9 @@
             </template>
           </q-input>
           <div>
-            <q-btn label="guardar" type="submit" color="primary" :loading="loading" />
-            <q-btn label="cerrar" type="reset" color="primary" flat class="q-ml-sm" v-close-popup />
+            <q-btn label="guardar" type="submit" color="primary" :loading="loading"  class="full-width" />
+            <q-btn label="Cerrar"  type="reset" icon="close"  class="full-width"  v-close-popup
+            style="background-color: white; color: black; box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);" />
           </div>
         </q-form>
       </div>
@@ -312,3 +313,15 @@ async function filterModality(val, update) {
   });
 }
 </script>
+
+<style scoped>
+.full-width{
+  transition: box-shadow 0.3s ease;
+}
+.full-width:hover{
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+
+  text-shadow: 0px 0px 10px white;
+}
+
+</style>

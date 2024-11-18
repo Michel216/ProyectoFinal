@@ -19,7 +19,7 @@
         :disable="!selectedValue" />
     </div>
     <!-- Botón de crear y tabla de aprendices -->
-    <Btn :label="btnLabel" :onClickFunction="bringIdAndOpenModal" :loading="loading" />
+    <Btn :label="btnLabel" :onClickFunction="bringIdAndOpenModal" :loading="loading"  />
     <apprenticeTable :title="title" :rows="filteredRows" :columns="columns" :onToggleActivate="handleToggleActivate"
       :loading="loading" :onClickEdit="bringIdAndOpenModal" />
 
@@ -71,9 +71,12 @@
               </q-item>
             </template>
           </q-select>
-          <q-btn label="Guardar" type="submit" icon="save" color="primary" :loading="loading" />
-          <q-btn label="Cerrar" type="reset" icon="close" flat class="q-ml-sm" v-close-popup
+        
+          <q-btn label="Guardar" type="submit" icon="save" color="primary" class="full-width" :loading="loading" />
+          <q-btn label="Cerrar"  type="reset" icon="close"  class="full-width"  v-close-popup
             style="background-color: white; color: black; box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);" />
+          
+       
         </q-form>
       </div>
     </Modal>
@@ -445,4 +448,13 @@ h3 {
 .q-mr-md {
   margin-right: 8px;
 }
+.full-width{
+  transition: box-shadow 0.3s ease;
+}
+.full-width:hover{
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+
+  text-shadow: 0px 0px 10px white;
+}
+
 </style>

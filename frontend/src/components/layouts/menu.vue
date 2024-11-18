@@ -77,6 +77,7 @@ const filteredMenuItems = computed(() =>
   font-size: 18px;
   margin-left: 5%;
   width: 90%;
+  transition: box-shadow 0.3s ease;
 }
 
 .custom-button .icon {
@@ -84,7 +85,11 @@ const filteredMenuItems = computed(() =>
 }
 
 .custom-button:hover {
-  background-color: #066b0b;
+  background-color: #005500;
   /* Color verde un poco más oscuro en hover */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+
+  text-shadow: 0px 0px 10px white;
 }
+
 </style>

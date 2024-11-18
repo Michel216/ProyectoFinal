@@ -304,4 +304,12 @@ const ClickFunctionLogin = async () => {
   text-decoration: underline;
   font-weight: bold !important;
 }
+.full-width{
+  transition: box-shadow 0.3s ease;
+}
+.full-width:hover{
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+
+  text-shadow: 0px 0px 10px white;
+}
 </style>
