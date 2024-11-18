@@ -26,25 +26,41 @@
                 (val && val.length > 0) ||
                 'Por favor, dígite el nombre de la modalidad',
             ]"
-          />
+          >
+            <template v-slot:prepend>
+              <font-awesome-icon icon="fa-solid fa-person-chalkboard" />
+            </template>
+          </q-input>
           <q-input
             outlined
             type="number"
             v-model="hourInstructorFollow"
             label="Hora instructor de seguimiento"
-          />
+          >
+            <template v-slot:prepend>
+              <font-awesome-icon icon="fa-solid fa-clock" />
+            </template>
+          </q-input>
           <q-input
             outlined
             type="number"
             v-model="hourInstructorProject"
             label="Hora instructor de projecto"
-          />
+          >
+            <template v-slot:prepend>
+              <font-awesome-icon icon="fa-solid fa-clock" />
+            </template>
+          </q-input>
           <q-input
             outlined
             type="number"
             v-model="hourInstructorTechnical"
             label="Hora instructor técnico"
-          />
+          >
+            <template v-slot:prepend>
+              <font-awesome-icon icon="fa-solid fa-clock" />
+            </template>
+          </q-input>
           <div>
             <q-btn
               label="guardar"
@@ -73,6 +89,12 @@ import {
   notifyWarningRequest,
 } from "../composables/Notify";
 import Header from '../components/header/Header.vue';
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { faClock, faPersonChalkboard } from '@fortawesome/free-solid-svg-icons';
+
+library.add(faClock, faPersonChalkboard)
+
 let title = "Modalidades";
 let loading = ref(false);
 let btnLabel = "Crear";
