@@ -1,11 +1,6 @@
 <template>
   <div class="q-pa-md q-gutter-md">
-
-    <router-link to="/home" class="iconExit" style="display: flex; text-decoration: none">
-      <q-btn dense unelevated round color="primary" icon="arrow_back" text-color="white" />
-    </router-link>
-    <h3 class="title-table">Seguimientos</h3>
-    <hr id="hr" class="bg-green-9" />
+    <Header title="Seguimientos"></Header>
     <Btn :label="btnLabel" :onClickFunction="openModalCreate" :loading="loading" />
 
     <FollowupTable :title="title" :columns="columns" :rows="rows" :options="options"
@@ -179,6 +174,7 @@ import { formatMonth } from "../utils/formatMonth.js";
 import moment from "moment-timezone";
 import { formatDate } from "../utils/formatDate.js";
 import { useAuthStore } from './../store/useAuth.js'
+import Header from '../components/header/header.vue';
 
 const title = "Seguimientos";
 const authStore = useAuthStore();

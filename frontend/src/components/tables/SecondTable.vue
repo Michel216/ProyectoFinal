@@ -34,7 +34,7 @@
       </template>
       <template v-slot:body-cell-apprentice="props">
         <q-td :props="props" align="center">
-          <Btn color="primary" @click="handleViewApprentices(props.row)" label=" ">
+          <Btn dense unelevated round color="primary" @click="toggleSeeApprentice(props.row)" label=" ">
             <template v-slot:prepend>
               <font-awesome-icon icon="eye" />
             </template>
@@ -52,17 +52,12 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { useRouter } from 'vue-router';
 import { faMagnifyingGlass, faEye } from '@fortawesome/free-solid-svg-icons';
 import Btn from "./../buttons/Button.vue";
-import  {getData} from './../../services/apiClient'
+import { getData } from './../../services/apiClient'
 
 library.add(faMagnifyingGlass, faEye);
 const router = useRouter();
 let loading = ref(false)
 const props = defineProps({
-  title: {
-    type: String,
-    required: true,
-    default: 'My Table'
-  },
   rows: {
     type: Array,
     required: true
@@ -84,14 +79,14 @@ const props = defineProps({
   },
   onClickFunction: {
     type: Function
+  },
+  toggleSeeApprentice: {
+    type: Function,
+    required: true,
   }
+
 });
 
-
-function handleViewApprentices(row) {
-  console.log("Detalles de la fila:", row);
-  router.push({ path: `/apprentice/${row._id}` });
-}
 // Combinar las columnas pasadas con las columnas de acciones "editar" y "activar"
 // const combinedColumns = computed(() => [
 //   ...props.columns,
@@ -110,9 +105,9 @@ function updateStatus(status, row) {
   props.onUpdateStatus(status, row);
 }
 
-function handleClick(row, change) {
-  props.onClickFunction(row, change) // Emite el evento al componente padre
-}
+// function handleClick(row, change) {
+//   props.onClickFunction(row, change) // Emite el evento al componente padre
+// }
 // const emit = defineEmits(['openModal']);
 
 // // Función para abrir el modal con la observación seleccionada

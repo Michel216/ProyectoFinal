@@ -1,10 +1,6 @@
 <template>
   <div class="q-pa-md q-gutter-md">
-    <router-link to="/home" class="iconExit" style="display: flex; text-decoration: none">
-      <q-btn dense unelevated round color="primary" icon="arrow_back" text-color="white" />
-    </router-link>
-    <h3 class="title-table">Asignaciones</h3>
-    <hr id="hr" class="bg-green-9" />
+    <Header title="Asignaciones"></Header>
 
     <!-- Contenedor de botón, formulario de radio y campo de entrada -->
     <div class="q-pa-md q-gutter-sm" style="display: flex; align-items: center; justify-content: space-between;">
@@ -120,7 +116,7 @@ import {
   notifySuccessRequest,
   notifyWarningRequest,
 } from "../composables/Notify";
-
+import Header from '../components/header/header.vue';
 let loading = ref(false);
 let title = "Asignación";
 let btnLabel = "Crear Asignación";

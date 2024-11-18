@@ -2,11 +2,11 @@
     <div>
         <q-table :title="title" :rows="rows" :columns="columns" :loading="loading">
             <template v-slot:body-cell-status="scope">
-                <q-td :props="scope">
-                    <strong style="color: green" v-if="scope.row.status === 1">Activo</strong>
-                    <strong style="color: red" v-else>Inactivo</strong>
-                </q-td>
-            </template>
+        <q-td :props="scope">
+          <span style="font-size: 110%; color: white; background-color: green; padding:8% 25%; border-radius:5px" v-if="scope.row.status === 1">Activo</span>
+          <span style="font-size: 110%; color: white; background-color: red; padding:8% 15%; border-radius:5px" v-else>Inactivo</span>
+        </q-td>
+      </template>
         </q-table>
     </div>
 </template>
