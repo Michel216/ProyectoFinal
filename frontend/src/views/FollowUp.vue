@@ -125,7 +125,7 @@
     " />
           </div>
         </q-form>
-        <q-form v-if="change" @submit="onSubmitObservation" @reset="onReset" class="q-gutter-md" style="
+        <q-form v-else @submit="onSubmitObservation" @reset="onReset" style="
             max-height: none;
             max-width: 100%;
             width: 100vw;
@@ -135,29 +135,45 @@
             border-radius: 50px;
           ">
           <div v-for="(item, index) in listObservations" :key="index">
-            <q-card bordered class="my-card">
-
-              <q-card-section v-if="listObservations.length != 0">
-                <p><span class="text-h7">Observación:</span> <span class="text-h7">{{ item.observation
-                    }}</span> </p>
-                    <p><span class="text-h7">Usuario:</span> <span class="text-h7">{{ item.user
-                    }}</span> </p>
-                <p><span class="text-h7">Fecha de observación:</span> <span class="text-h7">{{ formatDate(item.observationDate)
-                    }}</span>
+            <div v-if="listObservations.length > 0">
+              <q-chat-message v-if="item.user === user" sent>
+                <p style="padding: 5px;">
+                  <span class="text-h7 text-primary"><strong> {{ item.user
+                      }}</strong></span> <br>
+                  <span class=" text-dark">{{ item.observation
+                    }}</span> <br><br>
+                  <span class="text-h7 text-primary" style="float: right;"><strong> {{ formatDate(item.observationDate)
+                      }}</strong></span>
                 </p>
-              </q-card-section>
-              <q-card-section v-else>
-                <p>No hay observaciones para mostrar</p>
+              </q-chat-message>
+              <q-chat-message v-else>
+                <p style="padding: 5px;">
+                  <span class="text-h7 text-dark"><strong> {{ item.user
+                      }}</strong></span> <br>
+                  <span class=" text-dark">{{ item.observation
+                    }}</span> <br><br>
+                  <span class="text-h7 text-dark" style="float: right;"><strong> {{ formatDate(item.observationDate)
+                      }}</strong></span>
+                </p>
+              </q-chat-message>
+            </div>
+
+          </div>
+          <div v-if="listObservations.length <= 0">
+            <q-card bordered class="bg-grey-5 my-card" >
+              <q-card-section align="center" class="text-h5 text-bold text-grey-8">
+                No hay observaciones
               </q-card-section>
             </q-card>
           </div>
+          <br>
           <div class="q" style="display: flex; justify-content: center; align-items: center;">
 
             <q-btn label="Cerrar" type="reset" icon="close" flat class="q-ml-sm" v-close-popup style="
-      background-color: white;
-      color: black;
-      box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
-    " />
+background-color: white;
+color: black;
+box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
+" />
           </div>
         </q-form>
       </div>

@@ -1,9 +1,11 @@
 <template>
     <div class="q-pa-md q-gutter-sm">
-        <q-dialog :model-value="isVisible" @update:model-value="(val) => emits('update:isVisible', val)" persistent>
+        <q-dialog :model-value="isVisible" @update:model-value="(val) => emits('update:isVisible', val)">
             <q-card>
                 <q-card-section class="bg-primary row items-center">
                     <div class="text-h6 text-white" >{{ label }}</div>
+                    <q-space />
+                    <q-btn icon="close" color="white" flat round dense v-close-popup />
                 </q-card-section>
 
                 <q-card-section>

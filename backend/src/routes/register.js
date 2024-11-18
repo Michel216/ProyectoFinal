@@ -72,6 +72,7 @@ registerRoute.post('/addregister', [
     check('startDate', 'El campo startDate es obligatorio y debe ser una fecha válida').isDate(), 
     check('endDate', 'El campo endDate es obligatorio y debe ser una fecha válida').isDate(),
     check('company', 'El campo company es obligatorio y debe ser una cadena de texto').not().isEmpty(),
+    check('emailCompany', 'El correo de la compañía es obligatorio y debe ser un correo válido').notEmpty().isEmail(),
     check('businessProyectHour', 'El campo businessProyectHour es obligatorio ').not().isEmpty(),
     check('phonecompany', 'El campo phonecompany es obligatorio y debe ser un número de teléfono válido de 10 dígitos').isLength({ min: 10, max: 10 }).isNumeric(),
     check('addresscompany', 'El campo addresscompany es obligatorio, debe ser único y debe tener al menos 7 caracteres').isLength({ min: 7 }),

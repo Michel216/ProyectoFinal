@@ -1,10 +1,6 @@
 <template>
   <div class="q-pa-md q-gutter-md">
-    <router-link to="/home" class="iconExit" style="display: flex; text-decoration: none">
-      <q-btn dense unelevated round color="primary" icon="arrow_back" text-color="white" />
-    </router-link>
-    <h3 class="title-table">Asignaciones</h3>
-    <hr id="hr" class="bg-green-9" />
+    <Header title="Asignaciones"></Header>
 
     <!-- Contenedor de botón, formulario de radio y campo de entrada -->
     <div class="q-pa-md q-gutter-sm" style="display: flex; align-items: center; justify-content: space-between;">
@@ -70,33 +66,9 @@
             </template>
           </q-select>
 
-          <!-- <q-select clearable outlined v-model="filterInstructorTecnico" use-input input-debounce="0"
-            label="Instructor Técnico" :options="options" @filter="filterTechnicalInstructor"
-            style="width: 100%; margin-bottom: 20px; border-radius: 8px;" behavior="menu" emit-value map-options>
-            <template v-slot:no-option>
-              <q-item>
-                <q-item-section class="text-grey">
-                  No results
-                </q-item-section>
-              </q-item>
-            </template>
-          </q-select>
-
-          <q-select clearable outlined v-model="filterInstructorProyecto" use-input input-debounce="0"
-            label="Instructor de Proyecto" :options="options" @filter="filterProyectInstructor"
-            style="width: 100%; margin-bottom: 20px; border-radius: 8px;" behavior="menu" emit-value map-options
-            lazy-rules>
-            <template v-slot:no-option>
-              <q-item>
-                <q-item-section class="text-grey">
-                  No results
-                </q-item-section>
-              </q-item>
-            </template>
-          </q-select> -->
-
           <q-input outlined v-model="textCertificacion" label="Documento Certificación" />
           <q-input outlined type="text" v-model="textFotoJudicial" label="Foto Judicial" />
+
 
           <div>
             <q-btn label="Guardar" type="submit" color="primary" />
@@ -126,16 +98,17 @@ let title = "Asignación";
 let btnLabel = "Crear Asignación";
 const rows = ref([]);
 const showModal = ref(false);
-const options = ref(["6709424071e7d8e0b4b778bd", "66eb7269c249bb3aaed686e1"]);
+const options = ref([]);
 const textCertificacion = ref("");
 const textFotoJudicial = ref("");
 const fichaRegistro = ref("");
 const filterInstructorFollowUp = ref("");
 const filterInstructorTecnico = ref("");
 const filterInstructorProyecto = ref("");
+const optionsInstructor = ref("");
 const submitResult = ref([]);
 
-const shape =ref('apprentice')
+const shape = ref('apprentice')
 
 function radiobtn(evt) {
   const formData = new FormData(evt.target)
@@ -144,14 +117,14 @@ function radiobtn(evt) {
   for (const [name, value] of formData.entries()) {
     data.push({ name, value })
   }
-  
+
   submitResult.value = data
 }
 const text = ref('')
 let change = ref(); // true: crear, false: modificar
 let idAssignment = ref();
 const columns = ref([
-{
+  {
     name: "index",
     label: "#",
     align: "center",
@@ -201,28 +174,31 @@ onBeforeMount(() => {
 
 async function bring() {
   try {
+    // Obtén los datos de registros
     let data = await getData("/register/listallregister");
-    console.log(data); // Asegúrate de que `data.assignments` exista
-    rows.value = data.register.map(async(register, idx) => {
-      const ficheId = apprentice.fiche; // El ID de 'fiche' está en apprentice.fiche
-        const ficheData = await getDataRepfora(`/fiches/${ficheId}`);
-        console.log(ficheData);
+    console.log(data); // Asegúrate de que `data.register` exista
+
+    // Usar `Promise.all` para esperar a que todas las promesas dentro del `map` se resuelvan
+    rows.value = await Promise.all(data.register.map(async (register, idx) => {
+      const ficheId = register.apprentice.fiche;
+      let ficheData = await getDataRepfora(`/fiches/${ficheId}`);
       return {
         ...register,
         apprentice: (register.apprentice.firstName + " " + register.apprentice.lastName),
         fiche: ficheData.data.program.code,
-        // register: register.register.apprentice,
         modality: register.modality.name,
         projectInstructor: register.assignment.map(assign => assign.projectInstructor).join(", "),
-    technicalInstructor: register.assignment.map(assign => assign.technicalInstructor).join(", "),
-    followUpInstructor: register.assignment.map(assign => assign.followUpInstructor).join(", "),
-        index: idx + 1, // Añade el índice manualmente
+        technicalInstructor: register.assignment.map(assign => assign.technicalInstructor).join(", "),
+        followUpInstructor: register.assignment.map(assign => assign.followUpInstructor).join(", "),
+        index: idx + 1,
       };
-    });
+    }));
+
   } catch (error) {
-    console.log(error);
+    console.log("Error al cargar los registros:", error);
   }
 }
+
 
 async function handleToggleActivate(id, status) {
   try {
@@ -302,44 +278,44 @@ async function bringIdAndOpenModal(id) {
   }
 }
 
-const filterRegister = async (val, update) => {
-  try {
-    let res = await getData("/register/listallregister");
-    console.log("Respuesta de la API:", res);
+// const filterRegister = async (val, update) => {
+//   try {
+//     let res = await getData("/register/listallregister");
+//     console.log("Respuesta de la API:", res);
 
-    // Verificar si la respuesta tiene la propiedad 'register'
-    if (res && res.register && Array.isArray(res.register)) {
-      if (val === "") {
-        update(() => {
-          options.value = res.register.map((register) => ({
-            label: register.apprentice.firstName,
-            value: register.id,
-          }));
-        });
-        return;
-      }
+//     // Verificar si la respuesta tiene la propiedad 'register'
+//     if (res && res.register && Array.isArray(res.register)) {
+//       if (val === "") {
+//         update(() => {
+//           options.value = res.register.map((register) => ({
+//             label: register.apprentice.firstName,
+//             value: register.id,
+//           }));
+//         });
+//         return;
+//       }
 
-      update(() => {
-        const needle = val.toLowerCase();
-        options.value = res.register
-          .map((register) => ({
-            label: register.apprentice.firstName,
-            value: register._id,
-          }))
-          .filter((option) => option.label.toLowerCase().includes(needle));
-      });
-    } else {
-      console.error("La respuesta de la API no contiene datos válidos:", res);
-    }
-  } catch (error) {
-    console.error(
-      "Error al obtener registros:",
-      error.response ? error.response.data : error
-    );
-  }
-};
+//       update(() => {
+//         const needle = val.toLowerCase();
+//         options.value = res.register
+//           .map((register) => ({
+//             label: register.apprentice.firstName,
+//             value: register._id,
+//           }))
+//           .filter((option) => option.label.toLowerCase().includes(needle));
+//       });
+//     } else {
+//       console.error("La respuesta de la API no contiene datos válidos:", res);
+//     }
+//   } catch (error) {
+//     console.error(
+//       "Error al obtener registros:",
+//       error.response ? error.response.data : error
+//     );
+//   }
+// };
 
-const filterInstructorSeguimiento = async (val, update) => {
+const filterInstructors = async (val, update) => {
   try {
     // Llamada a la API para obtener los instructores
     let response = await getDataRepfora("/instructors");
@@ -350,9 +326,9 @@ const filterInstructorSeguimiento = async (val, update) => {
     if (response.data && Array.isArray(response.data)) {
       if (val === "") {
         update(() => {
-          options.value = response.data.map((instructor) => ({
+          optionsInstructor.value = response.data.map((instructor) => ({
             label: instructor.name,
-            value: instructor,
+            value: instructor._id,
           }));
         });
         return;
@@ -361,10 +337,10 @@ const filterInstructorSeguimiento = async (val, update) => {
       // Si hay un valor de búsqueda, filtra los instructores por nombre
       update(() => {
         const needle = val.toLowerCase();
-        options.value = response.data
+        optionsInstructor.value = response.data
           .map((instructor) => ({
             label: instructor.name,
-            value: instructor,
+            value: instructor._id,
           }))
           .filter((option) => option.label.toLowerCase().includes(needle));
       });
@@ -397,9 +373,10 @@ const filterInstructorSeguimiento = async (val, update) => {
   text-align: center;
   margin-bottom: 0;
 }
+
 h3 {
   text-align: center;
   margin-bottom: 0;
-  font-weight: bold;
+  font-weight: bold;
 }
 </style>

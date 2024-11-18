@@ -4,22 +4,26 @@
     <h3 class="title-table">Bitacoras</h3>
     <hr id="hr" class="bg-green-9" />
     <div class="q-pa-md q-gutter-sm" style="display: flex">
-      <div style="display: flex; justify-content: center;">
-        <div class="text-primary">Realizar filtro por</div>
-        <q-form @submit="radiobtn" class="q-gutter-md" style="display: flex;">
-          <q-radio name="shape" v-model="shape" :val="'apprentice'" label="Instructor" />
-          <q-radio name="shape" v-model="shape" :val="'insFollowup'" label="Aprendiz" />
-        </q-form>
-      </div>
-      <div class="q-pa-md">
-        <div class="q-gutter-md" style="width: 400px">
-          <q-input outlined v-model="text" label="Ingrese el nombre o número de documento " />
+      <div class="q-pa-md q-gutter-sm" style="display: flex">
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <div style="display: flex; justify-content: center;">
+            <div class="text-primary">Realizar filtro por</div>
+            <q-form @submit.prevent="filterBinnacles" class="q-gutter-md" style="display: flex;">
+              <q-radio name="shape" v-model="shape" :val="'apprentice'" label="Aprendiz" />
+              <q-radio name="shape" v-model="shape" :val="'instructor'" label="Instructor" />
+              <q-input outlined v-model="filterText" label="Ingrese el nombre o número de documento" />
+          <q-btn label="Filtrar" icon="search" type="submit" color="primary" @click="filterBinnacles" />
+            </q-form>
+          </div>
+          
         </div>
       </div>
+
     </div>
     <!-- <Btn :label="btnLabel" :onClickFunction="openModalCreate" :loading="loading" /> -->
-    <binnacleTable :title="title" :columns="columns" :rows="rows" :options="options"
-      :onUpdateStatus="handleUpdateStatus" :loading="loading" :val="true" :onClickFunction="openModalObservations" />
+    <binnacleTable :title="title" :columns="columns" :rows="filteredRows.length ? filteredRows : rows"
+      :options="options" :onUpdateStatus="handleUpdateStatus" :loading="loading" :val="true"
+      :onClickFunction="openModalObservations" />
     <Modal :isVisible="showModalCreate" @update:isVisible="showModalCreate = $event"
       :label="'DILIGENCIA LA INFORMACION'">
       <div class="q-pa-md" style="max-width: 600px">
@@ -119,7 +123,7 @@
     " />
           </div>
         </q-form>
-        <q-form v-if="change" @submit="onSubmitObservation" @reset="onReset" class="q-gutter-md" style="
+        <q-form v-else @submit="onSubmitObservation" @reset="onReset" style="
             max-height: none;
             max-width: 100%;
             width: 100vw;
@@ -129,29 +133,45 @@
             border-radius: 50px;
           ">
           <div v-for="(item, index) in listObservations" :key="index">
-            <q-card bordered class="my-card">
-
-              <q-card-section v-if="listObservations.length != 0">
-                <p><span class="text-h7">Observación:</span> <span class="text-h7">{{ item.observation
-                    }}</span> </p>
-                    <p><span class="text-h7">Usuario:</span> <span class="text-h7">{{ item.user
-                    }}</span> </p>
-                <p><span class="text-h7">Fecha de observación:</span> <span class="text-h7">{{ formatDate(item.observationDate)
-                    }}</span>
+            <div v-if="listObservations.length > 0">
+              <q-chat-message v-if="item.user === user" sent>
+                <p style="padding: 5px;">
+                  <span class="text-h7 text-primary"><strong> {{ item.user
+                      }}</strong></span> <br>
+                  <span class=" text-dark">{{ item.observation
+                    }}</span> <br><br>
+                  <span class="text-h7 text-primary" style="float: right;"><strong> {{ formatDate(item.observationDate)
+                      }}</strong></span>
                 </p>
-              </q-card-section>
-              <q-card-section v-else>
-                <p>No hay observaciones para mostrar</p>
+              </q-chat-message>
+              <q-chat-message v-else>
+                <p style="padding: 5px;">
+                  <span class="text-h7 text-dark"><strong> {{ item.user
+                      }}</strong></span> <br>
+                  <span class=" text-dark">{{ item.observation
+                    }}</span> <br><br>
+                  <span class="text-h7 text-dark" style="float: right;"><strong> {{ formatDate(item.observationDate)
+                      }}</strong></span>
+                </p>
+              </q-chat-message>
+            </div>
+
+          </div>
+          <div v-if="listObservations.length <= 0">
+            <q-card bordered class="bg-grey-5 my-card">
+              <q-card-section align="center" class="text-h5 text-bold text-grey-8">
+                No hay observaciones
               </q-card-section>
             </q-card>
           </div>
+          <br>
           <div class="q" style="display: flex; justify-content: center; align-items: center;">
 
             <q-btn label="Cerrar" type="reset" icon="close" flat class="q-ml-sm" v-close-popup style="
-      background-color: white;
-      color: black;
-      box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
-    " />
+background-color: white;
+color: black;
+box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
+" />
           </div>
         </q-form>
       </div>
@@ -195,8 +215,36 @@ let optionsAssignment = ref();
 let optionsInstructor = ref();
 const rows = ref([]);
 const submitResult = ref([]);
+const filterText = ref('');
+const filteredRows = ref([]);
 
 const shape = ref('apprentice')
+
+async function filterBinnacles() {
+  console.log(shape.value);
+  
+  try {
+    if (!rows.value.length) await bring();
+
+    const searchText = filterText.value.toLowerCase().trim();
+
+    filteredRows.value = rows.value.filter((row) => {
+      if (shape.value === 'apprentice') {
+        return (
+          row.assignment.toLowerCase().includes(searchText) ||
+          row.document?.toLowerCase().includes(searchText)
+        );
+      } else if (shape.value === 'instructor') {
+        return row.instructor.toLowerCase().includes(searchText);
+      }
+      return false;
+    });
+
+  } catch (error) {
+    console.error("Error al filtrar:", error);
+  }
+}
+
 
 function radiobtn(evt) {
   const formData = new FormData(evt.target)
@@ -303,6 +351,8 @@ async function bring() {
           index: idx + 1,  // Índice de la fila
         };
       }));
+      console.log(rows.value);
+
     } else {
       console.log("El campo 'ListAllBinnacles' no es un array o está vacío.");
       // Puedes también asignar un mensaje de error a la interfaz de usuario si es necesario
@@ -374,15 +424,15 @@ async function onSubmitObservation() {
       observations: [
         {
           observation: observation.value,
-          observationDate:  observationDate,
+          observationDate: observationDate,
           user: user.value
         }
       ]
     }
-    
+
     let url = await putData(`/binnacles/addobservation/${idBinnacle.value}`, data)
     notifySuccessRequest("Observación guardada exitosamente");
-    showModalObservations.value = false;
+    showModalObservations.value = false
     bring();
     onReset();
   } catch (error) {
@@ -397,7 +447,6 @@ async function openModalObservations(id, changes) {
   showModalObservations.value = true;
   idBinnacle.value = id
   change.value = changes
-
   try {
     let data = await getData(`/binnacles/listbinnaclesbyid/${id}`);
     console.log(data);

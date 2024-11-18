@@ -8,6 +8,7 @@ const registerSchema = new mongoose.Schema({
    company: { type: String, required: true },
    phonecompany: { type: String, required: true},
    addresscompany: { type: String, required: true},
+   emailCompany: { type: String, required: true },
    owner: { type: String, required: true },
    docAlternative: { type: String, required: true },
    hour: { type: String, required: true },

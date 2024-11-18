@@ -116,7 +116,7 @@ getlistregisterbystartdate: async (req, res) => {
 
     postaddregister: async (req, res) => {
         try {
-            const { apprentice, modality, startDate, endDate, company, phonecompany, addresscompany, owner, docAlternative, hour, businessProyectHour,assignment, certificationDoc, judymentPhoto } = req.body;
+            const { apprentice, modality, startDate, endDate, company, phonecompany, addresscompany, emailCompany, owner, docAlternative, hour, businessProyectHour,assignment, certificationDoc, judymentPhoto } = req.body;
 
             const newregister = new Register({
                 apprentice,
@@ -130,6 +130,7 @@ getlistregisterbystartdate: async (req, res) => {
                 docAlternative,
                 hour,
                 businessProyectHour,
+                emailCompany,
                 assignment,
                 certificationDoc,
                 judymentPhoto
