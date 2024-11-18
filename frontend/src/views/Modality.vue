@@ -1,21 +1,6 @@
 <template>
   <div class="q-pa-md q-gutter-md">
-    <router-link
-      to="/home"
-      class="iconExit"
-      style="display: flex; text-decoration: none"
-    >
-      <q-btn
-        dense
-        unelevated
-        round
-        color="primary"
-        icon="arrow_back"
-        text-color="white"
-      />
-    </router-link>
-    <h3 class="title-table">Modalidades</h3>
-    <hr id="hr" class="bg-green-9" />
+    <Header title="Modalidades"></Header>
     <Btn :label="btnLabel" :onClickFunction="bringId" :loading="loading" />
     <modalityTable
       :title="title"
@@ -92,7 +77,7 @@ import {
   notifySuccessRequest,
   notifyWarningRequest,
 } from "../composables/Notify";
-
+import Header from '../components/header/Header.vue';
 let title = "Modalidades";
 let loading = ref(false);
 let btnLabel = "Crear";

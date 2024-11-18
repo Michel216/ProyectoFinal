@@ -42,7 +42,7 @@ const routes = [
             { path: "/Assignment", component: Assignment, beforeEnter: auth, meta: { rol: ["ADMIN","INSTRUCTOR"] } },
             { path: "/Register", component: Register, beforeEnter: auth, meta: { rol: ["ADMIN"] } },
             { path: "/ForgotPassword", component: ForgotPassword, beforeEnter: auth, meta: { rol: ["ADMIN"] } },
-            { path: "/Apprentice", component: Apprentice, beforeEnter: auth, meta: { rol: ["ADMIN"] } },
+            { path: "/Apprentice/:ficheId?", component: Apprentice, beforeEnter: auth, meta: { rol: ["ADMIN"] } },
             { path: "/FollowUp", component: FollowUp, beforeEnter: auth, meta: { rol: ["ADMIN", "INSTRUCTOR"] } },
             { path: "/fiches", component: Fiche, beforeEnter: auth, meta: { rol: ["ADMIN"] } },
         ]

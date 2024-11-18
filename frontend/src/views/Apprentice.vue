@@ -1,76 +1,76 @@
 <template>
   <div class="q-pa-md q-gutter-md">
-    <router-link to="/home" class="iconExit" style="display: flex; text-decoration: none;">
-      <q-btn dense unelevated round color="primary" icon="arrow_back" text-color="white" />
-    </router-link>
-    <h3 class="title-table">Aprendices</h3>
-    <hr id="hr" class="bg-green-9" />
+    <Header title="Aprendices"></Header>
+    <div class="row items-center">
+      <div class="q-mr-md">
+        <span class="text-subtitle2">Realizar filtro por</span>
+
+        <!-- Radio buttons -->
+        <q-radio v-model="selectedValue" val="fiche" label="Código Ficha" dense color="primary"
+          @update:model-value="handleFilter" />
+        <q-radio v-model="selectedValue" val="apprentice" label="Aprendiz" dense color="primary"
+          @update:model-value="handleFilter" />
+        <q-radio v-model="selectedValue" val="status" label="Estado" dense color="primary"
+          @update:model-value="handleFilter" />
+      </div>
+
+      <!-- Input de búsqueda -->
+      <q-input class="q-ml-md" v-model="searchTerm" :label="searchLabel" @input="handleFilter" outlined
+        :disable="!selectedValue" />
+    </div>
+    <!-- Botón de crear y tabla de aprendices -->
     <Btn :label="btnLabel" :onClickFunction="bringIdAndOpenModal" :loading="loading" />
-    <apprenticeTable :title="title" :rows="rows" :columns="columns" :onToggleActivate="handleToggleActivate"
+    <apprenticeTable :title="title" :rows="filteredRows" :columns="columns" :onToggleActivate="handleToggleActivate"
       :loading="loading" :onClickEdit="bringIdAndOpenModal" />
+
+    <!-- Modal para crear aprendiz -->
     <Modal :isVisible="showModal" @update:isVisible="showModal = $event" :label="'CREAR APRENDIZ SENA'">
       <div class="q-pa-md" style="max-width: 600px">
         <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md" style="
-          display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  row-gap: 2px; /* Ajusta la separación vertical entre filas */
-  column-gap: 20px; /* Espacio entre columnas */
-  border-radius: 50px;
-  max-width: 100%;
-  width: 100vw;
-  margin: auto">
-
-          <q-select outlined v-model="fiche" label="Ficha" :options="optionsIdFiche" lazy-rules :rules="[
-            (val) =>
-              (val && val.length > 0) ||
-              'Por favor, dígite el código de la ficha',
-          ]" />
-
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            row-gap: 2px;
+            column-gap: 20px;
+            border-radius: 50px;
+            max-width: 100%;
+            width: 100vw;
+            margin: auto">
+                <q-select outlined v-model="fiche" label="Ficha" :options="options"
+            emit-value map-options clearable use-input input-debounce="0" behavior="menu" @filter="filterFiche"
+            lazy-rules :rules="[(val) => (val && val.length > 0) || 'Por favor, seleccione una ficha']">
+            <template v-slot:no-option>
+              <q-item>
+                <q-item-section class="text-grey"> No results </q-item-section>
+              </q-item>
+            </template>
+          </q-select>
+         
           <q-input outlined v-model="firstName" label="Nombres Aprendiz" lazy-rules :rules="[
-            (val) =>
-              (val && val.length > 0) ||
-              'Por favor, dígite el nombre del aprendiz',
+            (val) => (val && val.length > 0) || 'Por favor, dígite el nombre del aprendiz'
           ]" />
           <q-input outlined v-model="lastName" label="Apellidos Aprendiz" lazy-rules :rules="[
-            (val) =>
-              (val && val.length > 0) ||
-              'Por favor, dígite el apellido del aprendiz',
+            (val) => (val && val.length > 0) || 'Por favor, dígite el apellido del aprendiz'
           ]" />
-
           <q-input outlined v-model="institutionalEmail" label="Email institucional" lazy-rules :rules="[
-            (val) =>
-              (val && val.length > 0) ||
-              'Por favor, dígite el correo personal del aprendiz',
+            (val) => (val && val.length > 0) || 'Por favor, dígite el correo personal del aprendiz'
           ]" />
           <q-input outlined v-model="personalEmail" label="Email personal" lazy-rules :rules="[
-            (val) =>
-              (val && val.length > 0) ||
-              'Por favor, dígite el correo personal del aprendiz',
+            (val) => (val && val.length > 0) || 'Por favor, dígite el correo personal del aprendiz'
           ]" />
           <q-input outlined type="number" v-model="phone" label="Teléfono" lazy-rules :rules="[
-            (val) =>
-              (val && val.length > 0) ||
-              'Por favor, dígite el teléfono del aprndiz',
+            (val) => (val && val.length > 0) || 'Por favor, dígite el teléfono del aprendiz'
           ]" />
           <q-select outlined v-model="tpDoc" label="Tipo de documento" :options="optionsTpDoc" emit-value map-options
             lazy-rules :rules="[
-              (val) =>
-                (val && val.length > 0) ||
-                'Por favor, dígite el tipo de documento',
+              (val) => (val && val.length > 0) || 'Por favor, dígite el tipo de documento'
             ]" />
           <q-input outlined type="number" v-model="numDoc" label="Número de documento" lazy-rules :rules="[
-            (val) =>
-              (val && val.length > 0) ||
-              'Por favor, dígite el número de documento',
+            (val) => (val && val.length > 0) || 'Por favor, dígite el número de documento'
           ]" />
-
-
-
           <q-select outlined v-model="modality" label="Modalidad Etapa Productiva" :options="optionsModality" emit-value
             map-options clearable use-input input-debounce="0" behavior="menu" @filter="filterModality" lazy-rules
             :rules="[
-              (val) =>
-                (val && val.length > 0) || 'Por favor, dígite la modalidad',
+              (val) => (val && val.length > 0) || 'Por favor, dígite la modalidad'
             ]">
             <template v-slot:no-option>
               <q-item>
@@ -78,41 +78,34 @@
               </q-item>
             </template>
           </q-select>
-          <div class="q" style="display: flex; justify-content: center; align-items: center;">
-
-          </div>
           <q-btn label="Guardar" type="submit" icon="save" color="primary" :loading="loading" />
-
-          <q-btn label="Cerrar" type="reset" icon="close" flat class="q-ml-sm" v-close-popup style="
-      background-color: white;
-      color: black;
-      box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
-    " />
+          <q-btn label="Cerrar" type="reset" icon="close" flat class="q-ml-sm" v-close-popup
+            style="background-color: white; color: black; box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);" />
         </q-form>
       </div>
     </Modal>
   </div>
+
 </template>
 
+
 <script setup>
-import { ref, onBeforeMount } from "vue";
-import {getDataRepfora} from '../services/apiRepfora.js'
+import { ref, onBeforeMount, onMounted, computed } from "vue";
+import { getDataRepfora } from '../services/apiRepfora.js'
 import { getData, putData, postData } from "../services/apiClient.js";
 import apprenticeTable from "../components/tables/BasicTable.vue";
 import Btn from "../components/buttons/Button.vue";
 import Modal from "../components/modals/Modal.vue";
+import Header from '../components/header/Header.vue';
+import { notifyErrorRequest, notifySuccessRequest, notifyWarningRequest, } from "../composables/Notify";
 import { useRoute } from 'vue-router';
-import {
-  notifyErrorRequest,
-  notifySuccessRequest,
-  notifyWarningRequest,
-} from "../composables/Notify";
 
+const options = ref([]);
 let loading = ref(false);
 let title = "Aprendices";
 let btnLabel = "Crear";
-const showModal = ref(false);
 let searchTerm = ref("");
+let searchLabel = ref('Buscar')
 let fiche = ref("");
 let modality = ref("");
 let tpDoc = ref("");
@@ -123,6 +116,10 @@ let phone = ref("");
 let institutionalEmail = ref("");
 let personalEmail = ref("");
 let idApprentice = ref("");
+const selectedValue = ref('');
+const showModal = ref(false);
+const route = useRoute();
+
 let change = ref(); // true: crear, false: modificar
 const rows = ref([]);
 let optionsTpDoc = ref([
@@ -130,7 +127,12 @@ let optionsTpDoc = ref([
   "tarjeta de identidad",
   "cédula de extranjería",
 ]);
-let optionsIdFiche = ref(["671016f171e7d8e0b4b7cf5b"]);
+const filterOptions = [
+  { value: 'apprentice', label: 'Aprendiz' },
+  { value: 'fiche', label: 'Ficha' },
+  { value: 'status', label: 'Estado' },
+];
+// let optionsIdFiche = ref(["671016f171e7d8e0b4b7cf5b"]);
 let optionsModality = ref([]);
 const columns = ref([
   {
@@ -187,41 +189,96 @@ const columns = ref([
 
 ]);
 
+
+const handleFilter = () => {
+  if (selectedValue.value === "fiche") {
+    searchLabel.value = "Ingrese el código de la ficha";
+  } else if (selectedValue.value === "apprentice") {
+    searchLabel.value = "Ingrese el nombre o número de documento";
+  } else if (selectedValue.value === "status") {
+    searchLabel.value = "Ingrese el estado";
+  } else {
+    searchLabel.value = "Buscar";
+  }
+};
+console.log(rows.status)
+const filteredRows = computed(() => {
+  if (!searchTerm.value) return rows.value;  // Si no hay término de búsqueda, devolver todos los registros
+
+  return rows.value.filter(row => {
+    if (selectedValue.value === "fiche") {
+      return row.code.toLowerCase().startsWith(searchTerm.value.toLowerCase());  // Filtro por código de ficha
+    } else if (selectedValue.value === "apprentice") {
+      return row.firstName.toLowerCase().startsWith(searchTerm.value.toLowerCase()) ||
+        row.lastName.toLowerCase().startsWith(searchTerm.value.toLowerCase()) ||
+        row.numDocument.toLowerCase().startsWith(searchTerm.value.toLowerCase())
+    } else if (selectedValue.value === "status") {
+      // Compara el estado como texto: "Activo" o "Inactivo"
+      const statusText = row.status === 0 ? "Inactivo" :
+        row.status === 1 ? "Activo" :
+          row.status === 2 ? "En etapa productiva" :
+            row.status === 3 ? "Por certificación" :
+              row.status === 4 ? "Certificado" : "Desconocido";
+      return statusText.toLowerCase().startsWith(searchTerm.value.toLowerCase());  // Compara el texto con el término de búsqueda
+    }
+    return false;  // Si no hay filtro seleccionado
+  });
+});
+
+
+onMounted(async () => {
+  loading.value = true;
+  try {
+    const idFiche = route.query.ficheId
+    console.log(idFiche);
+
+    if (idFiche) {
+      // Si hay un ID de ficha, filtra por aprendices de esa ficha
+      const response = await getData(`/apprentice/listapprenticebyfiche/${idFiche}`);
+      console.log(response);
+
+      // // Filtrar los aprendices por ficha
+      rows.value = await Promise.all(
+        response.listApprenticesByFiche.map(async (apprentice) => {
+          const ficheId = apprentice.fiche; // El ID de 'fiche' está en apprentice.fiche
+          const ficheData = await getDataRepfora(`/fiches/${ficheId}`);
+
+          return {
+            ...apprentice,
+            firstName: (apprentice.firstName + " " + apprentice.lastName),
+            modality: apprentice.modality.name,
+            fiche: ficheData.data.program.name,
+            code: ficheData.data.program.code
+          };
+        })
+      );
+    } else {
+      // Si no hay ID de ficha, muestra todos los aprendices
+      bring()
+      console.log("error")
+    }
+  } catch (error) {
+    console.log(error);
+  } finally {
+    loading.value = false;
+  }
+});
 onBeforeMount(() => {
   bring();
 });
-
-// async function onSearch() {
-//   loading.value = true;
-//   try {
-//     let response = await getData(`/apprentice/searchapprentice?term=${searchTerm.value}`);
-//     console.log(response);
-
-//     rows.value = response.results.map((apprentice) => ({
-//       ...apprentice,
-//       firstName: (apprentice.firstName + " " + apprentice.lastName),
-//       modality: apprentice.modality.name,
-//     }));
-//   } catch (error) {
-//     console.log(error);
-//   } finally {
-//     loading.value = false;
-//   }
-// }
 
 async function bring() {
   loading.value = true;
   try {
     let url = await getData("/apprentice/listallapprentice");
     console.log(url);
-    
+
     // Usamos Promise.all para esperar a que todas las promesas se resuelvan
     rows.value = await Promise.all(
       url.listApprentice.map(async (apprentice) => {
         const ficheId = apprentice.fiche; // El ID de 'fiche' está en apprentice.fiche
         const ficheData = await getDataRepfora(`/fiches/${ficheId}`);
-        console.log(ficheData);
-        
+
         return {
           ...apprentice,
           firstName: (apprentice.firstName + " " + apprentice.lastName),
@@ -237,20 +294,6 @@ async function bring() {
     loading.value = false;
   }
 }
-
-const ficheId = route.params.idFiche;
-onMounted(async () => {
-  loading.value = true;
-  try {
-    // Aquí debes usar el ID de la ficha para obtener los aprendices
-    const response = await getData(`/apprentices/fiche/${ficheId}`);
-    apprentices.value = response.data; // Asegúrate de que esta sea la estructura correcta
-  } catch (error) {
-    console.error("Error al obtener los aprendices:", error);
-  } finally {
-    loading.value = false;
-  }
-});
 
 async function handleToggleActivate(id, status) {
   try {
@@ -350,6 +393,41 @@ async function bringIdAndOpenModal(id) {
     change.value = true;
   }
 }
+async function filterFiche(val, update) {
+  try {
+    // Llamada a la API para obtener los fiches
+    let response = await getDataRepfora("/fiches");
+
+    // Comprueba si response.data está definido y es un arreglo
+    if (response.data && Array.isArray(response.data)) {
+      if (val === "") {
+        update(() => {
+          options.value = response.data.map((fiche) => ({
+            label: `${fiche.program.name} - ${fiche.program.code} `,  // Muestra el nombre y el código
+            value: fiche._id,  // Guarda el ID de la ficha
+          }));
+        });
+        return;
+      }
+
+      // Si hay un valor de búsqueda, filtra las fichas por nombre
+      update(() => {
+        const needle = val.toLowerCase();
+        options.value = response.data
+          .map((fiche) => ({
+            label: `${fiche.program.name} - ${fiche.program.code}`,  // Muestra el nombre y el código
+            value: fiche._id,  // Guarda el ID de la ficha
+          }))
+          .filter((option) => option.label.toLowerCase().includes(needle)); // Filtra por el nombre o código
+      });
+    } else {
+      console.error("La respuesta de la API no contiene datos válidos:", response.data);
+    }
+  } catch (error) {
+    // Manejo de errores en la llamada a la API
+    console.error("Error al obtener fiches:", error.response ? error.response.data : error);
+  }
+}
 
 async function filterModality(val, update) {
   let modality = await getData("/modality/listallmodality");
@@ -397,5 +475,17 @@ h3 {
   text-align: center;
   margin-bottom: 0;
   font-weight: bold;
+}
+
+.q-mb-md {
+  margin-bottom: 16px;
+}
+
+.q-ml-md {
+  margin-left: 16px;
+}
+
+.q-mr-md {
+  margin-right: 8px;
 }
 </style>

@@ -19,10 +19,8 @@ const apprenticeController = {
                 $or: [
                     { firstName: { $regex: searchTerm, $options: 'i' } },
                     { lastName: { $regex: searchTerm, $options: 'i' } },
-                    { numDocument: { $regex: searchTerm, $options: 'i' } },
-                    { institutionalEmail: { $regex: searchTerm, $options: 'i' } },
-                    { personalEmail: { $regex: searchTerm, $options: 'i' } },
-                    { phone: { $regex: searchTerm, $options: 'i' } },
+                    { fiche: { $regex: searchTerm, $options: 'i' } },
+                    { status: { $regex: searchTerm, $options: 'i' } },
                 ],
             });
             res.status(200).json({ results });

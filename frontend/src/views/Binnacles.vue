@@ -1,8 +1,6 @@
 <template>
   <div class="q-pa-md q-gutter-md">
-    <q-btn to="/home" dense unelevated round color="primary" icon="arrow_back" text-color="white" class="iconExit" />
-    <h3 class="title-table">Bitacoras</h3>
-    <hr id="hr" class="bg-green-9" />
+    <Header title="Bitacoras"></Header>
     <div class="q-pa-md q-gutter-sm" style="display: flex">
       <div class="q-pa-md q-gutter-sm" style="display: flex">
         <div style="display: flex; flex-direction: column; gap: 10px;">
@@ -194,6 +192,7 @@ import {
 import { formatDate } from "../utils/formatDate.js";
 import moment from "moment-timezone"
 import { useAuthStore } from './../store/useAuth.js'
+import Header from '../components/header/Header.vue';
 
 const authStore = useAuthStore();
 let loading = ref(false);
