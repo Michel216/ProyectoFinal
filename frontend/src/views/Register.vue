@@ -19,6 +19,9 @@
                 </q-item-section>
               </q-item>
             </template>
+            <template v-slot:prepend>
+              <font-awesome-icon icon="fa-solid fa-user-graduate" />
+            </template>
           </q-select>
           <q-select outlined v-model="modality" label="Modalidad" :options="optionsModality" emit-value map-options
             clearable use-input input-debounce="0" behavior="menu" @filter="filterModality" lazy-rules :rules="[
@@ -32,51 +35,76 @@
                 </q-item-section>
               </q-item>
             </template>
+            <template v-slot:prepend>
+              <font-awesome-icon icon="fa-solid fa-person-chalkboard" />
+            </template>
           </q-select>
           <q-input outlined v-model="startDate" label="Fecha inicial" mask="date"
             :rules="[val => val && val.length > 0 || 'Por favor, dígite la fecha inicio']">
-            <template v-slot:append>
-              <q-icon name="event" class="cursor-pointer">
-                <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                  <q-date v-model="startDate" today-btn>
-                    <div class="row items-center justify-end">
-                      <q-btn v-close-popup label="Close" color="primary" flat />
-                    </div>
-                  </q-date>
-                </q-popup-proxy>
-              </q-icon>
+            <template v-slot:prepend>
+              <font-awesome-icon icon="calendar-day" class="cursor-pointer" />
+              <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                <q-date v-model="startDate" today-btn>
+                  <div class="row items-center justify-end">
+                    <q-btn v-close-popup label="Close" color="primary" flat />
+                  </div>
+                </q-date>
+              </q-popup-proxy>
             </template>
           </q-input>
           <q-input outlined v-model="endDate" label="Fecha final" mask="date"
             :rules="[val => (val && val.length > 0) || 'Por favor, dígite la fecha de fin']">
-            <template v-slot:append>
-              <q-icon name="event" class="cursor-pointer">
-                <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                  <q-date v-model="endDate" today-btn>
-                    <div class="row items-center justify-end">
-                      <q-btn v-close-popup label="Close" color="primary" flat />
-                    </div>
-                  </q-date>
-                </q-popup-proxy>
-              </q-icon>
+            <template v-slot:prepend>
+              <font-awesome-icon icon="calendar-day" class="cursor-pointer" />
+              <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                <q-date v-model="endDate" today-btn>
+                  <div class="row items-center justify-end">
+                    <q-btn v-close-popup label="Close" color="primary" flat />
+                  </div>
+                </q-date>
+              </q-popup-proxy>
             </template>
           </q-input>
           <q-input outlined v-model="company" label="Compañía" lazy-rules
-            :rules="[val => val && val.length > 0 || 'Por favor, dígite el nombre de la compañía']" />
+            :rules="[val => val && val.length > 0 || 'Por favor, dígite el nombre de la compañía']">
+            <template v-slot:prepend>
+              <font-awesome-icon icon="fa-solid fa-building" />
+            </template>
+          </q-input>
           <q-input outlined type="number" v-model="phoneCompany" label="Teléfono compañía" lazy-rules
-            :rules="[val => val && val.length > 0 || 'Por favor, dígite el teléfono de la compañía']" />
+            :rules="[val => val && val.length > 0 || 'Por favor, dígite el teléfono de la compañía']" >
+            <template v-slot:prepend>
+              <font-awesome-icon icon="fa-solid fa-phone" />
+            </template>
+          </q-input>
           <q-input outlined v-model="addressCompany" label="Dirreción compañía" lazy-rules
-            :rules="[val => val && val.length > 0 || 'Por favor, dígite la dirección de la compañía']" />
-            <q-input outlined v-model="emailCompany" label="Correo de la compañía" lazy-rules
-            :rules="[val => val && val.length > 0 || 'Por favor, dígite el correo de la compañía']" />
+            :rules="[val => val && val.length > 0 || 'Por favor, dígite la dirección de la compañía']" >
+            <template v-slot:prepend>
+              <font-awesome-icon icon="fa-solid fa-map-pin" />
+            </template>
+          </q-input>
+          <q-input outlined v-model="emailCompany" label="Correo de la compañía" lazy-rules
+            :rules="[val => val && val.length > 0 || 'Por favor, dígite el correo de la compañía']" >
+            <template v-slot:prepend>
+              <font-awesome-icon icon="fa-solid fa-envelope-circle-check" />
+            </template>
+          </q-input>
           <q-input outlined v-model="owner" label="Dueño compañía" lazy-rules
-            :rules="[val => val && val.length > 0 || 'Por favor, dígite el nombre del dueño de la compañía']" />
+            :rules="[val => val && val.length > 0 || 'Por favor, dígite el nombre del dueño de la compañía']" >
+            <template v-slot:prepend>
+              <font-awesome-icon icon="fa-solid fa-user-tie" />
+            </template>
+          </q-input>
           <q-input outlined v-model="docAlternative" label="Documento alternativo" lazy-rules
-            :rules="[val => val && val.length > 0 || 'Por favor, dígite el documento alternativo']" />
-            <q-input outlined v-model="hour" label="Hora" lazy-rules
+            :rules="[val => val && val.length > 0 || 'Por favor, dígite el documento alternativo']" >
+            <template v-slot:prepend>
+              <font-awesome-icon icon="fa-solid fa-file-invoice" />
+            </template>
+          </q-input>
+          <q-input outlined v-model="hour" label="Hora" lazy-rules
             :rules="[val => val && val.length > 0 || 'Por favor, dígite la hora']">
-            <template v-slot:append>
-              <q-icon name="access_time" class="cursor-pointer">
+            <template v-slot:prepend>
+              <font-awesome-icon icon="clock" class="cursor-pointer"/>
                 <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                   <q-time v-model="hour" mask="HH:mm" format24h>
                     <div class="row items-center justify-end">
@@ -84,13 +112,12 @@
                     </div>
                   </q-time>
                 </q-popup-proxy>
-              </q-icon>
             </template>
           </q-input>
           <q-input outlined v-model="businessProyectHour" label="Hora proyecto" lazy-rules
             :rules="[val => val && val.length > 0 || 'Por favor, dígite la hora del proyecto']">
-            <template v-slot:append>
-              <q-icon name="access_time" class="cursor-pointer">
+            <template v-slot:prepend>
+              <font-awesome-icon icon="business-time" class="cursor-pointer"/>
                 <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                   <q-time v-model="businessProyectHour" mask="HH:mm" format24h>
                     <div class="row items-center justify-end">
@@ -98,13 +125,12 @@
                     </div>
                   </q-time>
                 </q-popup-proxy>
-              </q-icon>
             </template>
           </q-input>
           <div>
-            <q-btn label="guardar" type="submit" color="primary" :loading="loading"  class="full-width" />
-            <q-btn label="Cerrar"  type="reset" icon="close"  class="full-width"  v-close-popup
-            style="background-color: white; color: black; box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);" />
+            <q-btn label="guardar" type="submit" color="primary" :loading="loading" class="full-width" />
+            <q-btn label="Cerrar" type="reset" icon="close" class="full-width" v-close-popup
+              style="background-color: white; color: black; box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);" />
           </div>
         </q-form>
       </div>
@@ -115,12 +141,17 @@
 <script setup>
 import { ref, onBeforeMount } from 'vue';
 import { getData, putData, postData } from '../services/apiClient.js';
-import {getDataRepfora} from '../services/apiRepfora.js'
+import { getDataRepfora } from '../services/apiRepfora.js'
 import RegisterTable from "../components/tables/BasicTable.vue";
 import { formatDate } from '../utils/formatDate.js';
 import Btn from "../components/buttons/Button.vue"
 import Modal from "../components/modals/Modal.vue";
 import { notifyErrorRequest, notifySuccessRequest, notifyWarningRequest } from "../composables/Notify";
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { faUserGraduate, faPersonChalkboard, faCalendarDay, faBuilding, faPhone, faMapPin, faEnvelopeCircleCheck, faUserTie, faFileInvoice, faClock, faBusinessTime } from '@fortawesome/free-solid-svg-icons';
+
+library.add(faUserGraduate, faPersonChalkboard, faCalendarDay, faBuilding, faPhone, faMapPin, faEnvelopeCircleCheck, faUserTie, faFileInvoice, faClock, faBusinessTime)
 
 let loading = ref(false)
 let title = 'Registros'
@@ -336,13 +367,13 @@ async function filterModality(val, update) {
 </script>
 
 <style scoped>
-.full-width{
+.full-width {
   transition: box-shadow 0.3s ease;
 }
-.full-width:hover{
+
+.full-width:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
 
   text-shadow: 0px 0px 10px white;
 }
-
 </style>

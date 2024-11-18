@@ -30,6 +30,9 @@
                 <q-item-section class="text-grey"> No results </q-item-section>
               </q-item>
             </template>
+            <template v-slot:prepend>
+              <font-awesome-icon icon="fa-solid fa-hand-pointer" />
+            </template>
           </q-select>
 
           <q-select outlined v-model="instructor" label="Seleccione un instructor" :options="optionsInstructor"
@@ -44,22 +47,24 @@
                 <q-item-section class="text-grey"> No results </q-item-section>
               </q-item>
             </template>
+            <template v-slot:prepend>
+              <font-awesome-icon icon="fa-solid fa-chalkboard-user" />
+            </template>
           </q-select>
 
           <q-input outlined v-model="month" label="Fecha inicial" mask="date" :rules="[
             (val) =>
               (val && val.length > 0) || 'Por favor, dígite la fecha inicio',
           ]">
-            <template v-slot:append>
-              <q-icon name="event" class="cursor-pointer">
-                <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                  <q-date v-model="month" today-btn>
-                    <div class="row items-center justify-end">
-                      <q-btn v-close-popup label="Close" color="primary" flat />
-                    </div>
-                  </q-date>
-                </q-popup-proxy>
-              </q-icon>
+            <template v-slot:prepend>
+              <font-awesome-icon icon="calendar-day" class="cursor-pointer" />
+              <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                <q-date v-model="month" today-btn>
+                  <div class="row items-center justify-end">
+                    <q-btn v-close-popup label="Close" color="primary" flat />
+                  </div>
+                </q-date>
+              </q-popup-proxy>
             </template>
           </q-input>
 
@@ -189,6 +194,11 @@ import moment from "moment-timezone";
 import { formatDate } from "../utils/formatDate.js";
 import { useAuthStore } from './../store/useAuth.js'
 import Header from '../components/header/Header.vue';
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { faCalendarDay, faChalkboardUser, faHandPointer } from '@fortawesome/free-solid-svg-icons';
+
+library.add(faCalendarDay, faChalkboardUser, faHandPointer)
 
 const title = "Seguimientos";
 const authStore = useAuthStore();

@@ -19,7 +19,7 @@
         :disable="!selectedValue" />
     </div>
     <!-- Botón de crear y tabla de aprendices -->
-    <Btn :label="btnLabel" :onClickFunction="bringIdAndOpenModal" :loading="loading"  />
+    <Btn :label="btnLabel" :onClickFunction="bringIdAndOpenModal" :loading="loading" />
     <apprenticeTable :title="title" :rows="filteredRows" :columns="columns" :onToggleActivate="handleToggleActivate"
       :loading="loading" :onClickEdit="bringIdAndOpenModal" />
 
@@ -35,38 +35,69 @@
             max-width: 100%;
             width: 100vw;
             margin: auto">
-                <q-select outlined v-model="fiche" label="Ficha" :options="options"
-            emit-value map-options clearable use-input input-debounce="0" behavior="menu" @filter="filterFiche"
-            lazy-rules :rules="[(val) => (val && val.length > 0) || 'Por favor, seleccione una ficha']">
+          <q-select outlined v-model="fiche" label="Ficha" :options="options" emit-value map-options clearable use-input
+            input-debounce="0" behavior="menu" @filter="filterFiche" lazy-rules
+            :rules="[(val) => (val && val.length > 0) || 'Por favor, seleccione una ficha']">
             <template v-slot:no-option>
               <q-item>
                 <q-item-section class="text-grey"> No results </q-item-section>
               </q-item>
             </template>
+            <template v-slot:prepend>
+              <font-awesome-icon icon="fa-solid fa-users-between-lines" />
+            </template>
           </q-select>
-         
+
           <q-input outlined v-model="firstName" label="Nombres Aprendiz" lazy-rules :rules="[
             (val) => (val && val.length > 0) || 'Por favor, dígite el nombre del aprendiz'
-          ]" />
+          ]">
+            <template v-slot:prepend>
+              <font-awesome-icon icon="fa-solid fa-user-graduate" />
+            </template>
+          </q-input>
           <q-input outlined v-model="lastName" label="Apellidos Aprendiz" lazy-rules :rules="[
             (val) => (val && val.length > 0) || 'Por favor, dígite el apellido del aprendiz'
-          ]" />
+          ]" >
+            <template v-slot:prepend>
+              <font-awesome-icon icon="fa-solid fa-user-graduate" />
+            </template>
+          </q-input>
           <q-input outlined v-model="institutionalEmail" label="Email institucional" lazy-rules :rules="[
             (val) => (val && val.length > 0) || 'Por favor, dígite el correo personal del aprendiz'
-          ]" />
+          ]" >
+            <template v-slot:prepend>
+              <font-awesome-icon icon="fa-solid fa-envelope-circle-check" />
+            </template>
+          </q-input>
           <q-input outlined v-model="personalEmail" label="Email personal" lazy-rules :rules="[
             (val) => (val && val.length > 0) || 'Por favor, dígite el correo personal del aprendiz'
-          ]" />
+          ]" >
+            <template v-slot:prepend>
+              <font-awesome-icon icon="fa-solid fa-envelope" />
+            </template>
+          </q-input>
           <q-input outlined type="number" v-model="phone" label="Teléfono" lazy-rules :rules="[
             (val) => (val && val.length > 0) || 'Por favor, dígite el teléfono del aprendiz'
-          ]" />
+          ]" >
+            <template v-slot:prepend>
+              <font-awesome-icon icon="fa-solid fa-phone" />
+            </template>
+          </q-input>
           <q-select outlined v-model="tpDoc" label="Tipo de documento" :options="optionsTpDoc" emit-value map-options
             lazy-rules :rules="[
               (val) => (val && val.length > 0) || 'Por favor, dígite el tipo de documento'
-            ]" />
+            ]" >
+            <template v-slot:prepend>
+              <font-awesome-icon icon="fa-solid fa-credit-card" />
+            </template>
+          </q-select>
           <q-input outlined type="number" v-model="numDoc" label="Número de documento" lazy-rules :rules="[
             (val) => (val && val.length > 0) || 'Por favor, dígite el número de documento'
-          ]" />
+          ]" >
+            <template v-slot:prepend>
+              <font-awesome-icon icon="fa-solid fa-id-card" />
+            </template>
+          </q-input>
           <q-select outlined v-model="modality" label="Modalidad Etapa Productiva" :options="optionsModality" emit-value
             map-options clearable use-input input-debounce="0" behavior="menu" @filter="filterModality" lazy-rules
             :rules="[
@@ -77,13 +108,16 @@
                 <q-item-section class="text-grey"> No results </q-item-section>
               </q-item>
             </template>
+            <template v-slot:prepend>
+              <font-awesome-icon icon="fa-solid fa-person-chalkboard" />
+            </template>
           </q-select>
-        
+
           <q-btn label="Guardar" type="submit" icon="save" color="primary" class="full-width" :loading="loading" />
-          <q-btn label="Cerrar"  type="reset" icon="close"  class="full-width"  v-close-popup
+          <q-btn label="Cerrar" type="reset" icon="close" class="full-width" v-close-popup
             style="background-color: white; color: black; box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);" />
-          
-       
+
+
         </q-form>
       </div>
     </Modal>
@@ -102,6 +136,11 @@ import Modal from "../components/modals/Modal.vue";
 import Header from '../components/header/Header.vue';
 import { notifyErrorRequest, notifySuccessRequest, notifyWarningRequest, } from "../composables/Notify";
 import { useRoute } from 'vue-router';
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { faUsersBetweenLines, faUserGraduate, faEnvelope, faEnvelopeCircleCheck, faPhone, faIdCard, faCreditCard, faPersonChalkboard } from '@fortawesome/free-solid-svg-icons';
+
+library.add(faUsersBetweenLines, faUserGraduate, faEnvelope, faEnvelopeCircleCheck, faPhone, faIdCard, faCreditCard, faPersonChalkboard)
 
 const options = ref([]);
 let loading = ref(false);
@@ -491,13 +530,14 @@ h3 {
 .q-mr-md {
   margin-right: 8px;
 }
-.full-width{
+
+.full-width {
   transition: box-shadow 0.3s ease;
 }
-.full-width:hover{
+
+.full-width:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
 
   text-shadow: 0px 0px 10px white;
 }
-
 </style>

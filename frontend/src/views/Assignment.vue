@@ -19,61 +19,83 @@
         </q-form>
       </div>
       <div class="q-pa-md">
-    <div class="q-gutter-md" style="max-width: 400px">
-      <q-input outlined v-model="text" label="Ingrese el nombre o número de documento " />
-    </div> 
-  </div>
-      <q-card
-      v-if="submitResult.length > 0"
-      flat bordered
-      class="q-mt-md"
-      :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-2'"
-    >
-      <q-card-section>Submitted form contains the following formData (key = value):</q-card-section>
-      <q-separator />
-      <q-card-section class="row q-gutter-sm items-center">
-        <div
-          v-for="(item, index) in submitResult"
-          :key="index"
-          class="q-px-sm q-py-xs bg-grey-8 text-white rounded-borders text-center text-no-wrap"
-        >{{ item.name }} = {{ item.value }}</div>
-      </q-card-section>
-    </q-card>
+        <div class="q-gutter-md" style="max-width: 400px">
+          <q-input outlined v-model="text" label="Ingrese el nombre o número de documento " />
+        </div>
+      </div>
+      <q-card v-if="submitResult.length > 0" flat bordered class="q-mt-md"
+        :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-2'">
+        <q-card-section>Submitted form contains the following formData (key = value):</q-card-section>
+        <q-separator />
+        <q-card-section class="row q-gutter-sm items-center">
+          <div v-for="(item, index) in submitResult" :key="index"
+            class="q-px-sm q-py-xs bg-grey-8 text-white rounded-borders text-center text-no-wrap">{{ item.name }} = {{
+              item.value }}</div>
+        </q-card-section>
+      </q-card>
     </div>
-   
+
     <ApprenticeTable :title="title" :rows="rows" :columns="columns" :onToggleActivate="handleToggleActivate"
       :loading="loading" :onClickEdit="bringIdAndOpenModal" />
     <Modal :isVisible="showModal" @update:isVisible="showModal = $event" :label="btnLabel">
       <div class="q-pa-md" style="max-width: 400px">
         <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
-          <q-select clearable outlined v-model="fichaRegistro" label="Registro" :options="options"
-            style="width: 100%; margin-bottom: 20px; border-radius: 8px" behavior="menu" emit-value map-options
-            lazy-rules>
+          <q-select outlined v-model="theApprentice" label="Seleccione al aprendiz" :options="optionsA" emit-value
+            map-options clearable use-input input-debounce="0" behavior="menu" @filter="filterApprentice">
             <template v-slot:no-option>
               <q-item>
                 <q-item-section class="text-grey"> No results </q-item-section>
               </q-item>
             </template>
+            <template v-slot:prepend>
+              <font-awesome-icon icon="fa-solid fa-user-graduate" />
+            </template>
           </q-select>
 
-          <q-select clearable outlined v-model="filterInstructorFollowUp" label="Instructor de Seguimiento" use-input
-            input-debounce="0" :options="options" @filter="filterInstructorSeguimiento"
-            style="width: 100%; margin-bottom: 20px; border-radius: 8px" behavior="menu" emit-value map-options>
+          <q-select outlined v-model="filterInstructorFollowUp" label="Seleccione al instructor de seguimiento"
+            :options="optionsI" emit-value map-options clearable use-input input-debounce="0" behavior="menu"
+            @filter="filterInstructors">
             <template v-slot:no-option>
               <q-item>
                 <q-item-section class="text-grey"> No results </q-item-section>
               </q-item>
             </template>
+            <template v-slot:prepend>
+              <font-awesome-icon icon="fa-solid fa-chalkboard-user" />
+            </template>
           </q-select>
 
-          <q-input outlined v-model="textCertificacion" label="Documento Certificación" />
-          <q-input outlined type="text" v-model="textFotoJudicial" label="Foto Judicial" />
+          <q-select outlined v-model="filterInstructorProyecto" label="Seleccione al instructor de proyecto"
+            :options="optionsI" emit-value map-options clearable use-input input-debounce="0" behavior="menu"
+            @filter="filterInstructors">
+            <template v-slot:no-option>
+              <q-item>
+                <q-item-section class="text-grey"> No results </q-item-section>
+              </q-item>
+            </template>
+            <template v-slot:prepend>
+              <font-awesome-icon icon="fa-solid fa-chalkboard-user" />
+            </template>
+          </q-select>
+
+          <q-select outlined v-model="filterInstructorTecnico" label="Seleccione al instructo técnico"
+            :options="optionsI" emit-value map-options clearable use-input input-debounce="0" behavior="menu"
+            @filter="filterInstructors">
+            <template v-slot:no-option>
+              <q-item>
+                <q-item-section class="text-grey"> No results </q-item-section>
+              </q-item>
+            </template>
+            <template v-slot:prepend>
+              <font-awesome-icon icon="fa-solid fa-chalkboard-user" />
+            </template>
+          </q-select>
 
 
           <div>
             <q-btn label="Guardar" type="submit" color="primary" class="full-width" />
-            <q-btn label="Cerrar"  type="reset" icon="close"  class="full-width"  v-close-popup
-            style="background-color: white; color: black; box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);" />
+            <q-btn label="Cerrar" type="reset" icon="close" class="full-width" v-close-popup
+              style="background-color: white; color: black; box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);" />
           </div>
         </q-form>
       </div>
@@ -94,19 +116,26 @@ import {
   notifyWarningRequest,
 } from "../composables/Notify";
 import Header from '../components/header/Header.vue';
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { faUserGraduate, faChalkboardUser } from '@fortawesome/free-solid-svg-icons';
+
+library.add(faUserGraduate, faChalkboardUser)
+
 let loading = ref(false);
 let title = "Asignación";
 let btnLabel = "Crear Asignación";
 const rows = ref([]);
 const showModal = ref(false);
-const options = ref([]);
+const optionsI = ref([]);
+const optionsA = ref([]);
+const theApprentice = ref();
 const textCertificacion = ref("");
 const textFotoJudicial = ref("");
 const fichaRegistro = ref("");
 const filterInstructorFollowUp = ref("");
 const filterInstructorTecnico = ref("");
 const filterInstructorProyecto = ref("");
-const optionsInstructor = ref("");
 const submitResult = ref([]);
 
 const shape = ref('apprentice')
@@ -257,6 +286,7 @@ function onReset() {
   filterInstructorProyecto.value = "";
   textCertificacion.value = "";
   textFotoJudicial.value = "";
+  theApprentice.value = "";
 }
 
 async function bringIdAndOpenModal(id) {
@@ -327,7 +357,7 @@ const filterInstructors = async (val, update) => {
     if (response.data && Array.isArray(response.data)) {
       if (val === "") {
         update(() => {
-          optionsInstructor.value = response.data.map((instructor) => ({
+          optionsI.value = response.data.map((instructor) => ({
             label: instructor.name,
             value: instructor._id,
           }));
@@ -338,7 +368,7 @@ const filterInstructors = async (val, update) => {
       // Si hay un valor de búsqueda, filtra los instructores por nombre
       update(() => {
         const needle = val.toLowerCase();
-        optionsInstructor.value = response.data
+        optionsI.value = response.data
           .map((instructor) => ({
             label: instructor.name,
             value: instructor._id,
@@ -359,6 +389,40 @@ const filterInstructors = async (val, update) => {
     );
   }
 };
+
+async function filterApprentice(val, update) {
+  try {
+    let response = await getData("/apprentice/listallapprentice");
+
+
+    // Comprueba si response.data está definido
+    if (val === "") {
+      update(() => {
+        optionsA.value = response.listApprentice.map((apprentice) => ({
+          label: apprentice.numDocument,
+          value: apprentice._id,
+        }));
+      });
+      return;
+    }
+
+    // Si hay un valor de búsqueda, filtra los instructores por nombre
+    update(() => {
+      const needle = val.toLowerCase();
+      optionsA.value = response.listApprentice
+        .map((apprentice) => ({
+          label: apprentice.numDocument,
+          value: apprentice._id,
+        }))
+        .filter((option) => option.label.toLowerCase().includes(needle));
+    });
+  } catch (error) {
+    console.error(
+      "Error al obtener aprendices:",
+      error.response ? error.response.data : error
+    );
+  }
+}
 </script>
 <style scoped>
 .bg-green-9 {
@@ -380,13 +444,14 @@ h3 {
   margin-bottom: 0;
   font-weight: bold;
 }
-.full-width{
+
+.full-width {
   transition: box-shadow 0.3s ease;
 }
-.full-width:hover{
+
+.full-width:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
 
   text-shadow: 0px 0px 10px white;
 }
-
 </style>
