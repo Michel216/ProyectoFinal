@@ -1,25 +1,37 @@
 <template>
   <div class="q-pa-md q-gutter-md">
     <Header title="Aprendices"></Header>
-    <div class="row items-center">
-      <div class="q-mr-md">
-        <span class="text-subtitle2">Realizar filtro por</span>
-
-        <!-- Radio buttons -->
-        <q-radio v-model="selectedValue" val="fiche" label="Código Ficha" dense color="primary"
-          @update:model-value="handleFilter" />
-        <q-radio v-model="selectedValue" val="apprentice" label="Aprendiz" dense color="primary"
-          @update:model-value="handleFilter" />
-        <q-radio v-model="selectedValue" val="status" label="Estado" dense color="primary"
-          @update:model-value="handleFilter" />
+    <div style="display: flex; flex-direction: row; align-items: flex-start; justify-content: space-between; margin:  -30px 0">
+      <div class="btn" style="display: flex; flex-direction: row;  gap: 10px; margin-left: 10%">
+        <Btn :label="btnLabel" :onClickFunction="bringIdAndOpenModal" :loading="loading" />
+        <Btn :label="btnLabel" :onClickFunction="bringIdAndOpenModal" :loading="loading" />
       </div>
+      <div class="q-pa-md q-gutter-sm" style="display: flex; flex-direction: column; align-items: flex-start;">
+        <div class="text-primary" style="margin-bottom: -30px;">Realizar filtro por</div>
 
-      <!-- Input de búsqueda -->
-      <q-input class="q-ml-md" v-model="searchTerm" :label="searchLabel" @input="handleFilter" outlined
-        :disable="!selectedValue" />
+        <!-- Contenedor de los radio buttons y el input, alineados en una fila -->
+        <div style="display: flex; flex-direction: row; align-items: center;">
+          <!-- Radio buttons -->
+          <div style="display: flex; flex-direction: row; align-items: flex-start;">
+            <q-radio v-model="selectedValue" val="fiche" label="Ficha" dense color="primary"
+              @update:model-value="handleFilter" style="margin-right: 10px;" />
+            <q-radio v-model="selectedValue" val="apprentice" label="Aprendiz" dense color="primary"
+              @update:model-value="handleFilter" style="margin-right: 10px;" />
+            <q-radio v-model="selectedValue" val="status" label="Estado" dense color="primary"
+              @update:model-value="handleFilter" />
+          </div>
+
+          <!-- Input de búsqueda alineado a la izquierda -->
+          <div class="q-pa-md">
+            <div class="rounded-input" style="width: 350px; ">
+              <q-input class="q-ml-md" v-model="searchTerm" :label="searchLabel" @input="handleFilter" outlined
+                :disable="!selectedValue" />
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     <!-- Botón de crear y tabla de aprendices -->
-    <Btn :label="btnLabel" :onClickFunction="bringIdAndOpenModal" :loading="loading" />
     <apprenticeTable :title="title" :rows="filteredRows" :columns="columns" :onToggleActivate="handleToggleActivate"
       :loading="loading" :onClickEdit="bringIdAndOpenModal" />
 
@@ -35,16 +47,16 @@
             max-width: 100%;
             width: 100vw;
             margin: auto">
-                <q-select outlined v-model="fiche" label="Ficha" :options="options"
-            emit-value map-options clearable use-input input-debounce="0" behavior="menu" @filter="filterFiche"
-            lazy-rules :rules="[(val) => (val && val.length > 0) || 'Por favor, seleccione una ficha']">
+          <q-select outlined v-model="fiche" label="Ficha" :options="options" emit-value map-options clearable use-input
+            input-debounce="0" behavior="menu" @filter="filterFiche" lazy-rules
+            :rules="[(val) => (val && val.length > 0) || 'Por favor, seleccione una ficha']">
             <template v-slot:no-option>
               <q-item>
                 <q-item-section class="text-grey"> No results </q-item-section>
               </q-item>
             </template>
           </q-select>
-         
+
           <q-input outlined v-model="firstName" label="Nombres Aprendiz" lazy-rules :rules="[
             (val) => (val && val.length > 0) || 'Por favor, dígite el nombre del aprendiz'
           ]" />
@@ -127,12 +139,7 @@ let optionsTpDoc = ref([
   "tarjeta de identidad",
   "cédula de extranjería",
 ]);
-const filterOptions = [
-  { value: 'apprentice', label: 'Aprendiz' },
-  { value: 'fiche', label: 'Ficha' },
-  { value: 'status', label: 'Estado' },
-];
-// let optionsIdFiche = ref(["671016f171e7d8e0b4b7cf5b"]);
+
 let optionsModality = ref([]);
 const columns = ref([
   {
@@ -477,15 +484,7 @@ h3 {
   font-weight: bold;
 }
 
-.q-mb-md {
-  margin-bottom: 16px;
-}
-
-.q-ml-md {
-  margin-left: 16px;
-}
-
-.q-mr-md {
-  margin-right: 8px;
+.rounded-input .q-field__control {
+  border-radius: 10px !important;
 }
 </style>

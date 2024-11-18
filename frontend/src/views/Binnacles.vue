@@ -1,22 +1,33 @@
 <template>
   <div class="q-pa-md q-gutter-md">
-    <Header title="Bitacoras"></Header>
-    <div class="q-pa-md q-gutter-sm" style="display: flex">
-      <div style="display: flex; justify-content: center;">
-        <div class="text-primary">Realizar filtro por</div>
-        <q-form @submit="radiobtn" class="q-gutter-md" style="display: flex;">
-          <q-radio name="shape" v-model="shape" :val="'apprentice'" label="Instructor" />
-          <q-radio name="shape" v-model="shape" :val="'insFollowup'" label="Aprendiz" />
-        </q-form>
+    <Header title="Bitácoras"></Header>
+    <div style="display: flex; flex-direction: row; align-items: flex-start; justify-content: flex-end; margin: -30px 0px">
+  <div class="q-pa-md q-gutter-sm" style="display: flex; flex-direction: column; align-items: flex-start;">
+    <div class="text-primary" style="margin-bottom: -30px;">Realizar filtro por</div>
+
+    <!-- Contenedor de los radio buttons y el input, alineados en una fila -->
+    <div style="display: flex; flex-direction: row; align-items: center; justify-content: flex-start; width: 100%;">
+      <!-- Radio buttons -->
+      <div style="display: flex; flex-direction: row; align-items: flex-start; margin-right: 10px;">
+        <q-radio v-model="selectedValue" val="instructor" label="Instructor" dense color="primary"
+          @update:model-value="handleFilter" style="margin-right: 10px;" />
+        <q-radio v-model="selectedValue" val="assignment" label="Aprendiz" dense color="primary"
+          @update:model-value="handleFilter" style="margin-right: -10px;" />
       </div>
-      <div class="q-pa-md">
-        <div class="q-gutter-md" style="width: 400px">
-          <q-input outlined v-model="text" label="Ingrese el nombre o número de documento " />
+
+      <!-- Input de búsqueda alineado a la izquierda -->
+      <div class="q-pa-md" style="flex-grow: 1; display: flex; justify-content: flex-start;">
+        <div class="rounded-input" style=" width: 370px;">
+          <q-input class="q-ml-md" v-model="searchTerm" :label="searchLabel" @input="handleFilter" outlined
+            :disable="!selectedValue" />
         </div>
       </div>
     </div>
+  </div>
+</div>
+
     <!-- <Btn :label="btnLabel" :onClickFunction="openModalCreate" :loading="loading" /> -->
-    <binnacleTable :title="title" :columns="columns" :rows="rows" :options="options"
+    <binnacleTable :title="title" :columns="columns" :rows="filteredRows" :options="options"
       :onUpdateStatus="handleUpdateStatus" :loading="loading" :val="true" :onClickFunction="openModalObservations" />
     <Modal :isVisible="showModalCreate" @update:isVisible="showModalCreate = $event"
       :label="'DILIGENCIA LA INFORMACION'">
@@ -194,9 +205,9 @@ let optionsAssignment = ref();
 let optionsInstructor = ref();
 const rows = ref([]);
 const submitResult = ref([]);
-
-const shape = ref('apprentice')
-
+let searchTerm = ref("");
+let searchLabel = ref('Buscar')
+const selectedValue = ref('');
 function radiobtn(evt) {
   const formData = new FormData(evt.target)
   const data = []
@@ -268,6 +279,35 @@ let options = ref([
 onBeforeMount(() => {
   bring();
 });
+
+const handleFilter = () => {
+  if (selectedValue.value === "assignment") {
+    searchLabel.value = "Ingrese el nombre del aprendiz";
+  } else if (selectedValue.value === "instructor") {
+    searchLabel.value = "Ingrese el nombre del instructor";
+  } else {
+    searchLabel.value = "Buscar";
+  }
+};
+console.log(rows.status)
+const filteredRows = computed(() => {
+  if (!searchTerm.value) return rows.value;  // Si no hay término de búsqueda, devolver todos los registros
+
+  return rows.value.filter(row => {
+    console.log(row); // Añadir esto para depurar
+    if (selectedValue.value === "instructor") {
+      return (
+        ( row.instructor.toLowerCase().startsWith(searchTerm.value.toLowerCase())) 
+      );
+    } else if (selectedValue.value === "assignment") {
+      return (
+        ( row.assignment.toLowerCase().startsWith(searchTerm.value.toLowerCase()))
+      );
+    }
+    return false;  // Si no hay filtro seleccionado
+  });
+});
+
 
 async function bring() {
   try {

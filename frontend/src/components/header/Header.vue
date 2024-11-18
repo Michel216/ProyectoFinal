@@ -65,7 +65,7 @@ const props = defineProps({
 
 hr {
     border: 2px solid green;
-  width: 40rem;            /* Define el ancho de la línea */
+  width: 66rem;            /* Define el ancho de la línea */
   border-radius: 10px;
    margin: auto auto !important;
    margin-top: -1% !important;
