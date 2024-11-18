@@ -52,9 +52,6 @@ const props = defineProps({
   onToggleActivate: {
     type: Function
   },
-  options: {
-    type: Array
-  },
   onUpdateStatus: {
     type: Function
   },

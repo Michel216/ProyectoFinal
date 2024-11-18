@@ -6,7 +6,7 @@
         <span class="text-subtitle2">Realizar filtro por</span>
 
         <!-- Radio buttons -->
-        <q-radio v-model="selectedValue" val="fiche" label="Ficha" dense color="primary"
+        <q-radio v-model="selectedValue" val="fiche" label="Código Ficha" dense color="primary"
           @update:model-value="handleFilter" />
         <q-radio v-model="selectedValue" val="apprentice" label="Aprendiz" dense color="primary"
           @update:model-value="handleFilter" />
@@ -35,9 +35,16 @@
             max-width: 100%;
             width: 100vw;
             margin: auto">
-          <q-select outlined v-model="fiche" label="Ficha" :options="optionsIdFiche" lazy-rules :rules="[
-            (val) => (val && val.length > 0) || 'Por favor, dígite el código de la ficha'
-          ]" />
+                <q-select outlined v-model="fiche" label="Ficha" :options="options"
+            emit-value map-options clearable use-input input-debounce="0" behavior="menu" @filter="filterFiche"
+            lazy-rules :rules="[(val) => (val && val.length > 0) || 'Por favor, seleccione una ficha']">
+            <template v-slot:no-option>
+              <q-item>
+                <q-item-section class="text-grey"> No results </q-item-section>
+              </q-item>
+            </template>
+          </q-select>
+         
           <q-input outlined v-model="firstName" label="Nombres Aprendiz" lazy-rules :rules="[
             (val) => (val && val.length > 0) || 'Por favor, dígite el nombre del aprendiz'
           ]" />
@@ -96,6 +103,7 @@ import Header from '../components/header/Header.vue';
 import { notifyErrorRequest, notifySuccessRequest, notifyWarningRequest, } from "../composables/Notify";
 import { useRoute } from 'vue-router';
 
+const options = ref([]);
 let loading = ref(false);
 let title = "Aprendices";
 let btnLabel = "Crear";
@@ -386,6 +394,41 @@ async function bringIdAndOpenModal(id) {
   } else {
     idApprentice.value = "";
     change.value = true;
+  }
+}
+async function filterFiche(val, update) {
+  try {
+    // Llamada a la API para obtener los fiches
+    let response = await getDataRepfora("/fiches");
+
+    // Comprueba si response.data está definido y es un arreglo
+    if (response.data && Array.isArray(response.data)) {
+      if (val === "") {
+        update(() => {
+          options.value = response.data.map((fiche) => ({
+            label: `${fiche.program.name} - ${fiche.program.code} `,  // Muestra el nombre y el código
+            value: fiche._id,  // Guarda el ID de la ficha
+          }));
+        });
+        return;
+      }
+
+      // Si hay un valor de búsqueda, filtra las fichas por nombre
+      update(() => {
+        const needle = val.toLowerCase();
+        options.value = response.data
+          .map((fiche) => ({
+            label: `${fiche.program.name} - ${fiche.program.code}`,  // Muestra el nombre y el código
+            value: fiche._id,  // Guarda el ID de la ficha
+          }))
+          .filter((option) => option.label.toLowerCase().includes(needle)); // Filtra por el nombre o código
+      });
+    } else {
+      console.error("La respuesta de la API no contiene datos válidos:", response.data);
+    }
+  } catch (error) {
+    // Manejo de errores en la llamada a la API
+    console.error("Error al obtener fiches:", error.response ? error.response.data : error);
   }
 }
 

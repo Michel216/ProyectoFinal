@@ -67,16 +67,32 @@
             :rules="[val => val && val.length > 0 || 'Por favor, dígite el teléfono de la compañía']" />
           <q-input outlined v-model="addressCompany" label="Dirreción compañía" lazy-rules
             :rules="[val => val && val.length > 0 || 'Por favor, dígite la dirección de la compañía']" />
+            <q-input outlined v-model="emailCompany" label="Correo de la compañía" lazy-rules
+            :rules="[val => val && val.length > 0 || 'Por favor, dígite el correo de la compañía']" />
           <q-input outlined v-model="owner" label="Dueño compañía" lazy-rules
             :rules="[val => val && val.length > 0 || 'Por favor, dígite el nombre del dueño de la compañía']" />
           <q-input outlined v-model="docAlternative" label="Documento alternativo" lazy-rules
             :rules="[val => val && val.length > 0 || 'Por favor, dígite el documento alternativo']" />
-          <q-input outlined v-model="hour" label="Hora" lazy-rules
+            <q-input outlined v-model="hour" label="Hora" lazy-rules
             :rules="[val => val && val.length > 0 || 'Por favor, dígite la hora']">
             <template v-slot:append>
               <q-icon name="access_time" class="cursor-pointer">
                 <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                   <q-time v-model="hour" mask="HH:mm" format24h>
+                    <div class="row items-center justify-end">
+                      <q-btn v-close-popup label="Close" color="primary" flat />
+                    </div>
+                  </q-time>
+                </q-popup-proxy>
+              </q-icon>
+            </template>
+          </q-input>
+          <q-input outlined v-model="businessProyectHour" label="Hora proyecto" lazy-rules
+            :rules="[val => val && val.length > 0 || 'Por favor, dígite la hora del proyecto']">
+            <template v-slot:append>
+              <q-icon name="access_time" class="cursor-pointer">
+                <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                  <q-time v-model="businessProyectHour" mask="HH:mm" format24h>
                     <div class="row items-center justify-end">
                       <q-btn v-close-popup label="Close" color="primary" flat />
                     </div>
@@ -116,6 +132,8 @@ let endDate = ref()
 let company = ref()
 let phoneCompany = ref()
 let addressCompany = ref()
+let emailCompany = ref()
+let businessProyectHour = ref()
 let owner = ref()
 let docAlternative = ref()
 let hour = ref()
@@ -198,9 +216,12 @@ async function onSubmit() {
       "apprentice": apprentice.value,
       "modality": modality.value,
       "startDate": startDate.value,
+      "endDate": endDate.value,
       "company": company.value,
       "phonecompany": phoneCompany.value,
       "addresscompany": addressCompany.value,
+      "emailCompany": emailCompany.value,
+      "businessProyectHour": businessProyectHour.value,
       "owner": owner.value,
       "docAlternative": docAlternative.value,
       "hour": hour.value
