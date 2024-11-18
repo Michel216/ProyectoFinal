@@ -7,6 +7,7 @@ const register = {
             const register = await Register.find()
                 .populate({ path: 'apprentice' })
                 .populate({ path: 'modality' })
+                // .populate({ path: 'fiche' })
                 .exec();
             res.json({ register });
         } catch (error) {
@@ -113,61 +114,133 @@ getlistregisterbystartdate: async (req, res) => {
     },
 
     //agregar registro
-
     postaddregister: async (req, res) => {
         try {
-            const { apprentice, modality, startDate, endDate, company, phonecompany, addresscompany, owner, docAlternative, hour, businessProyectHour,assignment, certificationDoc, judymentPhoto } = req.body;
-
+            const {
+                apprentice,
+                modality,
+                startDate,
+                company,
+                phoneCompany,
+                addresCompany,
+                emailCompany,
+                owner,
+                docAlternative,
+                hour,
+                businessProyectHour,
+                productiveProyectHour,
+                assignment,
+                certificationDoc,
+                judymentPhoto
+            } = req.body;
+    
+            // Validación de la fecha de inicio
+            const start = new Date(startDate);
+            if (isNaN(start)) {
+                return res.status(400).json({ message: "startDate no es una fecha válida" });
+            }
+    
+            // Validación de la modalidad
+            const modalityData = await Modality.findById(modality);
+            if (!modalityData) {
+                return res.status(400).json({ message: "Modalidad no encontrada" });
+            }
+            const { name } = modalityData;
+    
+            // Función para validar los instructores requeridos
+            const validateInstructors = (requiredInstructors) => {
+                if (!assignment) return null; // Omitir validación si assignment no está definido
+    
+                const providedInstructors = Object.keys(assignment);
+                const missingInstructors = requiredInstructors.filter(instructor => !providedInstructors.includes(instructor));
+                const invalidInstructors = providedInstructors.filter(instructor => !requiredInstructors.includes(instructor));
+    
+                if (missingInstructors.length > 0) {
+                    return `Se requieren los instructores: ${missingInstructors.join(", ")}`;
+                }
+                if (invalidInstructors.length > 0) {
+                    return `Instructores no permitidos: ${invalidInstructors.join(", ")}`;
+                }
+                return null;
+            };
+    
+            // Validación de instructores según el tipo de modalidad
+            let instructorError = null;
+            if (name === "PROYECTO EMPRESARIAL" || name === "PROYECTO PRODUCTIVO I+D") {
+                instructorError = validateInstructors(["projectInstructor", "technicalInstructor", "followUpInstructor"]);
+            } else if (name === "PROYECTO SOCIAL" || name === "PROYECTO PRODUCTIVO") {
+                instructorError = validateInstructors(["followUpInstructor", "technicalInstructor"]);
+            } else if (["PASANTIA", "VÍNCULO LABORAL", "MONITORIAS", "UNIDAD PRODUCTIVA FAMILIAR", "CONTRATO DE APRENDIZAJE"].includes(name)) {
+                instructorError = validateInstructors(["followUpInstructor"]);
+            } else {
+                instructorError = validateInstructors(["followUpInstructor"]);
+            }
+    
+            if (instructorError) {
+                return res.status(400).json({ message: instructorError });
+            }
+    
+            // Validación de la cantidad de aprendices
+            const apprenticeCount = Array.isArray(apprentice) ? apprentice.length : 1;
+            const singleApprenticeModalities = ["VÍNCULO LABORAL", "MONITORIAS", "PASANTIA", "UNIDAD PRODUCTIVA FAMILIAR", "CONTRATO DE APRENDIZAJE"];
+    
+            if (singleApprenticeModalities.includes(name) && apprenticeCount !== 1) {
+                return res.status(400).json({ message: "Solo se permite 1 aprendiz para esta modalidad" });
+            } else if (!singleApprenticeModalities.includes(name) && apprenticeCount < 1) {
+                return res.status(400).json({ message: "Se requiere al menos 1 aprendiz para esta modalidad" });
+            }
+    
+            // Cálculo de la fecha de finalización
+            const endDate = new Date(start);
+            endDate.setMonth(endDate.getMonth() + 6);
+            endDate.setDate(endDate.getDate() - 1);
+    
+            // Creación del nuevo registro
             const newregister = new Register({
                 apprentice,
                 modality,
                 startDate,
                 endDate,
                 company,
-                phonecompany,
-                addresscompany,
+                phoneCompany,
+                addresCompany,
+                emailCompany,
                 owner,
                 docAlternative,
                 hour,
                 businessProyectHour,
+                productiveProyectHour,
                 assignment,
                 certificationDoc,
                 judymentPhoto
             });
-
-            await newregister.save();
-            return res.json({ newregister });
-
+    
+            // Guardado del registro en la base de datos
+            const createdRegister = await newregister.save();
+            return res.status(201).json({ success: true, data: createdRegister });
+    
         } catch (error) {
-            console.error(error);
-
-            return res.status(400).json({ error: "Error al crear el registro" });
+            console.error("Error al crear registro:", error);
+            return res.status(400).json({ message: error.message || "Error al crear el registro" });
         }
     },
 
-    // Actualizar los datos del registro 
-    updateModalityregister: async (req, res) => {
-        try {
-            const modalityId = req.params.id; // ID de la modalidad desde la URL
-            const newData = req.body; // Datos a actualizar
-
-
-            const updatedRegister = await Register.findOneAndUpdate({ modality: modalityId }, newData, { new: true }
-            );
-            res.json({ updatedRegister })
-
-        } catch (error) {
-            console.error(error);
-            res.status(400).json({ error: "Error al modificar los datos del registro" });
-        }
-    },
     //actualizar registro por id
-
     updateregisterbyid: async (req, res) => {
         try {
             const id = req.params.id;
-            const newData = req.body
-            const updatedRegister = await Register.findByIdAndUpdate(id, newData, { new: true })
+            const { startDate, company, phoneCompany, addressCompany, owner, hour, businessProyectHour, productiveProjectHour, mailCompany } = req.body;
+            const registerID = await Register.findById(id);
+            if (!registerID) {
+                return res.status(404).json({ msg: "Registro no encontrado" });
+            }
+
+            const start = new Date(startDate);
+            const endDate = new Date(start);
+            endDate.setMonth(endDate.getMonth() + 6);
+            endDate.setDate(endDate.getDate() - 1);
+
+            const updatedRegister = await Register.findByIdAndUpdate(id,{ startDate, endDate, company, phoneCompany, addressCompany, owner, hour, businessProyectHour, productiveProjectHour, mailCompany }, { new: true })
             res.json({ updatedRegister })
         } catch (error) {
             console.log({ error });

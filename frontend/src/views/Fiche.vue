@@ -17,7 +17,7 @@ import ficheTable from '../components/tables/SecondTable.vue';
 import { ref, onBeforeMount } from 'vue';
 import { useRouter } from 'vue-router';
 import { getDataRepfora } from '../services/apiRepfora.js';
-import Header from '../components/header/header.vue';
+import Header from '../components/header/Header.vue';
 
 // library.add(faEye);
 

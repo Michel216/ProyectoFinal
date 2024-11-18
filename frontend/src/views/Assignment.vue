@@ -116,7 +116,7 @@ import {
   notifySuccessRequest,
   notifyWarningRequest,
 } from "../composables/Notify";
-import Header from '../components/header/header.vue';
+import Header from '../components/header/Header.vue';
 let loading = ref(false);
 let title = "Asignación";
 let btnLabel = "Crear Asignación";

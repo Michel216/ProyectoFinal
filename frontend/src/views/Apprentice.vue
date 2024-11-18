@@ -89,7 +89,7 @@ import { getData, putData, postData } from "../services/apiClient.js";
 import apprenticeTable from "../components/tables/BasicTable.vue";
 import Btn from "../components/buttons/Button.vue";
 import Modal from "../components/modals/Modal.vue";
-import Header from '../components/header/header.vue';
+import Header from '../components/header/Header.vue';
 import { notifyErrorRequest, notifySuccessRequest, notifyWarningRequest, } from "../composables/Notify";
 import { useRoute } from 'vue-router';
 

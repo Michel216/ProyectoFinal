@@ -172,7 +172,7 @@ import {
 import { formatDate } from "../utils/formatDate.js";
 import moment from "moment-timezone"
 import { useAuthStore } from './../store/useAuth.js'
-import Header from '../components/header/header.vue';
+import Header from '../components/header/Header.vue';
 
 const authStore = useAuthStore();
 let loading = ref(false);

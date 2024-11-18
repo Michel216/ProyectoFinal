@@ -174,7 +174,7 @@ import { formatMonth } from "../utils/formatMonth.js";
 import moment from "moment-timezone";
 import { formatDate } from "../utils/formatDate.js";
 import { useAuthStore } from './../store/useAuth.js'
-import Header from '../components/header/header.vue';
+import Header from '../components/header/Header.vue';
 
 const title = "Seguimientos";
 const authStore = useAuthStore();
