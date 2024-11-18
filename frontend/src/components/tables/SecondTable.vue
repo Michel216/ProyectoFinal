@@ -105,9 +105,9 @@ function updateStatus(status, row) {
   props.onUpdateStatus(status, row);
 }
 
-// function handleClick(row, change) {
-//   props.onClickFunction(row, change) // Emite el evento al componente padre
-// }
+function handleClick(row, change) {
+  props.onClickFunction(row, change) // Emite el evento al componente padre
+}
 // const emit = defineEmits(['openModal']);
 
 // // Función para abrir el modal con la observación seleccionada
