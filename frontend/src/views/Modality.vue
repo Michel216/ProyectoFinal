@@ -17,25 +17,72 @@
   
   <modalityTable :title="title" :columns="columns" :rows="filteredRows" :onToggleActivate="handleToggleActivate"
     :onClickEdit="bringId" />
-  <Modal :isVisible="showModal" @update:isVisible="showModal = $event" :label="btnLabel">
-    <div class="q-pa-md" style="max-width: 400px">
-      <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
-        <q-input outlined v-model="name" label="Nombre de la modalidad" lazy-rules :rules="[
-          (val) =>
-            (val && val.length > 0) ||
-            'Por favor, dígite el nombre de la modalidad',
-        ]" />
-        <q-input outlined type="number" v-model="hourInstructorFollow" label="Hora instructor de seguimiento" />
-        <q-input outlined type="number" v-model="hourInstructorProject" label="Hora instructor de projecto" />
-        <q-input outlined type="number" v-model="hourInstructorTechnical" label="Hora instructor técnico" />
-        <div>
-          <q-btn label="guardar" type="submit" color="primary" :loading="loading" class="full-width" />
-          <q-btn label="Cerrar" type="reset" icon="close" class="full-width" v-close-popup
+    <Modal
+      :isVisible="showModal"
+      @update:isVisible="showModal = $event"
+      :label="btnLabel"
+    >
+      <div class="q-pa-md" style="max-width: 400px">
+        <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
+          <q-input
+            outlined
+            v-model="name"
+            label="Nombre de la modalidad"
+            lazy-rules
+            :rules="[
+              (val) =>
+                (val && val.length > 0) ||
+                'Por favor, dígite el nombre de la modalidad',
+            ]"
+          >
+            <template v-slot:prepend>
+              <font-awesome-icon icon="fa-solid fa-person-chalkboard" />
+            </template>
+          </q-input>
+          <q-input
+            outlined
+            type="number"
+            v-model="hourInstructorFollow"
+            label="Hora instructor de seguimiento"
+          >
+            <template v-slot:prepend>
+              <font-awesome-icon icon="fa-solid fa-clock" />
+            </template>
+          </q-input>
+          <q-input
+            outlined
+            type="number"
+            v-model="hourInstructorProject"
+            label="Hora instructor de projecto"
+          >
+            <template v-slot:prepend>
+              <font-awesome-icon icon="fa-solid fa-clock" />
+            </template>
+          </q-input>
+          <q-input
+            outlined
+            type="number"
+            v-model="hourInstructorTechnical"
+            label="Hora instructor técnico"
+          >
+            <template v-slot:prepend>
+              <font-awesome-icon icon="fa-solid fa-clock" />
+            </template>
+          </q-input>
+          <div>
+            <q-btn
+              label="guardar"
+              type="submit"
+              color="primary"
+              :loading="loading"
+              class="full-width"
+            />
+            <q-btn label="Cerrar"  type="reset" icon="close"  class="full-width"  v-close-popup
             style="background-color: white; color: black; box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);" />
-        </div>
-      </q-form>
-    </div>
-  </Modal>
+          </div>
+        </q-form>
+      </div>
+    </Modal>
   </div>
 </template>
 <script setup>
@@ -50,6 +97,12 @@ import {
   notifyWarningRequest,
 } from "../composables/Notify";
 import Header from '../components/header/Header.vue';
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { faClock, faPersonChalkboard } from '@fortawesome/free-solid-svg-icons';
+
+library.add(faClock, faPersonChalkboard)
+
 let title = "Modalidades";
 let loading = ref(false);
 let btnLabel = "Crear";

@@ -4,98 +4,45 @@
       <div class="login-header">
         <h5>ETAPAS PRODUCTIVAS</h5>
       </div>
-      <img
-        src="https://repforacat.com/images/LOGO-SENA.png"
-        alt="Logo SENA"
-        class="logo"
-      />
+      <img src="https://repforacat.com/images/LOGO-SENA.png" alt="Logo SENA" class="logo" />
       <h2 class="login-title">LOGIN</h2>
-      <div class="container-form">
-        <form @submit.prevent="handleSubmit">
-          <div class="form-group">
-  <label for="rol">Rol</label>
-  <select id="rol" v-model="rol" class="input-field">
-    <option value="" disabled selected hidden>SELECCIONA UN ROL</option>
-    <option value="APRENDIZ">CONSULTOR</option>
-    <option value="ADMIN">ADMIN</option>
-    <option value="INSTRUCTOR">INSTRUCTOR</option>
-  </select>
-</div>
-
-
-          <div
-            class="form-group"
-            v-if="rol === 'APRENDIZ' || rol === 'INSTRUCTOR' || rol === 'ADMIN'"
-          >
-            <q-input
-              outlined
-              class="q-mt-sm" 
-              v-model="email"
-              label="Correo Electrónico"
-              :rules="[
-                (val) =>
-                  (val && val.trim() !== '') ||
-                  'Por favor ingresa tu correo electrónico',
-              ]"
-            />
+      <div class="q-pa-md">
+        <q-form @submit="handleSubmit" class="q-gutter-md">
+          <q-select outlined v-model="rol" :options="optionsLogin" emit-value map-options label="Rol" lazy-rules
+            :rules="[val => val && val.length > 0 || 'Por favor, ingrese un rol']" >
+            <template v-slot:prepend>
+              <font-awesome-icon icon="fa-solid fa-users" />
+            </template>
+          </q-select>
+          <q-input outlined v-model="email" type="email" label="Correo electrónico" lazy-rules
+            :rules="[val => val && val.length > 0 || 'Por favor, ingrese un correo electrónico']" >
+            <template v-slot:prepend>
+              <font-awesome-icon icon="fa-solid fa-envelope" />
+            </template>
+          </q-input>
+          <q-input outlined v-if="rol === 'APRENDIZ'" v-model="document" label="N° Documento" lazy-rules
+            :rules="[val => val && val.length > 0 || 'Por favor, ingrese un número de documento']" >
+            <template v-slot:prepend>
+              <font-awesome-icon icon="fa-solid fa-id-card" />
+            </template>
+          </q-input>
+          <q-input outlined v-if="rol === 'ADMIN' || rol === 'INSTRUCTOR'" v-model="password"
+            :type="isPwd ? 'password' : 'text'" label="Contraseña" lazy-rules
+            :rules="[val => val && val.length > 0 || 'Por favor, ingrese la contraseña']">
+            <template v-slot:append>
+              <q-icon :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer" @click="isPwd = !isPwd" />
+            </template>
+            <template v-slot:prepend>
+              <font-awesome-icon icon="fa-solid fa-lock" />
+            </template>
+          </q-input>
+          <div align="center">
+            <q-btn class="full-width" label="Iniciar sesión" type="submit" color="primary" />
           </div>
-
-          <div class="form-group" v-if="rol === 'APRENDIZ'">
-            <q-input
-              outlined
-              class="q-mt-sm"
-              v-model="document"
-              label="Num. Documento"
-              :rules="[
-                (val) =>
-                  (val && val.trim() !== '') ||
-                  'Por favor ingresa tu Num de documento',
-              ]"
-            />
-          </div>
-
-          <div
-            class="form-group"
-            v-if="rol === 'ADMIN' || rol === 'INSTRUCTOR'"
-          >
-            <q-input
-              outlined
-              class="q-mt-md"
-              v-model="password"
-              :type="isPwd ? 'password' : 'text'"
-              placeholder="CONTRASEÑA"
-              :rules="[
-                (val) =>
-                  (val !== null && val.trim() !== '') ||
-                  'Por favor ingresa tu contraseña',
-              ]"
-            >
-              <template v-slot:append>
-                <q-icon
-                  :name="isPwd ? 'visibility_off' : 'visibility'"
-                  class="cursor-pointer"
-                  @click="isPwd = !isPwd"
-                />
-              </template>
-            </q-input>
-          </div>
-
-      
-          <q-btn
-            :label="btnLabel"
-            :loading="isLoading"
-            @click="ClickFunctionLogin"
-            color="primary"
-            class="full-width"
-            :disable="isLoading"
-            loading-label="Iniciando sesión..."
-          />
-        </form>
+        </q-form>
       </div>
       <p>
-        <a @click="forgotPassword" class="forgot-password"
-          >Olvidé mi contraseña</a
-        >
+        <a @click="forgotPassword" class="forgot-password">Olvidé mi contraseña</a>
       </p>
     </div>
   </div>
@@ -106,21 +53,39 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { Notify } from "quasar"; 
+import { Notify } from "quasar";
 import { postDataLogin } from "../services/apiRepfora.js";
 import { postLogin } from "../services/apiClient.js";
 import { useAuthStore } from "../store/useAuth.js";
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { faUsers, faEnvelope, faIdCard, faLock } from '@fortawesome/free-solid-svg-icons';
 
+library.add(faUsers, faEnvelope, faIdCard, faLock)
 const router = useRouter();
 const authStore = useAuthStore();
 
 let btnLabel = "INICIAR SESIÓN";
-const rol = ref("APRENDIZ");
+const rol = ref("");
 const email = ref("");
 const cedula = ref("");
 const password = ref("");
 const isPwd = ref(true);
-const isLoading = ref(false); 
+const isLoading = ref(false);
+const optionsLogin = [
+  {
+    label: "CONSULTOR",
+    value: "APRENDIZ",
+  },
+  {
+    label: "INSTRUCTOR",
+    value: "INSTRUCTOR",
+  },
+  {
+    label: "ADMIN",
+    value: "ADMIN",
+  },
+];
 
 const handleSubmit = async () => {
   if (!email.value.trim() || !password.value.trim()) {
@@ -227,11 +192,11 @@ const ClickFunctionLogin = async () => {
 }
 
 .container-form {
-  padding: 10px !important; 
+  padding: 10px !important;
 }
 
 .login-box {
-  width: 40%; 
+  width: 40%;
 
   border-radius: 10px;
   background-color: #fff;
@@ -243,7 +208,7 @@ const ClickFunctionLogin = async () => {
 
 .login-header {
   background-color: green;
-  padding: 20px; 
+  padding: 20px;
   border-radius: 8px 8px 0 0;
 }
 
@@ -254,17 +219,17 @@ const ClickFunctionLogin = async () => {
 }
 
 .logo {
-  width: 80px; 
+  width: 80px;
 }
 
 .login-title {
-  font-size: 20px; 
+  font-size: 20px;
   font-weight: bold;
   margin: 0;
 }
 
 .form-group {
-  margin-bottom: 15px; 
+  margin-bottom: 15px;
 }
 
 .form-group label {
@@ -273,14 +238,14 @@ const ClickFunctionLogin = async () => {
 
 .input-field {
   width: 100%;
-  padding: 8px; 
+  padding: 8px;
   border: 1px solid #ccc;
   border-radius: 5px;
   font-size: 14px;
 }
 
 .login-button {
-  width: 40%; 
+  width: 40%;
   padding: 10px;
   background-color: green;
   color: white;
@@ -304,10 +269,12 @@ const ClickFunctionLogin = async () => {
   text-decoration: underline;
   font-weight: bold !important;
 }
-.full-width{
+
+.full-width {
   transition: box-shadow 0.3s ease;
 }
-.full-width:hover{
+
+.full-width:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
 
   text-shadow: 0px 0px 10px white;
