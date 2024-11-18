@@ -36,7 +36,7 @@ const menuItems = [
   { label: 'Bitácora', path: '/Binnacles', icon: ['fas', 'book'], rol: ["ADMIN", "ETAPA PRODUCTIVA", "INSTRUCTOR"] },
   // { label: 'Modalidades', path: '/Modality', icon: ['fas', 'tasks'], rol: [ "ETAPA PRODUCTIVA"] },
   { label: 'Asignaciones', path: '/Assignment', icon: ['fas', 'file-alt'], rol: ["ADMIN", "ETAPA PRODUCTIVA","INSTRUCTOR"] },
-  // { label: 'Modalidades', path: '/Modality', icon: ['fas', 'tasks'], rol: ["ADMIN", "ETAPA PRODUCTIVA",] },
+ { label: 'Modalidades', path: '/Modality', icon: ['fas', 'tasks'], rol: ["ADMIN", "ETAPA PRODUCTIVA",] },
   { label: 'Registros', path: '/Register', icon: ['fas', 'user'], rol: ["ADMIN", "ETAPA PRODUCTIVA"] },
   { label: 'Aprendices', path: '/Apprentice', icon: ['fas', 'user-graduate'], rol: ["ADMIN", "ETAPA PRODUCTIVA"] },
   { label: 'Seguimientos', path: '/FollowUp', icon: ['fas', 'chart-line'], rol: ["ADMIN", "ETAPA PRODUCTIVA", "INSTRUCTOR"] },

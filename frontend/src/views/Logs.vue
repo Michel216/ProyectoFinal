@@ -66,7 +66,7 @@ const router = useRouter();
 const authStore = useAuthStore();
 
 let btnLabel = "INICIAR SESIÓN";
-const rol = ref("APRENDIZ");
+const rol = ref("");
 const email = ref("");
 const cedula = ref("");
 const password = ref("");
