@@ -61,9 +61,12 @@ const props = defineProps({
   width: 80%; /* Aumenté el tamaño del botón */
   border-radius: 5px;
   margin-top: 8px; /* Añadí un margen superior */
+  transition: box-shadow 0.3s ease;
 }
 
 #btn:hover {
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.493);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+  /* Sombra al pasar el mouse, sin cambiar el color */
+  text-shadow: 0px 0px 10px white;
 }
 </style>

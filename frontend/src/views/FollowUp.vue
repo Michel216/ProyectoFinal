@@ -1,9 +1,24 @@
 <template>
   <div class="q-pa-md q-gutter-md">
     <Header title="Seguimientos"></Header>
-    <Btn :label="btnLabel" :onClickFunction="openModalCreate" :loading="loading" />
+    <!-- <Btn :label="btnLabel" :onClickFunction="openModalCreate" :loading="loading" /> -->
+    <div style="display: flex; flex-direction: row; align-items: flex-start; justify-content: flex-end; margin: -20px 0; margin-top: -60px;">
+  <div class="q-pa-md q-gutter-sm" style="display: flex; flex-direction: column; align-items: flex-start;">
 
-    <FollowupTable :title="title" :columns="columns" :rows="rows" :options="options"
+    <!-- Contenedor de los radio buttons y el input, alineados en una fila -->
+    <div style="display: flex; flex-direction: row; align-items: center; justify-content: flex-start; width: 100%;">
+
+      <!-- Input de búsqueda alineado a la izquierda -->
+      <div class="q-pa-md" style="flex-grow: 1; display: flex; justify-content: flex-start;">
+        <div class="rounded-input" style=" width: 370px;">
+          <q-input class="q-ml-md" v-model="searchTerm" :label="searchLabel" @input="handleFilter" outlined />
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+    <FollowupTable :title="title" :columns="columns" :rows="filteredRows" :options="options"
       :onUpdateStatus="handleUpdateStatus" :onClickFunction="openModalObservations" />
 
     <Modal :isVisible="showModalCreate" @update:isVisible="showModalCreate = $event"
@@ -83,13 +98,10 @@
           </q-input>
 
           <div class="q" style="display: flex; justify-content: center; align-items: center">
-            <q-btn label="Guardar" type="submit" icon="save" color="primary" :loading="loading" />
+            <q-btn label="Guardar"  class="full-width"  type="submit" icon="save" color="primary" :loading="loading" />
 
-            <q-btn label="Cerrar" type="reset" icon="close" flat class="q-ml-sm" v-close-popup style="
-                background-color: white;
-                color: black;
-                box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
-              " />
+            <q-btn label="Cerrar"  type="reset" icon="close"  class="full-width"  v-close-popup
+            style="background-color: white; color: black; box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);" />
           </div>
         </q-form>
       </div>
@@ -110,17 +122,14 @@
             :rules="[(val) => (val && val.length > 0) || 'Por favor, ingrese una observación']" />
 
 
-          <div class="q" style="display: flex; justify-content: center; align-items: center;">
-            <q-btn label="Guardar" type="submit" icon="save" color="primary" :loading="loading" />
+    
+            <q-btn label="Guardar" class="full-width" type="submit" icon="save" color="primary" :loading="loading" />
 
-            <q-btn label="Cerrar" type="reset" icon="close" flat class="q-ml-sm" v-close-popup style="
-      background-color: white;
-      color: black;
-      box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
-    " />
-          </div>
+            <q-btn label="Cerrar"  type="reset" icon="close"  class="full-width"  v-close-popup
+            style="background-color: white; color: black; box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);" />
+        
         </q-form>
-        <q-form v-if="change" @submit="onSubmitObservation" @reset="onReset" class="q-gutter-md" style="
+        <q-form v-else @submit="onSubmitObservation" @reset="onReset" style="
             max-height: none;
             max-width: 100%;
             width: 100vw;
@@ -130,29 +139,49 @@
             border-radius: 50px;
           ">
           <div v-for="(item, index) in listObservations" :key="index">
-            <q-card bordered class="my-card">
-
-              <q-card-section v-if="listObservations.length != 0">
-                <p><span class="text-h7">Observación:</span> <span class="text-h7">{{ item.observation
-                    }}</span> </p>
-                    <p><span class="text-h7">Usuario:</span> <span class="text-h7">{{ item.user
-                    }}</span> </p>
-                <p><span class="text-h7">Fecha de observación:</span> <span class="text-h7">{{ formatDate(item.observationDate)
-                    }}</span>
+            <div v-if="listObservations.length > 0">
+              <q-chat-message v-if="item.user === user" sent>
+                <p style="padding: 5px;">
+                  <span class="text-h7 text-primary"><strong> {{ item.user
+                      }}</strong></span> <br>
+                  <span class=" text-dark">{{ item.observation
+                    }}</span> <br><br>
+                  <span class="text-h7 text-primary" style="float: right;"><strong> {{ formatDate(item.observationDate)
+                      }}</strong></span>
                 </p>
-              </q-card-section>
-              <q-card-section v-else>
-                <p>No hay observaciones para mostrar</p>
+              </q-chat-message>
+              <q-chat-message v-else>
+                <p style="padding: 5px;">
+                  <span class="text-h7 text-dark"><strong> {{ item.user
+                      }}</strong></span> <br>
+                  <span class=" text-dark">{{ item.observation
+                    }}</span> <br><br>
+                  <span class="text-h7 text-dark" style="float: right;"><strong> {{ formatDate(item.observationDate)
+                      }}</strong></span>
+                </p>
+              </q-chat-message>
+            </div>
+
+          </div>
+          <div v-if="listObservations.length <= 0">
+            <q-card bordered class="bg-grey-5 my-card" >
+              <q-card-section align="center" class="text-h5 text-bold text-grey-8">
+                No hay observaciones
               </q-card-section>
             </q-card>
           </div>
+
+      
+
+          <br>
           <div class="q" style="display: flex; justify-content: center; align-items: center;">
 
+
             <q-btn label="Cerrar" type="reset" icon="close" flat class="q-ml-sm" v-close-popup style="
-      background-color: white;
-      color: black;
-      box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
-    " />
+background-color: white;
+color: black;
+box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
+" />
           </div>
         </q-form>
       </div>
@@ -197,6 +226,9 @@ let listObservations = ref([]);
 let idFollowUp = ref("");
 let optionsAssignment = ref();
 let optionsInstructor = ref();
+let searchTerm = ref("");
+let searchLabel = ref('Ingrese el nombre del aprendiz')
+const selectedValue = ref('');
 const columns = ref([
   { name: "index", label: "#", align: "center", field: "index" },
   {
@@ -271,6 +303,14 @@ async function bring() {
     console.log(error);
   }
 }
+
+const filteredRows = computed(() => {
+    if (!searchTerm.value) return rows.value;  // Si no hay término de búsqueda, devolver todos los registros
+    return rows.value.filter(row => {
+
+        return row.register.toLowerCase().startsWith(searchTerm.value.toLowerCase())
+    });
+  });
 
 async function handleUpdateStatus(status, row) {
   try {
@@ -438,6 +478,14 @@ h3 {
   text-align: center;
   margin-bottom: 0;
   font-weight: bold;
+}
+.full-width{
+  transition: box-shadow 0.3s ease;
+}
+.full-width:hover{
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+
+  text-shadow: 0px 0px 10px white;
 }
 
 .observation-box {

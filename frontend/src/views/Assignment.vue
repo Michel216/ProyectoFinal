@@ -3,45 +3,37 @@
     <Header title="Asignaciones"></Header>
 
     <!-- Contenedor de botón, formulario de radio y campo de entrada -->
-    <div class="q-pa-md q-gutter-sm" style="display: flex; align-items: center; justify-content: space-between;">
-
-      <!-- Botón en el extremo izquierdo -->
-      <!-- <q-btn class="btn" color="green-9" label="Crear" icon="add_circle_outline" style="width: auto" /> -->
-      <Btn :label="btnLabel" :onClickFunction="bringIdAndOpenModal" :loading="loading" />
-
-      <!-- Formulario de radio centrado -->
-      <div style="display: flex; justify-content: center;">
-        <q-form @submit="radiobtn" class="q-gutter-md" style="display: flex;">
-          <q-radio name="shape" v-model="shape" :val="'apprentice'" label="Aprendiz" />
-          <q-radio name="shape" v-model="shape" :val="'insFollowup'" label="Ins. Seguimiento" />
-          <q-radio name="shape" v-model="shape" :val="'insTec'" label="Ins. Técnico" />
-          <q-radio name="shape" v-model="shape" :val="'insProyect'" label="Ins. Proyecto" />
-        </q-form>
+    <div style="display: flex; align-items: center; justify-content: space-between;  margin: -30px 0">
+      <div class="btn" style="display: flex; flex-direction: row;  gap: 10px; margin-left: 10%">
+        <Btn :label="btnLabel" :onClickFunction="bringIdAndOpenModal" :loading="loading" />
       </div>
-      <div class="q-pa-md">
-    <div class="q-gutter-md" style="max-width: 400px">
-      <q-input outlined v-model="text" label="Ingrese el nombre o número de documento " />
-    </div> 
-  </div>
-      <q-card
-      v-if="submitResult.length > 0"
-      flat bordered
-      class="q-mt-md"
-      :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-2'"
-    >
-      <q-card-section>Submitted form contains the following formData (key = value):</q-card-section>
-      <q-separator />
-      <q-card-section class="row q-gutter-sm items-center">
-        <div
-          v-for="(item, index) in submitResult"
-          :key="index"
-          class="q-px-sm q-py-xs bg-grey-8 text-white rounded-borders text-center text-no-wrap"
-        >{{ item.name }} = {{ item.value }}</div>
-      </q-card-section>
-    </q-card>
+      <!-- Formulario de radio centrado -->
+      <div class="q-pa-md q-gutter-sm" style="display: flex; flex-direction: column; align-items: flex-start;">
+        <div class="text-primary" style="margin-bottom: -30px;">Realizar filtro por</div>
+        <!-- Contenedor de los radio buttons y el input, alineados en una fila -->
+        <div style="display: flex; flex-direction: row; align-items: center;">
+          <!-- Radio buttons -->
+          <div style="display: flex; flex-direction: row; align-items: flex-start;">
+            <q-radio v-model="selectedValue" val="apprentice" label="Aprendiz" dense color="primary"
+              @update:model-value="handleFilter" style="margin-right: 10px;" />
+            <q-radio v-model="selectedValue" val="followUpInstructor" label="Ins. Seguimiento" dense color="primary"
+              @update:model-value="handleFilter" style="margin-right: 10px;" />
+            <q-radio v-model="selectedValue" val="technicalInstructor" label="Ins. Técnico" dense color="primary"
+              @update:model-value="handleFilter" style="margin-right: 10px;" />
+            <q-radio v-model="selectedValue" val="projectInstructor" label="Ins. Proyecto" dense color="primary"
+              @update:model-value="handleFilter" style="margin-right: 10px;" />
+          </div>
+
+          <div class="q-pa-md">
+            <div class="rounded-input" style="width: 350px; ">
+              <q-input class="q-ml-md" v-model="searchTerm" :label="searchLabel" @input="handleFilter" outlined
+                :disable="!selectedValue" />
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-   
-    <ApprenticeTable :title="title" :rows="rows" :columns="columns" :onToggleActivate="handleToggleActivate"
+    <ApprenticeTable :title="title" :rows="filteredRows" :columns="columns" :onToggleActivate="handleToggleActivate"
       :loading="loading" :onClickEdit="bringIdAndOpenModal" />
     <Modal :isVisible="showModal" @update:isVisible="showModal = $event" :label="btnLabel">
       <div class="q-pa-md" style="max-width: 400px">
@@ -66,37 +58,14 @@
             </template>
           </q-select>
 
-          <!-- <q-select clearable outlined v-model="filterInstructorTecnico" use-input input-debounce="0"
-            label="Instructor Técnico" :options="options" @filter="filterTechnicalInstructor"
-            style="width: 100%; margin-bottom: 20px; border-radius: 8px;" behavior="menu" emit-value map-options>
-            <template v-slot:no-option>
-              <q-item>
-                <q-item-section class="text-grey">
-                  No results
-                </q-item-section>
-              </q-item>
-            </template>
-          </q-select>
-
-          <q-select clearable outlined v-model="filterInstructorProyecto" use-input input-debounce="0"
-            label="Instructor de Proyecto" :options="options" @filter="filterProyectInstructor"
-            style="width: 100%; margin-bottom: 20px; border-radius: 8px;" behavior="menu" emit-value map-options
-            lazy-rules>
-            <template v-slot:no-option>
-              <q-item>
-                <q-item-section class="text-grey">
-                  No results
-                </q-item-section>
-              </q-item>
-            </template>
-          </q-select> -->
-
           <q-input outlined v-model="textCertificacion" label="Documento Certificación" />
           <q-input outlined type="text" v-model="textFotoJudicial" label="Foto Judicial" />
 
+
           <div>
-            <q-btn label="Guardar" type="submit" color="primary" />
-            <q-btn label="Cerrar" type="reset" color="primary" flat class="q-ml-sm" v-close-popup />
+            <q-btn label="Guardar" type="submit" color="primary" class="full-width" />
+            <q-btn label="Cerrar" type="reset" icon="close" class="full-width" v-close-popup
+              style="background-color: white; color: black; box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);" />
           </div>
         </q-form>
       </div>
@@ -105,7 +74,7 @@
 </template>
 
 <script setup>
-import { ref, onBeforeMount } from "vue";
+import { ref, onBeforeMount, computed } from "vue";
 import { getData, putData, postData } from "../services/apiClient.js";
 import { getDataRepfora } from "../services/apiRepfora";
 import ApprenticeTable from "../components/tables/BasicTable.vue";
@@ -118,7 +87,6 @@ import {
 } from "../composables/Notify";
 import Header from '../components/header/Header.vue';
 let loading = ref(false);
-let title = "Asignación";
 let btnLabel = "Crear Asignación";
 const rows = ref([]);
 const showModal = ref(false);
@@ -129,9 +97,11 @@ const fichaRegistro = ref("");
 const filterInstructorFollowUp = ref("");
 const filterInstructorTecnico = ref("");
 const filterInstructorProyecto = ref("");
+const optionsInstructor = ref("");
 const submitResult = ref([]);
-
-const shape =ref('apprentice')
+let searchTerm = ref("");
+let searchLabel = ref('Buscar')
+const selectedValue = ref('');
 
 function radiobtn(evt) {
   const formData = new FormData(evt.target)
@@ -140,14 +110,14 @@ function radiobtn(evt) {
   for (const [name, value] of formData.entries()) {
     data.push({ name, value })
   }
-  
+
   submitResult.value = data
 }
 const text = ref('')
 let change = ref(); // true: crear, false: modificar
 let idAssignment = ref();
 const columns = ref([
-{
+  {
     name: "index",
     label: "#",
     align: "center",
@@ -195,189 +165,243 @@ onBeforeMount(() => {
   bring();
 });
 
-async function bring() {
-  try {
-    let data = await getData("/register/listallregister");
-    console.log(data); // Asegúrate de que `data.assignments` exista
-    rows.value = data.register.map(async(register, idx) => {
-      const ficheId = apprentice.fiche; // El ID de 'fiche' está en apprentice.fiche
-        const ficheData = await getDataRepfora(`/fiches/${ficheId}`);
-        console.log(ficheData);
-      return {
-        ...register,
-        apprentice: (register.apprentice.firstName + " " + register.apprentice.lastName),
-        fiche: ficheData.data.program.code,
-        // register: register.register.apprentice,
-        modality: register.modality.name,
-        projectInstructor: register.assignment.map(assign => assign.projectInstructor).join(", "),
-    technicalInstructor: register.assignment.map(assign => assign.technicalInstructor).join(", "),
-    followUpInstructor: register.assignment.map(assign => assign.followUpInstructor).join(", "),
-        index: idx + 1, // Añade el índice manualmente
-      };
+const handleFilter = () => {
+  if (selectedValue.value === "apprentice") {
+    searchLabel.value = "Ingrese el nombre del aprendiz";
+  } else  {
+    searchLabel.value = "Ingrese el nombre del instructor";
+  };
+}
+  console.log(rows.status)
+  const filteredRows = computed(() => {
+    if (!searchTerm.value) return rows.value;  // Si no hay término de búsqueda, devolver todos los registros
+    return rows.value.filter(row => {
+      if (selectedValue.value === "followUpInstructor") {
+        return row.followUpInstructor.toLowerCase().startsWith(searchTerm.value.toLowerCase());  // Filtro por código de ficha
+      } else if (selectedValue.value === "apprentice") {
+        return row.apprentice.toLowerCase().startsWith(searchTerm.value.toLowerCase())
+      } else if (selectedValue.value === "technicalInstructor") {
+        return row.technicalInstructor.toLowerCase().startsWith(searchTerm.value.toLowerCase()); 
+      }
+      else if (selectedValue.value === "projectInstructor") {
+        return row.projectInstructor.toLowerCase().startsWith(searchTerm.value.toLowerCase()); 
+      }
+      return false;  // Si no hay filtro seleccionado
     });
-  } catch (error) {
-    console.log(error);
-  }
-}
+  });
 
-async function handleToggleActivate(id, status) {
-  try {
-    const url =
-      status === 0
-        ? `/assignment/enableassignmentbyid/${id}`
-        : `/assignment/disableassignmentbyid/${id}`;
-    await putData(url);
-    bring();
-  } catch (error) {
-    console.log(error);
-  }
-}
+  async function bring() {
+    try {
+      // Obtén los datos de registros
+      let data = await getData("/register/listallregister");
+      console.log(data); // Asegúrate de que `data.register` exista
 
-async function onSubmit() {
-  loading.value = true;
-  try {
-    let url = ref();
-    let data = {
-      register: fichaRegistro.value,
-      certificationdoc: textCertificacion.value,
-      judymenthphoto: textFotoJudicial.value,
-    };
-    if (filterInstructorFollowUp != "")
-      data.followInstructor = filterInstructorFollowUp.value;
-    // if (filterInstructorTecnico != '') data.technicalInstructor = filterInstructorTecnico.value
-    // if (filterInstructorProyecto != '') data.proyectInstructor = filterInstructorProyecto.value
-    if (change.value === true) {
-      url.value = await postData(`/assignment/addassignment`, data);
-      notifySuccessRequest("Asignación creado exitosamente");
-    } else {
-      url.value = await putData(
-        `/assignment/updateassignmentbyid/${idAssignment.value}`,
-        data
+      // Usar `Promise.all` para esperar a que todas las promesas dentro del `map` se resuelvan
+      rows.value = await Promise.all(data.register.map(async (register, idx) => {
+        const ficheId = register.apprentice.fiche;
+        let ficheData = await getDataRepfora(`/fiches/${ficheId}`);
+
+        // Variables para los instructores
+        let followUpInstructor = "";
+        let technicalInstructor = "";
+        let projectInstructor = "";
+
+        // Recorre el array `assignment` si tiene más de una asignación
+        await Promise.all(register.assignment.map(async (assign) => {
+          // Solicita los datos de cada instructor
+          if (assign.followUpInstructor) {
+            let followData = await getDataRepfora(`/instructors/${assign.followUpInstructor}`);
+            followUpInstructor = followData.data.name;
+          }
+
+          if (assign.technicalInstructor) {
+            let technicalData = await getDataRepfora(`/instructors/${assign.technicalInstructor}`);
+            technicalInstructor = technicalData.data.name;
+          }
+
+          if (assign.projectInstructor) {
+            let projectData = await getDataRepfora(`/instructors/${assign.projectInstructor}`);
+            projectInstructor = projectData.data.name;
+          }
+        }));
+
+        // Retorna el registro con los datos de los instructores
+        return {
+          ...register,
+          apprentice: (register.apprentice.firstName + " " + register.apprentice.lastName),
+          fiche: ficheData.data.program.code,
+          modality: register.modality.name,
+          projectInstructor: projectInstructor, // Datos del instructor de proyecto
+          technicalInstructor: technicalInstructor, // Datos del instructor técnico
+          followUpInstructor: followUpInstructor, // Datos del instructor de seguimiento
+          index: idx + 1,
+        };
+      }));
+
+    } catch (error) {
+      console.log("Error al cargar los registros:", error);
+    }
+  }
+
+
+  async function handleToggleActivate(id, status) {
+    try {
+      const url =
+        status === 0
+          ? `/assignment/enableassignmentbyid/${id}`
+          : `/assignment/disableassignmentbyid/${id}`;
+      await putData(url);
+      bring();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function onSubmit() {
+    loading.value = true;
+    try {
+      let url = ref();
+      let data = {
+        register: fichaRegistro.value,
+        certificationdoc: textCertificacion.value,
+        judymenthphoto: textFotoJudicial.value,
+      };
+      if (filterInstructorFollowUp != "")
+        data.followInstructor = filterInstructorFollowUp.value;
+      // if (filterInstructorTecnico != '') data.technicalInstructor = filterInstructorTecnico.value
+      // if (filterInstructorProyecto != '') data.proyectInstructor = filterInstructorProyecto.value
+      if (change.value === true) {
+        url.value = await postData(`/assignment/addassignment`, data);
+        notifySuccessRequest("Asignación creado exitosamente");
+      } else {
+        url.value = await putData(
+          `/assignment/updateassignmentbyid/${idAssignment.value}`,
+          data
+        );
+        notifySuccessRequest("Asignación actualizada exitosamente");
+      }
+      showModal.value = false;
+      bring();
+      onReset();
+    } catch (error) {
+      console.log(error);
+      notifyErrorRequest(
+        error?.response?.data?.errors?.[0]?.msg || "Error desconocido"
       );
-      notifySuccessRequest("Asignación actualizada exitosamente");
+    } finally {
+      loading.value = false;
     }
-    showModal.value = false;
-    bring();
-    onReset();
-  } catch (error) {
-    console.log(error);
-    notifyErrorRequest(
-      error?.response?.data?.errors?.[0]?.msg || "Error desconocido"
-    );
-  } finally {
-    loading.value = false;
   }
-}
 
-function onReset() {
-  fichaRegistro.value = "";
-  filterInstructorFollowUp.value = "";
-  filterInstructorTecnico.value = "";
-  filterInstructorProyecto.value = "";
-  textCertificacion.value = "";
-  textFotoJudicial.value = "";
-}
-
-async function bringIdAndOpenModal(id) {
-  showModal.value = true;
-  if (id) {
-    let assignment = await getData(`/assignment/listassignmentbyid/${id}`);
-    let theAssignment = assignment.assignment;
-    idAssignment.value = id;
-    console.log(id);
-    change.value = false;
-    fichaRegistro.value = theAssignment.register;
-    filterInstructorFollowUp.value = theAssignment.followInstructor;
-    filterInstructorTecnico.value = theAssignment.technicalInstructor;
-    filterInstructorProyecto.value = theAssignment.proyectInstructor;
-    textCertificacion.value = theAssignment.certificationdoc;
-    textFotoJudicial.value = theAssignment.judymenthphoto;
-  } else {
-    idAssignment.value = "";
-    change.value = true;
+  function onReset() {
+    fichaRegistro.value = "";
+    filterInstructorFollowUp.value = "";
+    filterInstructorTecnico.value = "";
+    filterInstructorProyecto.value = "";
+    textCertificacion.value = "";
+    textFotoJudicial.value = "";
   }
-}
 
-const filterRegister = async (val, update) => {
-  try {
-    let res = await getData("/register/listallregister");
-    console.log("Respuesta de la API:", res);
-
-    // Verificar si la respuesta tiene la propiedad 'register'
-    if (res && res.register && Array.isArray(res.register)) {
-      if (val === "") {
-        update(() => {
-          options.value = res.register.map((register) => ({
-            label: register.apprentice.firstName,
-            value: register.id,
-          }));
-        });
-        return;
-      }
-
-      update(() => {
-        const needle = val.toLowerCase();
-        options.value = res.register
-          .map((register) => ({
-            label: register.apprentice.firstName,
-            value: register._id,
-          }))
-          .filter((option) => option.label.toLowerCase().includes(needle));
-      });
+  async function bringIdAndOpenModal(id) {
+    showModal.value = true;
+    if (id) {
+      let assignment = await getData(`/assignment/listassignmentbyid/${id}`);
+      let theAssignment = assignment.assignment;
+      idAssignment.value = id;
+      console.log(id);
+      change.value = false;
+      fichaRegistro.value = theAssignment.register;
+      filterInstructorFollowUp.value = theAssignment.followInstructor;
+      filterInstructorTecnico.value = theAssignment.technicalInstructor;
+      filterInstructorProyecto.value = theAssignment.proyectInstructor;
+      textCertificacion.value = theAssignment.certificationdoc;
+      textFotoJudicial.value = theAssignment.judymenthphoto;
     } else {
-      console.error("La respuesta de la API no contiene datos válidos:", res);
+      idAssignment.value = "";
+      change.value = true;
     }
-  } catch (error) {
-    console.error(
-      "Error al obtener registros:",
-      error.response ? error.response.data : error
-    );
   }
-};
 
-const filterInstructorSeguimiento = async (val, update) => {
-  try {
-    // Llamada a la API para obtener los instructores
-    let response = await getDataRepfora("/instructors");
-    console.log("Respuesta de la API:", response);
-    console.log("response.data:", response.data); // Aquí verifica el contenido de response.data
+  // const filterRegister = async (val, update) => {
+  //   try {
+  //     let res = await getData("/register/listallregister");
+  //     console.log("Respuesta de la API:", res);
 
-    // Comprueba si response.data está definido
-    if (response.data && Array.isArray(response.data)) {
-      if (val === "") {
+  //     // Verificar si la respuesta tiene la propiedad 'register'
+  //     if (res && res.register && Array.isArray(res.register)) {
+  //       if (val === "") {
+  //         update(() => {
+  //           options.value = res.register.map((register) => ({
+  //             label: register.apprentice.firstName,
+  //             value: register.id,
+  //           }));
+  //         });
+  //         return;
+  //       }
+
+  //       update(() => {
+  //         const needle = val.toLowerCase();
+  //         options.value = res.register
+  //           .map((register) => ({
+  //             label: register.apprentice.firstName,
+  //             value: register._id,
+  //           }))
+  //           .filter((option) => option.label.toLowerCase().includes(needle));
+  //       });
+  //     } else {
+  //       console.error("La respuesta de la API no contiene datos válidos:", res);
+  //     }
+  //   } catch (error) {
+  //     console.error(
+  //       "Error al obtener registros:",
+  //       error.response ? error.response.data : error
+  //     );
+  //   }
+  // };
+
+  const filterInstructors = async (val, update) => {
+    try {
+      // Llamada a la API para obtener los instructores
+      let response = await getDataRepfora("/instructors");
+      console.log("Respuesta de la API:", response);
+      console.log("response.data:", response.data); // Aquí verifica el contenido de response.data
+
+      // Comprueba si response.data está definido
+      if (response.data && Array.isArray(response.data)) {
+        if (val === "") {
+          update(() => {
+            optionsInstructor.value = response.data.map((instructor) => ({
+              label: instructor.name,
+              value: instructor._id,
+            }));
+          });
+          return;
+        }
+
+        // Si hay un valor de búsqueda, filtra los instructores por nombre
         update(() => {
-          options.value = response.data.map((instructor) => ({
-            label: instructor.name,
-            value: instructor,
-          }));
+          const needle = val.toLowerCase();
+          optionsInstructor.value = response.data
+            .map((instructor) => ({
+              label: instructor.name,
+              value: instructor._id,
+            }))
+            .filter((option) => option.label.toLowerCase().includes(needle));
         });
-        return;
+      } else {
+        console.error(
+          "La respuesta de la API no contiene datos válidos:",
+          response.data
+        );
       }
-
-      // Si hay un valor de búsqueda, filtra los instructores por nombre
-      update(() => {
-        const needle = val.toLowerCase();
-        options.value = response.data
-          .map((instructor) => ({
-            label: instructor.name,
-            value: instructor,
-          }))
-          .filter((option) => option.label.toLowerCase().includes(needle));
-      });
-    } else {
+    } catch (error) {
+      // Manejo de errores en la llamada a la API
       console.error(
-        "La respuesta de la API no contiene datos válidos:",
-        response.data
+        "Error al obtener instructores:",
+        error.response ? error.response.data : error
       );
     }
-  } catch (error) {
-    // Manejo de errores en la llamada a la API
-    console.error(
-      "Error al obtener instructores:",
-      error.response ? error.response.data : error
-    );
-  }
-};
+  };
 </script>
 <style scoped>
 .bg-green-9 {
@@ -393,9 +417,20 @@ const filterInstructorSeguimiento = async (val, update) => {
   text-align: center;
   margin-bottom: 0;
 }
+
 h3 {
   text-align: center;
   margin-bottom: 0;
-  font-weight: bold;
+  font-weight: bold;
+}
+
+.full-width {
+  transition: box-shadow 0.3s ease;
+}
+
+.full-width:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+
+  text-shadow: 0px 0px 10px white;
 }
 </style>

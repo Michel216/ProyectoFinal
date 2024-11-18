@@ -33,11 +33,6 @@ import { ref, computed } from 'vue';
 
 let loading = ref(false)
 const props = defineProps({
-  title: {
-    type: String,
-    required: true,
-    default: 'My Table'
-  },
   rows: {
     type: Array,
     required: true
@@ -51,9 +46,6 @@ const props = defineProps({
   },
   onToggleActivate: {
     type: Function
-  },
-  options: {
-    type: Array
   },
   onUpdateStatus: {
     type: Function

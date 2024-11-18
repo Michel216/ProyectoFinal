@@ -1,10 +1,15 @@
 <template>
     <div class="btn">
-        <q-btn color="primary" @click="handleClick" :label="label" >
-            <slot name="prepend"></slot>
-        </q-btn>
+      <q-btn
+        color="primary"
+        @click="handleClick"
+        :label="label"
+        class="custom-btn"
+      >
+        <slot name="prepend"></slot>
+      </q-btn>
     </div>
-</template>
+  </template>
 
 <script setup>
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -29,3 +34,14 @@ function handleClick (){
 }
 
 </script>
+<style scoped>
+.custom-btn {
+  transition: all 0.3s ease;
+}
+
+.custom-btn:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+  text-shadow: 0px 0px 10px white;
+}
+</style>
+

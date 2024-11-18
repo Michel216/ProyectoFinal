@@ -90,9 +90,12 @@
               </q-item>
             </template>
           </q-select>
-          <q-btn label="Guardar" type="submit" icon="save" color="primary" :loading="loading" />
-          <q-btn label="Cerrar" type="reset" icon="close" flat class="q-ml-sm" v-close-popup
+        
+          <q-btn label="Guardar" type="submit" icon="save" color="primary" class="full-width" :loading="loading" />
+          <q-btn label="Cerrar"  type="reset" icon="close"  class="full-width"  v-close-popup
             style="background-color: white; color: black; box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);" />
+          
+       
         </q-form>
       </div>
     </Modal>
