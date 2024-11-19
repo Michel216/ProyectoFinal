@@ -151,11 +151,11 @@
                       }}</strong></span> <br>
                   <span class=" text-dark">{{ item.observation
                     }}</span> <br><br>
-                  <span class="text-h7 text-primary" style="float: right;"><strong> {{ formatDate(item.observationDate)
-                      }}</strong></span>
+                  <span class="text-h7 text-primary" style="float: right;"><strong> {{ formatDate(item.observationDate
+                      )}}</strong></span>
                 </p>
               </q-chat-message>
-              <q-chat-message v-else>
+              <q-chat-message v-else bg-color="green-3">
                 <p style="padding: 5px;">
                   <span class="text-h7 text-dark"><strong> {{ item.user
                       }}</strong></span> <br>
@@ -169,7 +169,7 @@
 
           </div>
           <div v-if="listObservations.length <= 0">
-            <q-card bordered class="bg-grey-5 my-card" >
+            <q-card bordered class="bg-grey-4 my-card" >
               <q-card-section align="center" class="text-h5 text-bold text-grey-8">
                 No hay observaciones
               </q-card-section>
@@ -227,7 +227,7 @@ let numFollowUp = ref("");
 let document = ref("");
 let month = ref("");
 let observation = ref("");
-let observationDate = moment().tz('America/Bogota').format('YYYY-MM-DD HH:mm:ss')
+const observationDate = moment().tz('America/Bogota').format('YYYY-MM-DD HH:mm:ss'); // ISO 8601
 const user = computed(() => authStore.getEmail());
 
 let showModalCreate = ref(false);
@@ -363,11 +363,12 @@ async function onSubmitObservation() {
       observations: [
         {
           observation: observation.value,
-          observationDate:  observationDate,
+          observationDate: observationDate,
           user: user.value
         },
       ],
     };
+    console.log(observationDate);
     
     
     let url = await putData(
