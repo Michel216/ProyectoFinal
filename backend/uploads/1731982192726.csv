@@ -1,0 +1,6 @@
+fiche,modality,tpdocument,numDocument,firstName,lastName,phone,institutionalEmail,personalEmail,status
+64a5f9c0c54e2b5b60d56789,64a5fa23c54e2b5b60d5678a,cédula de ciudadanía,12345678,Juan,Pérez,3101234567,juan.perez@sena.edu.co,juan.perez@gmail.com,1
+64a5f9c0c54e2b5b60d56790,64a5fa23c54e2b5b60d5678b,tarjeta de identidad,87654321,Maria,Gomez,3209876543,maria.gomez@sena.edu.co,maria.gomez@gmail.com,1
+64a5f9c0c54e2b5b60d56791,64a5fa23c54e2b5b60d5678c,cédula de extranjería,45678901,Carlos,Lopez,3105671234,carlos.lopez@sena.edu.co,carlos.lopez@gmail.com,2
+64a5f9c0c54e2b5b60d56792,64a5fa23c54e2b5b60d5678d,cédula de ciudadanía,23456789,Ana,Martinez,3151234567,ana.martinez@sena.edu.co,ana.martinez@gmail.com,1
+64a5f9c0c54e2b5b60d56793,64a5fa23c54e2b5b60d5678e,tarjeta de identidad,67890123,Luis,Fernandez,3124567890,luis.fernandez@sena.edu.co,luis.fernandez@gmail.com,3

@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const cron = require('node-cron');
+const fs = require('fs');
 const { createBackupDb } = require('./utils/backup');
 
 class Server {
@@ -9,6 +10,9 @@ class Server {
         this.app = express();
         this.port = process?.env?.PORT || 4040;
         this.MONGO_URI = process.env.MONGO_URI
+
+        this.ensureUploadsDirectory();
+
         this.paths = {
             apprentice: '/api/apprentice',
             // assignment: '/api/assignment',
@@ -21,6 +25,13 @@ class Server {
         this.middlewares();
         this.routes();
     }
+    ensureUploadsDirectory() {
+        if (!fs.existsSync('uploads')) {
+            fs.mkdirSync('uploads');
+            console.log('Directorio "uploads" creado');
+        }
+    }
+
     middlewares() {
         this.app.use(express.json());
         this.app.use(cors())

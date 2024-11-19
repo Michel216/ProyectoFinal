@@ -1,11 +1,13 @@
 <template>
   <div class="q-pa-md q-gutter-md">
     <Header title="Aprendices"></Header>
+    <q-file v-model="file" label="Seleccionar archivo" accept=".csv, .txt" @input="handleFile" />
+
     <div
       style="display: flex; flex-direction: row; align-items: flex-start; justify-content: space-between; margin:  -30px 0">
       <div class="btn" style="display: flex; flex-direction: row;  gap: 10px; margin-left: 10%">
         <Btn :label="btnLabel" :onClickFunction="bringIdAndOpenModal" :loading="loading" />
-        <Btn :label="btnLabel" :onClickFunction="bringIdAndOpenModal" :loading="loading" />
+        <Btn :label="'Subir Archivo'" :onClickFunction="uploadFile" :loading="loading" />
       </div>
       <div class="q-pa-md q-gutter-sm" style="display: flex; flex-direction: column; align-items: flex-start;">
         <div class="text-primary" style="margin-bottom: -30px;">Realizar filtro por</div>
@@ -52,88 +54,88 @@
             input-debounce="0" behavior="menu" @filter="filterFiche" lazy-rules
             :rules="[(val) => (val && val.length > 0) || 'Por favor, seleccione una ficha']">
           </q-select>
-            <q-select outlined v-model="fiche" label="Ficha" :options="options" emit-value map-options clearable
-              use-input input-debounce="0" behavior="menu" @filter="filterFiche" lazy-rules
-              :rules="[(val) => (val && val.length > 0) || 'Por favor, seleccione una ficha']">
-              <template v-slot:no-option>
-                <q-item>
-                  <q-item-section class="text-grey"> No results </q-item-section>
-                </q-item>
-              </template>
-              <template v-slot:prepend>
-                <font-awesome-icon icon="fa-solid fa-users-between-lines" />
-              </template>
-            </q-select>
+          <q-select outlined v-model="fiche" label="Ficha" :options="options" emit-value map-options clearable use-input
+            input-debounce="0" behavior="menu" @filter="filterFiche" lazy-rules
+            :rules="[(val) => (val && val.length > 0) || 'Por favor, seleccione una ficha']">
+            <template v-slot:no-option>
+              <q-item>
+                <q-item-section class="text-grey"> No results </q-item-section>
+              </q-item>
+            </template>
+            <template v-slot:prepend>
+              <font-awesome-icon icon="fa-solid fa-users-between-lines" />
+            </template>
+          </q-select>
 
 
-            <q-input outlined v-model="firstName" label="Nombres Aprendiz" lazy-rules :rules="[
-              (val) => (val && val.length > 0) || 'Por favor, dígite el nombre del aprendiz'
+          <q-input outlined v-model="firstName" label="Nombres Aprendiz" lazy-rules :rules="[
+            (val) => (val && val.length > 0) || 'Por favor, dígite el nombre del aprendiz'
+          ]">
+            <template v-slot:prepend>
+              <font-awesome-icon icon="fa-solid fa-user-graduate" />
+            </template>
+          </q-input>
+          <q-input outlined v-model="lastName" label="Apellidos Aprendiz" lazy-rules :rules="[
+            (val) => (val && val.length > 0) || 'Por favor, dígite el apellido del aprendiz'
+          ]">
+            <template v-slot:prepend>
+              <font-awesome-icon icon="fa-solid fa-user-graduate" />
+            </template>
+          </q-input>
+          <q-input outlined v-model="institutionalEmail" label="Email institucional" lazy-rules :rules="[
+            (val) => (val && val.length > 0) || 'Por favor, dígite el correo personal del aprendiz'
+          ]">
+            <template v-slot:prepend>
+              <font-awesome-icon icon="fa-solid fa-envelope-circle-check" />
+            </template>
+          </q-input>
+          <q-input outlined v-model="personalEmail" label="Email personal" lazy-rules :rules="[
+            (val) => (val && val.length > 0) || 'Por favor, dígite el correo personal del aprendiz'
+          ]">
+            <template v-slot:prepend>
+              <font-awesome-icon icon="fa-solid fa-envelope" />
+            </template>
+          </q-input>
+          <q-input outlined type="number" v-model="phone" label="Teléfono" lazy-rules :rules="[
+            (val) => (val && val.length > 0) || 'Por favor, dígite el teléfono del aprendiz'
+          ]">
+            <template v-slot:prepend>
+              <font-awesome-icon icon="fa-solid fa-phone" />
+            </template>
+          </q-input>
+          <q-select outlined v-model="tpDoc" label="Tipo de documento" :options="optionsTpDoc" emit-value map-options
+            lazy-rules :rules="[
+              (val) => (val && val.length > 0) || 'Por favor, dígite el tipo de documento'
             ]">
-              <template v-slot:prepend>
-                <font-awesome-icon icon="fa-solid fa-user-graduate" />
-              </template>
-            </q-input>
-            <q-input outlined v-model="lastName" label="Apellidos Aprendiz" lazy-rules :rules="[
-              (val) => (val && val.length > 0) || 'Por favor, dígite el apellido del aprendiz'
+            <template v-slot:prepend>
+              <font-awesome-icon icon="fa-solid fa-credit-card" />
+            </template>
+          </q-select>
+          <q-input outlined type="number" v-model="numDoc" label="Número de documento" lazy-rules :rules="[
+            (val) => (val && val.length > 0) || 'Por favor, dígite el número de documento'
+          ]">
+            <template v-slot:prepend>
+              <font-awesome-icon icon="fa-solid fa-id-card" />
+            </template>
+          </q-input>
+          <q-select outlined v-model="modality" label="Modalidad Etapa Productiva" :options="optionsModality" emit-value
+            map-options clearable use-input input-debounce="0" behavior="menu" @filter="filterModality" lazy-rules
+            :rules="[
+              (val) => (val && val.length > 0) || 'Por favor, dígite la modalidad'
             ]">
-              <template v-slot:prepend>
-                <font-awesome-icon icon="fa-solid fa-user-graduate" />
-              </template>
-            </q-input>
-            <q-input outlined v-model="institutionalEmail" label="Email institucional" lazy-rules :rules="[
-              (val) => (val && val.length > 0) || 'Por favor, dígite el correo personal del aprendiz'
-            ]">
-              <template v-slot:prepend>
-                <font-awesome-icon icon="fa-solid fa-envelope-circle-check" />
-              </template>
-            </q-input>
-            <q-input outlined v-model="personalEmail" label="Email personal" lazy-rules :rules="[
-              (val) => (val && val.length > 0) || 'Por favor, dígite el correo personal del aprendiz'
-            ]">
-              <template v-slot:prepend>
-                <font-awesome-icon icon="fa-solid fa-envelope" />
-              </template>
-            </q-input>
-            <q-input outlined type="number" v-model="phone" label="Teléfono" lazy-rules :rules="[
-              (val) => (val && val.length > 0) || 'Por favor, dígite el teléfono del aprendiz'
-            ]">
-              <template v-slot:prepend>
-                <font-awesome-icon icon="fa-solid fa-phone" />
-              </template>
-            </q-input>
-            <q-select outlined v-model="tpDoc" label="Tipo de documento" :options="optionsTpDoc" emit-value map-options
-              lazy-rules :rules="[
-                (val) => (val && val.length > 0) || 'Por favor, dígite el tipo de documento'
-              ]">
-              <template v-slot:prepend>
-                <font-awesome-icon icon="fa-solid fa-credit-card" />
-              </template>
-            </q-select>
-            <q-input outlined type="number" v-model="numDoc" label="Número de documento" lazy-rules :rules="[
-              (val) => (val && val.length > 0) || 'Por favor, dígite el número de documento'
-            ]">
-              <template v-slot:prepend>
-                <font-awesome-icon icon="fa-solid fa-id-card" />
-              </template>
-            </q-input>
-            <q-select outlined v-model="modality" label="Modalidad Etapa Productiva" :options="optionsModality"
-              emit-value map-options clearable use-input input-debounce="0" behavior="menu" @filter="filterModality"
-              lazy-rules :rules="[
-                (val) => (val && val.length > 0) || 'Por favor, dígite la modalidad'
-              ]">
-              <template v-slot:no-option>
-                <q-item>
-                  <q-item-section class="text-grey"> No results </q-item-section>
-                </q-item>
-              </template>
-              <template v-slot:prepend>
-                <font-awesome-icon icon="fa-solid fa-person-chalkboard" />
-              </template>
-            </q-select>
+            <template v-slot:no-option>
+              <q-item>
+                <q-item-section class="text-grey"> No results </q-item-section>
+              </q-item>
+            </template>
+            <template v-slot:prepend>
+              <font-awesome-icon icon="fa-solid fa-person-chalkboard" />
+            </template>
+          </q-select>
 
-            <q-btn label="Guardar" type="submit" icon="save" color="primary" class="full-width" :loading="loading" />
-            <q-btn label="Cerrar" type="reset" icon="close" class="full-width" v-close-popup
-              style="background-color: white; color: black; box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);" />
+          <q-btn label="Guardar" type="submit" icon="save" color="primary" class="full-width" :loading="loading" />
+          <q-btn label="Cerrar" type="reset" icon="close" class="full-width" v-close-popup
+            style="background-color: white; color: black; box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);" />
 
 
         </q-form>
@@ -157,6 +159,7 @@ import { useRoute } from 'vue-router';
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faUsersBetweenLines, faUserGraduate, faEnvelope, faEnvelopeCircleCheck, faPhone, faIdCard, faCreditCard, faPersonChalkboard } from '@fortawesome/free-solid-svg-icons';
+import axios from 'axios';
 
 library.add(faUsersBetweenLines, faUserGraduate, faEnvelope, faEnvelopeCircleCheck, faPhone, faIdCard, faCreditCard, faPersonChalkboard)
 
@@ -179,6 +182,7 @@ let idApprentice = ref("");
 const selectedValue = ref('');
 const showModal = ref(false);
 const route = useRoute();
+const file = ref(null)
 
 let change = ref(); // true: crear, false: modificar
 const rows = ref([]);
@@ -294,14 +298,14 @@ onMounted(async () => {
 
       // // Filtrar los aprendices por ficha
       rows.value = await Promise.all(
-        response.listApprenticesByFiche.map(async (apprentice) => {
-          const ficheId = apprentice.fiche; // El ID de 'fiche' está en apprentice.fiche
+        response.listApprenticesByFiche.map(async (app) => {
+          const ficheId = app.fiche; // El ID de 'fiche' está en apprentice.fiche
           const ficheData = await getDataRepfora(`/fiches/${ficheId}`);
 
           return {
-            ...apprentice,
-            firstName: (apprentice.firstName + " " + apprentice.lastName),
-            modality: apprentice.modality.name,
+            ...app,
+            firstName: (app.firstName + " " + app.lastName),
+            modality: app.modality.name,
             fiche: ficheData.data.program.name,
             code: ficheData.data.program.code
           };
@@ -318,9 +322,9 @@ onMounted(async () => {
     loading.value = false;
   }
 });
-onBeforeMount(() => {
-  bring();
-});
+// onBeforeMount(() => {
+//   bring();
+// });
 
 async function bring() {
   loading.value = true;
@@ -448,67 +452,105 @@ async function bringIdAndOpenModal(id) {
     change.value = true;
   }
 }
-async function filterFiche(val, update) {
-  try {
-    // Llamada a la API para obtener los fiches
-    let response = await getDataRepfora("/fiches");
 
-    // Comprueba si response.data está definido y es un arreglo
-    if (response.data && Array.isArray(response.data)) {
-      if (val === "") {
-        update(() => {
-          options.value = response.data.map((fiche) => ({
-            label: `${fiche.program.name} - ${fiche.program.code} `,  // Muestra el nombre y el código
-            value: fiche._id,  // Guarda el ID de la ficha
-          }));
-        });
-        return;
-      }
+const handleFile = (uploadedFile) => {
+  file.value = uploadedFile; // Actualiza el archivo cargado
+};
 
-      // Si hay un valor de búsqueda, filtra las fichas por nombre
-      update(() => {
-        const needle = val.toLowerCase();
-        options.value = response.data
-          .map((fiche) => ({
-            label: `${fiche.program.name} - ${fiche.program.code}`,  // Muestra el nombre y el código
-            value: fiche._id,  // Guarda el ID de la ficha
-          }))
-          .filter((option) => option.label.toLowerCase().includes(needle)); // Filtra por el nombre o código
-      });
-    } else {
-      console.error("La respuesta de la API no contiene datos válidos:", response.data);
-    }
-  } catch (error) {
-    // Manejo de errores en la llamada a la API
-    console.error("Error al obtener fiches:", error.response ? error.response.data : error);
-  }
-}
-
-async function filterModality(val, update) {
-  let modality = await getData("/modality/listallmodality");
-  let theModality = modality.listAllModalities.filter(
-    (modality) => modality.status === 1
-  );
-  if (val === "") {
-    update(() => {
-      optionsModality.value = theModality.map((modality) => ({
-        label: modality.name,
-        value: modality._id,
-      }));
-    });
+const uploadFile = async () => {
+  if (!file.value) {
+    notifyErrorRequest("Por favor seleccione un archivo.");
     return;
   }
 
-  update(() => {
-    const needle = val.toLowerCase();
-    optionsModality.value = theModality
-      .map((modality) => ({
-        label: modality.name,
-        value: modality._id,
-      }))
-      .filter((option) => option.label.toLowerCase().includes(needle));
-  });
+  const formData = new FormData();
+  formData.append('file', file.value);
+  console.log(file.value);
+
+  try {
+    const response = await postData('/apprentice/upload', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    if (response.status === 200) {
+      notifySuccessRequest("Archivo cargado exitosamente.");
+  
+    }
+  } catch (error) {
+    if (error.response) {
+      console.error('Error en la respuesta:', error.response.data);
+      notifyErrorRequest(`Hubo un error: ${error.response.data.message || 'Error desconocido'}`);
+    } else {
+      console.error('Error de red o configuración:', error.message);
+      notifyErrorRequest("Hubo un error al cargar el archivo.");
+    }
+  }
 }
+
+
+
+
+
+  async function filterFiche(val, update) {
+    try {
+      // Llamada a la API para obtener los fiches
+      let response = await getDataRepfora("/fiches");
+
+      // Comprueba si response.data está definido y es un arreglo
+      if (response.data && Array.isArray(response.data)) {
+        if (val === "") {
+          update(() => {
+            options.value = response.data.map((fiche) => ({
+              label: `${fiche.program.name} - ${fiche.program.code} `,  // Muestra el nombre y el código
+              value: fiche._id,  // Guarda el ID de la ficha
+            }));
+          });
+          return;
+        }
+
+        // Si hay un valor de búsqueda, filtra las fichas por nombre
+        update(() => {
+          const needle = val.toLowerCase();
+          options.value = response.data
+            .map((fiche) => ({
+              label: `${fiche.program.name} - ${fiche.program.code}`,  // Muestra el nombre y el código
+              value: fiche._id,  // Guarda el ID de la ficha
+            }))
+            .filter((option) => option.label.toLowerCase().includes(needle)); // Filtra por el nombre o código
+        });
+      } else {
+        console.error("La respuesta de la API no contiene datos válidos:", response.data);
+      }
+    } catch (error) {
+      // Manejo de errores en la llamada a la API
+      console.error("Error al obtener fiches:", error.response ? error.response.data : error);
+    }
+  }
+
+  async function filterModality(val, update) {
+    let modality = await getData("/modality/listallmodality");
+    let theModality = modality.listAllModalities.filter(
+      (modality) => modality.status === 1
+    );
+    if (val === "") {
+      update(() => {
+        optionsModality.value = theModality.map((modality) => ({
+          label: modality.name,
+          value: modality._id,
+        }));
+      });
+      return;
+    }
+
+    update(() => {
+      const needle = val.toLowerCase();
+      optionsModality.value = theModality
+        .map((modality) => ({
+          label: modality.name,
+          value: modality._id,
+        }))
+        .filter((option) => option.label.toLowerCase().includes(needle));
+    });
+  }
 </script>
 
 <style scoped>

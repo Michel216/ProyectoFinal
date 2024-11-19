@@ -4,6 +4,9 @@ const apprenticeHelper = require('./../helpers/apprentice.js');
 const { validateFields } = require('./../middlewares/validate-fields.js');
 const { validateJWT } = require('./../middlewares/validateJWT.js');
 const { check } = require('express-validator');
+const fs = require('fs');  // Asegúrate de incluir esto al principio del archivo
+
+const upload = require('../middlewares/uploadMiddleware');
 
 const apprenticeRoute = express.Router();
 
@@ -41,6 +44,9 @@ apprenticeRoute.get('/listapprenticebystatus/:status', [
     check('status').custom(apprenticeHelper.validateStatus),
     validateFields
 ], apprenticeController.getListApprenticeByStatus);
+
+// Ruta para subir el archivo
+apprenticeRoute.post('/upload', upload.single('file'), apprenticeController.postUploadFile);
 
 // Añadir aprendiz
 apprenticeRoute.post('/addapprentice', [

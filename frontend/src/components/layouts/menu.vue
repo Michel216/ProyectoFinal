@@ -92,4 +92,8 @@ const filteredMenuItems = computed(() =>
   text-shadow: 0px 0px 10px white;
 }
 
+.indicator-icon{
+  color: white;
+}
+
 </style>

@@ -7,7 +7,7 @@ const apiClient = axios.create({
     // baseURL: 'https://proyectofinal-kwu7.onrender.com/api/',
     // baseURL: 'https://proyectofinal-wv26.onrender.com/api/',
     headers: {
-        'Content-Type': 'application/json',
+        // 'Content-Type': 'application/json',
         "token": token
     }
 });

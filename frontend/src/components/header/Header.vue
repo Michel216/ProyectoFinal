@@ -1,9 +1,10 @@
 <template>
+  <div>
   <div id="en">
     <q-btn to="/home" dense unelevated round color="primary" icon="arrow_back" text-color="white" class="iconExit" />
     <h1 id="programas">{{title}}</h1>
   </div>
-  <hr color="primary">
+  <hr color="primary"></div>
 </template>
 
 <script setup>
