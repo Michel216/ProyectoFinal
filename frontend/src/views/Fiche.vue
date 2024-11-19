@@ -1,68 +1,99 @@
 <template>
   <div class="q-pa-md q-gutter-md">
-    <Header title="Fichas"></Header>
-    <!-- <hr id="hr" class="bg-green-9" /> -->
-    <ficheTable :title="title" :columns="columns" :rows="rowsForTable" :options="options" :toggleSeeApprentice="handleViewApprentices">
-    </ficheTable>
-    <!-- <h3 class="title-table">Fichas</h3> -->
+    <Header title="Fichas" />
+    <div class="q-gutter-md row q-select-container">
+      <q-select
+        filled
+        v-model="model"
+        use-input
+        input-debounce="0"
+        label="Ingrese el nombre o número de la ficha"
+        :options="options"
+        @filter="filterFn"
+        style="width: 370px"
+        behavior="menu"
+        clearable
+      >
+        <template v-slot:no-option>
+          <q-item>
+            <q-item-section class="text-grey">
+              No results
+            </q-item-section>
+          </q-item>
+        </template>
+      </q-select>
+    </div>
+    <ficheTable
+      :title="title"
+      :columns="columns"
+      :rows="rowsForTable"
+      :options="options"
+      :toggleSeeApprentice="handleViewApprentices"
+    />
   </div>
 </template>
 
+<style scoped>
+.q-select-container {
+  display: flex;
+  justify-content: flex-end; /* Alinea el contenido hacia la derecha */
+}
+</style>
+
 <script setup>
-// import { library } from '@fortawesome/fontawesome-svg-core';
-// import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-// import { faEye } from '@fortawesome/free-solid-svg-icons';
-import ficheTable from '../components/tables/SecondTable.vue';
-// import Btn from '../components/buttons/Button.vue';
 import { ref, onBeforeMount } from 'vue';
 import { useRouter } from 'vue-router';
-import { getDataRepfora } from '../services/apiRepfora.js';
 import Header from '../components/header/Header.vue';
-
-// library.add(faEye);
+import ficheTable from '../components/tables/SecondTable.vue';
+import { getDataRepfora } from '../services/apiRepfora.js';
 
 const router = useRouter();
-const rows = ref([]); // Almacena la respuesta completa
-const rowsForTable = ref([]); // Solo los datos de `program` para mostrar en la tabla
+const model = ref(null);
+const rows = ref([]);
+const rowsForTable = ref([]);
+const stringOptions = ['Option 1', 'Option 2', 'Option 3'];
+const options = ref([...stringOptions]);
 
-const columns = ref([
-{
-    name: "index",
-    label: "N°",
-    align: "center",
-    field: 'index'
-  },
+const filterFn = (val, update) => {
+  if (val === '') {
+    update(() => {
+      options.value = [...stringOptions];
+    });
+    return;
+  }
+
+  update(() => {
+    const needle = val.toLowerCase();
+    options.value = stringOptions.filter(
+      (v) => v.toLowerCase().indexOf(needle) > -1
+    );
+  });
+};
+
+const columns = [
+  { name: "index", label: "N°", align: "center", field: 'index' },
   { name: "name", label: "NOMBRE DEL PROGRAMA", align: "center", field: "name" },
   { name: "code", label: "CÓDIGO DEL PROGRAMA", align: "center", field: "code", sortable: true },
   { name: "status", label: "ESTADO", align: "center", field: "status" },
   { name: "apprentice", label: "VER APRENDICES", align: "center", field: "apprentice" },
-]);
+];
 
-onBeforeMount(() => {
-  bring();
-});
-
-async function bring() {
+onBeforeMount(async () => {
   try {
-    let response = await getDataRepfora("/fiches");
-
-    // Guarda la respuesta completa en `rows`
+    const response = await getDataRepfora("/fiches");
     rows.value = response.data;
-console.log(response);
-
-    // Crea `rowsForTable` con solo los datos de `program` para la tabla y el ID de la ficha completa
     rowsForTable.value = response.data.map((item, idx) => ({
-      ...item.program,  // Incluye las propiedades de `program` para mostrar en la tabla
+      ...item.program,
       ficheId: item._id,
       index: idx + 1,
     }));
   } catch (error) {
     console.error("Error al traer los datos:", error);
   }
-}
+});
 
 function handleViewApprentices(row) {
-  if (row && row.ficheId) {
+  if (row?.ficheId) {
     router.push({
       path: './Apprentice/:ficheId?',
       query: { ficheId: row.ficheId }

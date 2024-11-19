@@ -7,6 +7,7 @@ import ForgotPassword from "./../views/ForgotPassword.vue";
 import Apprentice from "./../views/Apprentice.vue";
 import FollowUp from "./../views/FollowUp.vue";
 import Fiche  from './../views/Fiche.vue';
+import HoursInstructor from "../views/HoursInstructor.vue";
 import { createRouter, createWebHashHistory } from "vue-router";
 import Register from "../views/Register.vue";
 import { useAuthStore } from '../store/useAuth.js'; 
@@ -45,6 +46,7 @@ const routes = [
             { path: "/Apprentice/:ficheId?", component: Apprentice, beforeEnter: auth, meta: { rol: ["ADMIN"] } },
             { path: "/FollowUp", component: FollowUp, beforeEnter: auth, meta: { rol: ["ADMIN", "INSTRUCTOR"] } },
             { path: "/fiches", component: Fiche, beforeEnter: auth, meta: { rol: ["ADMIN"] } },
+            { path: "/HoursInstructor", component: HoursInstructor, beforeEnter: auth, meta: { rol:["ADMIN"]}},
         ]
     }
 ];

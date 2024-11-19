@@ -39,6 +39,7 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 //   faChartLine,
 // } from "@fortawesome/free-solid-svg-icons";
 import { useAuthStore } from "../store/useAuth.js";
+import Button from "../components/buttons/Button.vue";
 
 // Registra los íconos
 // library.add(faCamera, faUsers, faTasks, faClipboardList, faBook, faChartLine);
@@ -127,6 +128,13 @@ const cards = [
     buttonText: "Ver",
     imageSrc: "https://img.freepik.com/vector-gratis/socios-comerciales-que-firman-documento-pequenos-personajes-boligrafo-papel-firma-sello-plano-ilustracion_74855-10491.jpg?ga=GA1.1.1307591831.1699306440&semt=ais_hybrid",
     rol: [, "INSTRUCTOR","ADMIN"],
+  },
+  {
+    title:"Informe Horas Instructores EP",
+    buttonLink:"/hoursInstructor",
+    buttonText:"Ver",
+    imageSrc:"https://img.freepik.com/vector-gratis/concepto-landing-page-control-tiempo_52683-21296.jpg?t=st=1731976679~exp=1731980279~hmac=9e524f6784021f660134d8b0aa82db70d4a316ad12aef95f332b290b9416b1db&w=826",
+    rol:[,"ADMIN"],
   },
  
 ];
