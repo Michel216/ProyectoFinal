@@ -144,7 +144,7 @@
                       }}</strong></span>
                 </p>
               </q-chat-message>
-              <q-chat-message v-else>
+              <q-chat-message v-else bg-color="green-3">
                 <p style="padding: 5px;">
                   <span class="text-h7 text-dark"><strong> {{ item.user
                       }}</strong></span> <br>
