@@ -13,15 +13,20 @@
       <!-- Slot para la celda de activar/desactivar -->
       <template v-slot:body-cell-activar="scope">
         <q-td :props="scope">
-          <q-btn dense unelevated round color="red" class="q-pa-none"  style="height: 0px" v-if="scope.row.status === 1"
-            @click="toggleActivate(scope.row._id, scope.row.status)"><i class="fas fa-times fa-2x text-white"></i></q-btn>
-          <q-btn dense unelevated round color="primary" class="q-pa-none"  style="height: 0px" v-else @click="toggleActivate(scope.row._id, scope.row.status)"><i class="fas fa-check fa-2x text-white"></i></q-btn>
+          <q-btn dense unelevated round color="red" class="q-pa-none" style="height: 0px" v-if="scope.row.status === 1"
+            @click="toggleActivate(scope.row._id, scope.row.status)"><i
+              class="fas fa-times fa-2x text-white"></i></q-btn>
+          <q-btn dense unelevated round color="primary" class="q-pa-none" style="height: 0px" v-else
+            @click="toggleActivate(scope.row._id, scope.row.status)"><i
+              class="fas fa-check fa-2x text-white"></i></q-btn>
         </q-td>
       </template>
       <template v-slot:body-cell-status="scope">
         <q-td :props="scope">
-          <h7 style="font-size: 110%; color: white; background-color: green; padding:8% 25%; border-radius:5px" v-if="scope.row.status === 1">Activo</h7>
-          <h7 style="font-size: 110%; color: white; background-color: red; padding:8% 15%; border-radius:5px" v-else>Inactivo</h7>
+          <h7 style="font-size: 110%; color: white; background-color: green; padding:8% 25%; border-radius:5px"
+            v-if="scope.row.status === 1">Activo</h7>
+          <h7 style="font-size: 110%; color: white; background-color: red; padding:8% 15%; border-radius:5px" v-else>
+            Inactivo</h7>
         </q-td>
       </template>
     </q-table>
@@ -33,6 +38,9 @@ import { ref, computed } from 'vue';
 
 let loading = ref(false)
 const props = defineProps({
+  title: { 
+    type: String 
+  },
   rows: {
     type: Array,
     required: true
@@ -72,7 +80,8 @@ const toggleUpdate = (row) => {
 }
 </script>
 <style scoped>
-.q-pa-none{
-  height: 10px !important; width: 10px !important;
+.q-pa-none {
+  height: 10px !important;
+  width: 10px !important;
 }
- </style>
+</style>

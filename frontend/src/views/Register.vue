@@ -52,19 +52,6 @@
               </q-popup-proxy>
             </template>
           </q-input>
-          <q-input outlined v-model="endDate" label="Fecha final" mask="date"
-            :rules="[val => (val && val.length > 0) || 'Por favor, dígite la fecha de fin']">
-            <template v-slot:prepend>
-              <font-awesome-icon icon="calendar-day" class="cursor-pointer" />
-              <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                <q-date v-model="endDate" today-btn>
-                  <div class="row items-center justify-end">
-                    <q-btn v-close-popup label="Close" color="primary" flat />
-                  </div>
-                </q-date>
-              </q-popup-proxy>
-            </template>
-          </q-input>
           <q-input outlined v-model="company" label="Compañía" lazy-rules
             :rules="[val => val && val.length > 0 || 'Por favor, dígite el nombre de la compañía']">
             <template v-slot:prepend>
@@ -72,31 +59,43 @@
             </template>
           </q-input>
           <q-input outlined type="number" v-model="phoneCompany" label="Teléfono compañía" lazy-rules
-            :rules="[val => val && val.length > 0 || 'Por favor, dígite el teléfono de la compañía']" >
+            :rules="[val => val && val.length > 0 || 'Por favor, dígite el teléfono de la compañía']">
             <template v-slot:prepend>
               <font-awesome-icon icon="fa-solid fa-phone" />
             </template>
           </q-input>
           <q-input outlined v-model="addressCompany" label="Dirreción compañía" lazy-rules
-            :rules="[val => val && val.length > 0 || 'Por favor, dígite la dirección de la compañía']" >
+            :rules="[val => val && val.length > 0 || 'Por favor, dígite la dirección de la compañía']">
             <template v-slot:prepend>
               <font-awesome-icon icon="fa-solid fa-map-pin" />
             </template>
           </q-input>
           <q-input outlined v-model="emailCompany" label="Correo de la compañía" lazy-rules
-            :rules="[val => val && val.length > 0 || 'Por favor, dígite el correo de la compañía']" >
+            :rules="[val => val && val.length > 0 || 'Por favor, dígite el correo de la compañía']">
             <template v-slot:prepend>
               <font-awesome-icon icon="fa-solid fa-envelope-circle-check" />
             </template>
           </q-input>
           <q-input outlined v-model="owner" label="Dueño compañía" lazy-rules
-            :rules="[val => val && val.length > 0 || 'Por favor, dígite el nombre del dueño de la compañía']" >
+            :rules="[val => val && val.length > 0 || 'Por favor, dígite el nombre del dueño de la compañía']">
             <template v-slot:prepend>
               <font-awesome-icon icon="fa-solid fa-user-tie" />
             </template>
           </q-input>
           <q-input outlined v-model="docAlternative" label="Documento alternativo" lazy-rules
-            :rules="[val => val && val.length > 0 || 'Por favor, dígite el documento alternativo']" >
+            :rules="[val => val && val.length > 0 || 'Por favor, dígite el documento alternativo']">
+            <template v-slot:prepend>
+              <font-awesome-icon icon="fa-solid fa-file-invoice" />
+            </template>
+          </q-input>
+          <q-input outlined v-model="certificationDoc" label="Documento de certificación" lazy-rules
+            :rules="[val => val && val.length > 0 || 'Por favor, dígite el documento de certificación']">
+            <template v-slot:prepend>
+              <font-awesome-icon icon="fa-solid fa-file-invoice" />
+            </template>
+          </q-input>
+          <q-input outlined v-model="judymentPhoto" label="Foto judicial" lazy-rules
+            :rules="[val => val && val.length > 0 || 'Por favor, dígite la foto judicial']">
             <template v-slot:prepend>
               <font-awesome-icon icon="fa-solid fa-file-invoice" />
             </template>
@@ -104,27 +103,40 @@
           <q-input outlined v-model="hour" label="Hora" lazy-rules
             :rules="[val => val && val.length > 0 || 'Por favor, dígite la hora']">
             <template v-slot:prepend>
-              <font-awesome-icon icon="clock" class="cursor-pointer"/>
-                <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                  <q-time v-model="hour" mask="HH:mm" format24h>
-                    <div class="row items-center justify-end">
-                      <q-btn v-close-popup label="Close" color="primary" flat />
-                    </div>
-                  </q-time>
-                </q-popup-proxy>
+              <font-awesome-icon icon="clock" class="cursor-pointer" />
+              <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                <q-time v-model="hour" mask="HH:mm" format24h>
+                  <div class="row items-center justify-end">
+                    <q-btn v-close-popup label="Close" color="primary" flat />
+                  </div>
+                </q-time>
+              </q-popup-proxy>
             </template>
           </q-input>
           <q-input outlined v-model="businessProyectHour" label="Hora proyecto" lazy-rules
             :rules="[val => val && val.length > 0 || 'Por favor, dígite la hora del proyecto']">
             <template v-slot:prepend>
-              <font-awesome-icon icon="business-time" class="cursor-pointer"/>
-                <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                  <q-time v-model="businessProyectHour" mask="HH:mm" format24h>
-                    <div class="row items-center justify-end">
-                      <q-btn v-close-popup label="Close" color="primary" flat />
-                    </div>
-                  </q-time>
-                </q-popup-proxy>
+              <font-awesome-icon icon="business-time" class="cursor-pointer" />
+              <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                <q-time v-model="businessProyectHour" mask="HH:mm" format24h>
+                  <div class="row items-center justify-end">
+                    <q-btn v-close-popup label="Close" color="primary" flat />
+                  </div>
+                </q-time>
+              </q-popup-proxy>
+            </template>
+          </q-input>
+          <q-input outlined v-model="productiveProyectHour" label="Hora proyecto" lazy-rules
+            :rules="[val => val && val.length > 0 || 'Por favor, dígite la hora productiva del proyecto']">
+            <template v-slot:prepend>
+              <font-awesome-icon icon="business-time" class="cursor-pointer" />
+              <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                <q-time v-model="productiveProyectHour" mask="HH:mm" format24h>
+                  <div class="row items-center justify-end">
+                    <q-btn v-close-popup label="Close" color="primary" flat />
+                  </div>
+                </q-time>
+              </q-popup-proxy>
             </template>
           </q-input>
           <div>
@@ -144,6 +156,7 @@ import { getData, putData, postData } from '../services/apiClient.js';
 import { getDataRepfora } from '../services/apiRepfora.js'
 import RegisterTable from "../components/tables/BasicTable.vue";
 import { formatDate } from '../utils/formatDate.js';
+import { convertTimeToMinutes } from '../utils/timeToMinutes.js';
 import Btn from "../components/buttons/Button.vue"
 import Modal from "../components/modals/Modal.vue";
 import { notifyErrorRequest, notifySuccessRequest, notifyWarningRequest } from "../composables/Notify";
@@ -159,9 +172,11 @@ let btnLabel = 'Crear registro'
 let apprentice = ref()
 let modality = ref()
 let startDate = ref()
-let endDate = ref()
 let company = ref()
 let phoneCompany = ref()
+let certificationDoc = ref()
+let judymentPhoto = ref()
+let productiveProyectHour = ref()
 let addressCompany = ref()
 let emailCompany = ref()
 let businessProyectHour = ref()
@@ -184,13 +199,13 @@ const columns = ref([
   { name: 'apprentice', label: 'NOMBRE APRENDIZ', align: 'center', field: 'apprentice' },
   { name: 'program', label: 'PROGRAMA', align: 'center', field: 'program' },
   { name: 'modality', label: 'MODALIDAD', align: 'center', field: 'modality' },
-  { name: 'assignment', label: 'ASIGNACIÓN', align: 'center', field: 'assignment' },
+  // { name: 'assignment', label: 'ASIGNACIÓN', align: 'center', field: 'assignment' },
   { name: 'startDate', label: 'FECHA INICIO', align: 'center', field: 'startDate' },
   { name: 'endDate', label: 'FECHA FIN', align: 'center', field: 'endDate' },
-  { name: 'details', label: 'DETALLES', align: 'center', field: 'details' },
+  // { name: 'details', label: 'DETALLES', align: 'center', field: 'details' },
   { name: 'hour', label: 'REGISTRO HORAS', align: 'center', field: 'hour' },
-  { name: 'state', label: 'ESTADO', align: 'center', field: 'state' },
-  { name: 'options', label: 'OPCIONES', align: 'center', field: 'options' },
+  // { name: 'state', label: 'ESTADO', align: 'center', field: 'state' },
+  // { name: 'options', label: 'OPCIONES', align: 'center', field: 'options' },
 ])
 
 onBeforeMount(() => {
@@ -239,15 +254,16 @@ async function handleToggleActivate(rows, status) {
 
 };
 
+
 async function onSubmit() {
   loading.value = true
   try {
     let url = ref()
+
     let data = {
       "apprentice": apprentice.value,
       "modality": modality.value,
       "startDate": startDate.value,
-      "endDate": endDate.value,
       "company": company.value,
       "phonecompany": phoneCompany.value,
       "addresscompany": addressCompany.value,
@@ -255,7 +271,10 @@ async function onSubmit() {
       "businessProyectHour": businessProyectHour.value,
       "owner": owner.value,
       "docAlternative": docAlternative.value,
-      "hour": hour.value
+      "hour": hour.value,
+      "judymentPhoto": judymentPhoto.value,
+      "certificationDoc": certificationDoc.value,
+      "productiveProyectHour": productiveProyectHour.value
     }
     if (change.value === true) {
       url.value = await postData('/register/addregister', data);
@@ -279,13 +298,17 @@ function onReset() {
   apprentice.value = ''
   modality.value = ''
   startDate.value = ''
-  endDate.value = ''
   company.value = ''
   phoneCompany.value = ''
   addressCompany.value = ''
+  emailCompany.value = ''
+  businessProyectHour.value = ''
   owner.value = ''
-  docAlternative.value = ''
+  docAlternative.value =
   hour.value = ''
+  judymentPhoto.value = ''
+  certificationDoc.value = ''
+  productiveProyectHour.value = ''
 }
 
 async function bringIdAndOpenModal(id) {

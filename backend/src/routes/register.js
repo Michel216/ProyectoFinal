@@ -69,8 +69,7 @@ registerRoute.post('/addregister', [
     // validateJWT,
     check('apprentice', 'El apprentice es obligatorio y debe ser un ID válido de MongoDB').isMongoId(),
     check('modality', 'El modality es obligatorio y debe ser un ID válido de MongoDB').isMongoId(),
-    check('startDate', 'El campo startDate es obligatorio y debe ser una fecha válida').isDate(), 
-    check('endDate', 'El campo endDate es obligatorio y debe ser una fecha válida').isDate(),
+    check('startDate', 'El campo startDate es obligatorio y debe ser una fecha válida').isDate(),
     check('company', 'El campo company es obligatorio y debe ser una cadena de texto').not().isEmpty(),
     check('emailCompany', 'El correo de la compañía es obligatorio y debe ser un correo válido').notEmpty().isEmail(),
     check('businessProyectHour', 'El campo businessProyectHour es obligatorio ').not().isEmpty(),
@@ -78,7 +77,10 @@ registerRoute.post('/addregister', [
     check('addresscompany', 'El campo addresscompany es obligatorio, debe ser único y debe tener al menos 7 caracteres').isLength({ min: 7 }),
     check('owner', 'El campo owner es obligatorio y debe ser una cadena de texto').not().isEmpty(),
     check('docAlternative', 'El campo docAlternative es obligatorio y debe ser una cadena de texto').not().isEmpty(),
-    check('hour', 'El campo hour es obligatorio y debe ser una hora válida en formato HH:mm').matches(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/), // Cambio a validación de formato de hora
+    check('judymentPhoto', 'El campo judymentPhoto es obligatorio y debe ser una cadena de texto').not().isEmpty(),
+    check('certificationDoc', 'El campo certificationDoc es obligatorio y debe ser una cadena de texto').not().isEmpty(),
+    //check('hour', 'El campo hour es obligatorio y debe ser una hora válida en formato HH:mm').matches(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/), // Cambio a validación de formato de hora
+    check('hour', 'El campo hour es obligatorio y debe ser una hora válida en formato HH:mm').notEmpty(), // Cambio a validación de formato de hora
     validateFields
 ], register.postaddregister);
 

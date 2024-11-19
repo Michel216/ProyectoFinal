@@ -11,14 +11,14 @@ const registerSchema = new mongoose.Schema({
    emailCompany: { type: String, required: true },
    owner: { type: String, required: true },
    docAlternative: { type: String, required: true },
-   hour: { type: Number, required: true },
-   businessProyectHour: { type: Number, required: true },
-   productiveProyectHour: {type: Number},
+   hour: { type: String, required: true },
+   businessProyectHour: { type: String, required: true },
+   productiveProyectHour: {type: String},
    assignment: [
       {
-         followUpInstructor: { type: Object, required: true },
-         technicalInstructor: { type: Object, required: true },
-         projectInstructor: { type: Object, required: true },
+         followUpInstructor: { type: Object },
+         technicalInstructor: { type: Object },
+         projectInstructor: { type: Object },
          status: { type: Number, default: 1 }
       }
    ],

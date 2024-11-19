@@ -53,10 +53,6 @@
           <q-select outlined v-model="fiche" label="Ficha" :options="options" emit-value map-options clearable use-input
             input-debounce="0" behavior="menu" @filter="filterFiche" lazy-rules
             :rules="[(val) => (val && val.length > 0) || 'Por favor, seleccione una ficha']">
-          </q-select>
-          <q-select outlined v-model="fiche" label="Ficha" :options="options" emit-value map-options clearable use-input
-            input-debounce="0" behavior="menu" @filter="filterFiche" lazy-rules
-            :rules="[(val) => (val && val.length > 0) || 'Por favor, seleccione una ficha']">
             <template v-slot:no-option>
               <q-item>
                 <q-item-section class="text-grey"> No results </q-item-section>

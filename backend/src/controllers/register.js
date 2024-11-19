@@ -1,4 +1,5 @@
 const Register = require("../models/register.js")
+const Modality = require("./../models/modality.js")
 
 const register = {
     //Listar todos los registros 
@@ -121,8 +122,8 @@ getlistregisterbystartdate: async (req, res) => {
                 modality,
                 startDate,
                 company,
-                phoneCompany,
-                addresCompany,
+                phonecompany,
+                addresscompany,
                 emailCompany,
                 owner,
                 docAlternative,
@@ -202,8 +203,8 @@ getlistregisterbystartdate: async (req, res) => {
                 startDate,
                 endDate,
                 company,
-                phoneCompany,
-                addresCompany,
+                phonecompany,
+                addresscompany,
                 emailCompany,
                 owner,
                 docAlternative,
@@ -229,7 +230,7 @@ getlistregisterbystartdate: async (req, res) => {
     updateregisterbyid: async (req, res) => {
         try {
             const id = req.params.id;
-            const { startDate, company, phoneCompany, addressCompany, owner, hour, businessProyectHour, productiveProjectHour, mailCompany } = req.body;
+            const { startDate, company, phonecompany, addressCompany, owner, hour, businessProyectHour, productiveProjectHour, mailCompany } = req.body;
             const registerID = await Register.findById(id);
             if (!registerID) {
                 return res.status(404).json({ msg: "Registro no encontrado" });
@@ -240,7 +241,7 @@ getlistregisterbystartdate: async (req, res) => {
             endDate.setMonth(endDate.getMonth() + 6);
             endDate.setDate(endDate.getDate() - 1);
 
-            const updatedRegister = await Register.findByIdAndUpdate(id,{ startDate, endDate, company, phoneCompany, addressCompany, owner, hour, businessProyectHour, productiveProjectHour, mailCompany }, { new: true })
+            const updatedRegister = await Register.findByIdAndUpdate(id,{ startDate, endDate, company, phonecompany, addressCompany, owner, hour, businessProyectHour, productiveProjectHour, mailCompany }, { new: true })
             res.json({ updatedRegister })
         } catch (error) {
             console.log({ error });
