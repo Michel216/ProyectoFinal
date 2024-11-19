@@ -37,7 +37,7 @@
             </template>
           </q-input>
           <div align="center">
-            <q-btn class="full-width" label="Iniciar sesión" type="submit" color="primary" />
+            <q-btn class="full-width" label="Iniciar sesión" type="submit" color="primary"  :loading="isLoading"  :disable="isLoading" />
           </div>
         </q-form>
       </div>

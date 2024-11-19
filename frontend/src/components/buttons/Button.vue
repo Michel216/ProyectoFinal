@@ -3,15 +3,20 @@
       <q-btn
         color="primary"
         @click="handleClick"
-        :label="label"
+        :label="isLoading ? '' : label" 
+        :disabled="isLoading" 
         class="custom-btn"
       >
+      <template v-if="isLoading">
+        <q-spinner/>
+      </template>
         <slot name="prepend"></slot>
       </q-btn>
     </div>
   </template>
 
 <script setup>
+import { ref } from 'vue';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import {  faEye } from '@fortawesome/free-solid-svg-icons';
@@ -25,12 +30,24 @@ const props = defineProps({
         default:"No tengo texto"
     },
     onClickFunction:{
-        type:Function
+        type:Function,
+        required: false
     }
 })
 
+
+const isLoading = ref(false);
 function handleClick (){
-    props.onClickFunction()
+  isLoading.value = true;
+
+setTimeout(() => {
+
+  if (props.onClickFunction) {
+    props.onClickFunction();
+  }
+
+  isLoading.value = false;
+}, 2000);
 }
 
 </script>

@@ -74,7 +74,7 @@
               label="guardar"
               type="submit"
               color="primary"
-              :loading="loading"
+              :loading="isLoading"  :disable="isLoading" 
               class="full-width"
             />
             <q-btn label="Cerrar"  type="reset" icon="close"  class="full-width"  v-close-popup
@@ -105,6 +105,7 @@ library.add(faClock, faPersonChalkboard)
 
 let title = "Modalidades";
 let loading = ref(false);
+const isLoading = ref(false);
 let btnLabel = "Crear";
 const showModal = ref(false);
 let name = ref("");
@@ -194,6 +195,7 @@ async function handleToggleActivate(id, status) {
 
 async function onSubmit() {
   loading.value = true;
+  isLoading.value = true; 
   let data = {
     name: name.value,
   };
@@ -230,6 +232,7 @@ async function onSubmit() {
     );
   } finally {
     loading.value = false;
+    isLoading.value = false; 
   }
 }
 

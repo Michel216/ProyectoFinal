@@ -129,7 +129,7 @@
             </template>
           </q-select>
 
-          <q-btn label="Guardar" type="submit" icon="save" color="primary" class="full-width" :loading="loading" />
+          <q-btn label="Guardar" type="submit" icon="save" color="primary" class="full-width" :loading="isLoading"  :disable="isLoading"  />
           <q-btn label="Cerrar" type="reset" icon="close" class="full-width" v-close-popup
             style="background-color: white; color: black; box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);" />
 
@@ -161,6 +161,7 @@ library.add(faUsersBetweenLines, faUserGraduate, faEnvelope, faEnvelopeCircleChe
 
 const options = ref([]);
 let loading = ref(false);
+const isLoading = ref(false);
 let title = "Aprendices";
 let btnLabel = "Crear";
 let searchTerm = ref("");
@@ -365,6 +366,7 @@ async function handleToggleActivate(id, status) {
 
 async function onSubmit() {
   loading.value = true;
+  isLoading.value = true; 
   try {
     let url = ref();
     let data = {
@@ -402,6 +404,7 @@ async function onSubmit() {
     );
   } finally {
     loading.value = false;
+    isLoading.value = false; 
   }
 }
 

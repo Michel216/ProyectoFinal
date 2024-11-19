@@ -140,7 +140,7 @@
             </template>
           </q-input>
           <div>
-            <q-btn label="guardar" type="submit" color="primary" :loading="loading" class="full-width" />
+            <q-btn label="guardar" type="submit" color="primary" :loading="isLoading"  :disable="isLoading" class="full-width" />
             <q-btn label="Cerrar" type="reset" icon="close" class="full-width" v-close-popup
               style="background-color: white; color: black; box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);" />
           </div>
@@ -167,6 +167,7 @@ import { faUserGraduate, faPersonChalkboard, faCalendarDay, faBuilding, faPhone,
 library.add(faUserGraduate, faPersonChalkboard, faCalendarDay, faBuilding, faPhone, faMapPin, faEnvelopeCircleCheck, faUserTie, faFileInvoice, faClock, faBusinessTime)
 
 let loading = ref(false)
+const isLoading = ref(false);
 let title = 'Registros'
 let btnLabel = 'Crear registro'
 let apprentice = ref()
@@ -257,6 +258,7 @@ async function handleToggleActivate(rows, status) {
 
 async function onSubmit() {
   loading.value = true
+  isLoading.value = true; 
   try {
     let url = ref()
 
@@ -291,6 +293,7 @@ async function onSubmit() {
     notifyErrorRequest(error?.response?.data?.errors?.[0]?.msg || "Error desconocido");
   } finally {
     loading.value = false
+    isLoading.value = false; 
   }
 }
 

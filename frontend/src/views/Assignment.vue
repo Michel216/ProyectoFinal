@@ -101,7 +101,7 @@
 
 
           <div>
-            <q-btn label="Guardar" type="submit" color="primary" class="full-width" />
+            <q-btn label="Guardar" type="submit" color="primary" class="full-width" :loading="isLoading"  :disable="isLoading"  />
             <q-btn label="Cerrar" type="reset" icon="close" class="full-width" v-close-popup
               style="background-color: white; color: black; box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);" />
           </div>
@@ -132,6 +132,7 @@ library.add(faUserGraduate, faChalkboardUser)
 
 let loading = ref(false);
 let btnLabel = "Crear Asignación";
+const isLoading = ref(false);
 const rows = ref([]);
 const showModal = ref(false);
 const optionsI = ref([]);
@@ -304,6 +305,7 @@ async function handleToggleActivate(id, status) {
 
 async function onSubmit() {
   loading.value = true;
+  isLoading.value = true; 
   try {
     let url = ref();
     let data = {
@@ -335,6 +337,7 @@ async function onSubmit() {
     );
   } finally {
     loading.value = false;
+    isLoading.value = false; 
   }
 }
 

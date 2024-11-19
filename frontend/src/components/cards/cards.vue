@@ -1,15 +1,21 @@
 <template>
   <q-card class="my-card">
-    <q-img :src="imageSrc" class="card-image">
-     
-    </q-img>
-    <div class="text-subtitle2 absolute-top text-center" style="font-weight: bold; font-size: 18px; background-color: green;  border-radius: 8px 8px 0 0; height: 50px; color: white; text-align: center; ">
-        <p style="margin-top: 15px">{{ title }}</p>
-      </div>
-    
+    <q-img :src="imageSrc" class="card-image"></q-img>
+    <div class="text-subtitle2 absolute-top text-center" style="font-weight: bold; font-size: 18px; background-color: green; border-radius: 8px 8px 0 0; height: 50px; color: white; text-align: center;">
+      <p style="margin-top: 15px">{{ title }}</p>
+    </div>
+
     <q-card-section class="card-section">
-      <q-btn id="btn" color="primary" clickable :to="buttonLink" v-ripple>
-        {{ buttonText }}
+
+      <q-btn 
+        id="btn" 
+        color="primary" 
+        :disabled="isLoading" 
+        @click="handleClick" 
+        v-ripple>
+        <q-spinner v-if="isLoading"  />
+        <span v-if="!isLoading">{{ buttonText }}</span>
+      
       </q-btn>
     </q-card-section>
   </q-card>
@@ -17,8 +23,9 @@
 
 <script setup>
 import { defineProps } from 'vue';
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
-// Define las propiedades
 const props = defineProps({
   title: {
     type: String,
@@ -37,6 +44,20 @@ const props = defineProps({
     default: 'Ver',
   },
 });
+const router = useRouter();
+
+
+const isLoading = ref(false);
+
+
+const handleClick = () => {
+  isLoading.value = true;
+
+  setTimeout(() => {
+    router.push(props.buttonLink);
+    isLoading.value = false;
+  }, 2000); 
+};
 </script>
 
 <style scoped>
