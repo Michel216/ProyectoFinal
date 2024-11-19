@@ -2,6 +2,7 @@ import Logs from "./../views/Logs.vue";
 import Home from "./../views/Home.vue";
 import Binnacles from "./../views/Binnacles.vue";
 import Modality from "./../views/Modality.vue";
+import Certification from "./../views/Certification.vue";
 import Assignment from "./../views/Assignment.vue";
 import ForgotPassword from "./../views/ForgotPassword.vue";
 import Apprentice from "./../views/Apprentice.vue";
@@ -46,6 +47,7 @@ const routes = [
             { path: "/Apprentice/:ficheId?", component: Apprentice, beforeEnter: auth, meta: { rol: ["ADMIN"] } },
             { path: "/FollowUp", component: FollowUp, beforeEnter: auth, meta: { rol: ["ADMIN", "INSTRUCTOR"] } },
             { path: "/fiches", component: Fiche, beforeEnter: auth, meta: { rol: ["ADMIN"] } },
+            { path: "/Certification", component: Certification, beforeEnter: auth, meta: { rol: ["ADMIN", "INSTRUCTOR"] } },
             { path: "/HoursInstructor", component: HoursInstructor, beforeEnter: auth, meta: { rol:["ADMIN"]}},
         ]
     }

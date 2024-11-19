@@ -43,7 +43,7 @@ const menuItems = [
   // { label: 'Informes', path: '/reports', icon: ['fas', 'user-graduate'], rol: ["ADMIN", "ETAPA PRODUCTIVA"] },
   { label: 'Fichas', path: '/fiches', icon: ['fas', 'chart-line'], rol: ["ADMIN" ] },
   { label: 'Registro de Horas', path: '/reports', icon: ['fas', 'user-graduate'], rol: ["INSTRUCTOR" ] },
-  { label: 'Certificaciones', path: '/reports', icon: ['fas', 'user-graduate'], rol: ["INSTRUCTOR" ] }
+  { label: 'Certificaciones', path: '/Certification', icon: ['fas', 'user-graduate'], rol: ["ADMIN","INSTRUCTOR" ] }
 ];
 
 

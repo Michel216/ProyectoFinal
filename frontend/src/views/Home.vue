@@ -124,7 +124,7 @@ const cards = [
   },
   {
     title: "Certificados",
-    buttonLink: "/reports",
+    buttonLink: "/Certification",
     buttonText: "Ver",
     imageSrc: "https://img.freepik.com/vector-gratis/socios-comerciales-que-firman-documento-pequenos-personajes-boligrafo-papel-firma-sello-plano-ilustracion_74855-10491.jpg?ga=GA1.1.1307591831.1699306440&semt=ais_hybrid",
     rol: [, "INSTRUCTOR","ADMIN"],
