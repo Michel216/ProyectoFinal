@@ -51,7 +51,33 @@ apprenticeRoute.get('/listapprenticebystatus/:status', [
 ], apprenticeController.getListApprenticeByStatus);
 
 // Ruta para subir el archivo
-apprenticeRoute.post('/upload', upload.single('file'), apprenticeController.postUploadFile);
+apprenticeRoute.post('/upload', upload.single('file'), [
+    // validateJWT,
+    check('tpdocument', 'El tipo de documento es obligatorio').notEmpty(),
+    check('tpdocument').custom(apprenticeHelper.validateTpDocument),
+    check('numDocument', 'El número docuemnto es obligatorio').notEmpty(),
+    check('numDocument').custom(apprenticeHelper.validateNumDocument),
+    check('numDocument', 'El número docuemnto debe tener mínimo 8 y maximo 10 caracteres').isLength({ min: 8, max: 10 }),
+    check('firstName', 'El nombre es obligatorio').notEmpty(),
+    check('lastName', 'El apellido es obligatorio').notEmpty(),
+    check('phone', 'El teléfono es obligatorio').notEmpty(),
+    check('phone', 'El teléfono debe ser válido').isMobilePhone(),
+    check('phone').custom(apprenticeHelper.validatePhone),
+    check('institutionalEmail', 'El correo institucional es obligatorio').notEmpty(),
+    check('institutionalEmail', 'El correo institucional debe ser válido').isEmail(),
+    check('institutionalEmail').custom(apprenticeHelper.validateInstitutionalEmail),
+    check('personalEmail', 'El correo personal es obligatorio').notEmpty(),
+    check('personalEmail', 'El correo personal debe ser válido').isEmail(),
+    check('personalEmail').custom(apprenticeHelper.validatePersonalEmail),
+    check('fiche', 'La ficha debe ser obligatoria').notEmpty(),
+    check('fiche', 'El Id de la ficha debe ser válido').isMongoId(),
+    check('modality', 'La modalidad debe ser obligatoria').notEmpty(),
+    check('modality', 'El Id de la modalidad debe ser válido').isMongoId(),
+    check('modality').custom(apprenticeHelper.validateModality),
+    check('modality').custom(apprenticeHelper.validateModalityStatus),
+    check('status').optional().custom(apprenticeHelper.validateStatus),
+    validateFields
+], apprenticeController.postUploadFile);
 
 // Añadir aprendiz
 apprenticeRoute.post('/addapprentice', [

@@ -48,7 +48,7 @@
       <Modal :isVisible="showModal" @update:isVisible="showModal = $event" :label="btnLabel" :onClickFunction="onReset">
       <div class="q-pa-md" style="max-width: 400px">
         <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
-          <q-select outlined v-model="theApprentice" label="Seleccione al aprendiz" :options="optionsA" emit-value
+          <q-select outlined v-model="theApprentice" label="Seleccione al aprendiz" :options="optionsApprentice" emit-value
             map-options clearable use-input input-debounce="0" behavior="menu" @filter="filterApprentice">
             <template v-slot:no-option>
               <q-item>
@@ -61,7 +61,7 @@
           </q-select>
 
           <q-select outlined v-model="filterInstructorFollowUp" label="Seleccione al instructor de seguimiento"
-            :options="optionsI" emit-value map-options clearable use-input input-debounce="0" behavior="menu"
+            :options="optionsInstructor" emit-value map-options clearable use-input input-debounce="0" behavior="menu"
             @filter="filterInstructors">
             <template v-slot:no-option>
               <q-item>
@@ -74,7 +74,7 @@
           </q-select>
 
           <q-select outlined v-model="filterInstructorProyecto" label="Seleccione al instructor de proyecto"
-            :options="optionsI" emit-value map-options clearable use-input input-debounce="0" behavior="menu"
+            :options="optionsInstructor" emit-value map-options clearable use-input input-debounce="0" behavior="menu"
             @filter="filterInstructors">
             <template v-slot:no-option>
               <q-item>
@@ -87,7 +87,7 @@
           </q-select>
 
           <q-select outlined v-model="filterInstructorTecnico" label="Seleccione al instructo técnico"
-            :options="optionsI" emit-value map-options clearable use-input input-debounce="0" behavior="menu"
+            :options="optionsInstructor" emit-value map-options clearable use-input input-debounce="0" behavior="menu"
             @filter="filterInstructors">
             <template v-slot:no-option>
               <q-item>
@@ -139,8 +139,8 @@ let btnLabel = "Crear Asignación";
 const isLoading = ref(false);
 const rows = ref([]);
 const showModal = ref(false);
-const optionsI = ref([]);
-const optionsA = ref([]);
+const optionsInstructor = ref([]);
+const optionsApprentice = ref([]);
 const theApprentice = ref();
 const textCertificacion = ref("");
 const textFotoJudicial = ref("");
@@ -244,10 +244,22 @@ async function bring() {
   try {
     // Obtén los datos de registros
     let data = await getData("/register/listallregister");
-    console.log(data); // Asegúrate de que `data.register` exista
 
-    // Usar `Promise.all` para esperar a que todas las promesas dentro del `map` se resuelvan
-    rows.value = await Promise.all(data.register.map(async (register, idx) => {
+    // Verifica que `data.register` sea un arreglo
+    if (!Array.isArray(data.register)) {
+      console.error("Los datos no tienen el formato esperado:", data.register);
+      return;
+    }
+
+    // Filtra los registros que tienen asignaciones
+    const registersWithAssignments = data.register.filter(register => 
+      Array.isArray(register.assignment) && register.assignment.length > 0
+    );
+
+    console.log("Registros con asignaciones:", registersWithAssignments);
+
+    // Procesa solo los registros con asignaciones
+    rows.value = await Promise.all(registersWithAssignments.map(async (register, idx) => {
       const ficheId = register.apprentice.fiche;
       let ficheData = await getDataRepfora(`/fiches/${ficheId}`);
 
@@ -256,9 +268,8 @@ async function bring() {
       let technicalInstructor = "";
       let projectInstructor = "";
 
-      // Recorre el array `assignment` si tiene más de una asignación
+      // Recorre el array `assignment` para obtener datos de los instructores
       await Promise.all(register.assignment.map(async (assign) => {
-        // Solicita los datos de cada instructor
         if (assign.followUpInstructor) {
           let followData = await getDataRepfora(`/instructors/${assign.followUpInstructor}`);
           followUpInstructor = followData.data.name;
@@ -275,24 +286,22 @@ async function bring() {
         }
       }));
 
-      // Retorna el registro con los datos de los instructores
+      // Retorna el registro con los datos procesados
       return {
         ...register,
         apprentice: (register.apprentice.firstName + " " + register.apprentice.lastName),
         fiche: ficheData.data.program.code,
         modality: register.modality.name,
-        projectInstructor: projectInstructor, // Datos del instructor de proyecto
-        technicalInstructor: technicalInstructor, // Datos del instructor técnico
-        followUpInstructor: followUpInstructor, // Datos del instructor de seguimiento
+        projectInstructor: projectInstructor,
+        technicalInstructor: technicalInstructor,
+        followUpInstructor: followUpInstructor,
         index: idx + 1,
       };
     }));
-
   } catch (error) {
-    console.log("Error al cargar los registros:", error);
+    console.error("Error al cargar los registros:", error);
   }
 }
-
 
 async function handleToggleActivate(id, status) {
   try {
@@ -357,7 +366,7 @@ function onReset() {
 async function bringIdAndOpenModal(id) {
   showModal.value = true;
   if (id) {
-    let assignment = await getData(`/assignment/listassignmentbyid/${id}`);
+    let assignment = await getData(`/register/addassignment`);
     let theAssignment = assignment.assignment;
     idAssignment.value = id;
     console.log(id);
@@ -454,6 +463,56 @@ const filterInstructors = async (val, update) => {
     );
   }
 };
+
+const filterApprentice = async (val, update) => {
+  try {
+    // Llamada a la API para obtener los datos
+    let response = await getData("/register/listallregister");
+    console.log("Respuesta de la API:", response);
+
+    // Verifica si la respuesta contiene un arreglo en la propiedad register
+    if (response.register && Array.isArray(response.register)) {
+      // Extrae todos los apprentices del arreglo response.register, asegurándote de que existan
+      const allApprentices = response.register
+        .filter(item => item.apprentice && item.apprentice.firstName) // Validación
+        .map(item => item.apprentice);
+
+      if (val === "") {
+        // Actualiza las opciones con todos los apprentices
+        update(() => {
+          optionsApprentice.value = allApprentices.map(apprentice => ({
+            label: (apprentice.firstName + " " + apprentice.lastName),
+            value: apprentice._id,
+          }));
+        });
+        return;
+      }
+
+      // Si hay un valor de búsqueda, filtra los apprentices por nombre
+      update(() => {
+        const needle = val.toLowerCase();
+        optionsApprentice.value = allApprentices
+          .map(apprentice => ({
+            label: (apprentice.firstName + " " + apprentice.lastName),
+            value: apprentice._id,
+          }))
+          .filter(option => option.label && option.label.toLowerCase().includes(needle)); // Validación
+      });
+    } else {
+      console.error(
+        "La respuesta de la API no contiene datos válidos en 'register':",
+        response.register
+      );
+    }
+  } catch (error) {
+    // Manejo de errores en la llamada a la API
+    console.error(
+      "Error al obtener apprentices:",
+      error.response ? error.response.data : error
+    );
+  }
+};
+
 </script>
 <style scoped>
 .bg-green-9 {

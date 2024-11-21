@@ -1,3 +1,4 @@
+
 const Register = require("../models/register.js")
 const Modality = require("./../models/modality.js")
 
@@ -272,6 +273,39 @@ const register = {
             res.status(400).json({ error: "Error al desactivar registro" })
         }
     },
+    putAddAssignment: async (req, res) => {
+        const { apprentice, followInstructor, technicalInstructor, proyectInstructor } = req.body;
+
+        try {
+            // Busca el registro asociado al aprendiz
+            const registerToApprentice = await Register.findOne({ apprentice });
+
+            if (!registerToApprentice) {
+                return res.status(404).json({ msg: "No se encontró un registro para el aprendiz especificado." });
+            }
+
+            // Crear el objeto de la nueva asignación
+            const newAssignment = {
+                followUpInstructor: followInstructor ? { name: followInstructor } : null,
+                technicalInstructor: technicalInstructor ? { name: technicalInstructor } : null,
+                projectInstructor: proyectInstructor ? { name: proyectInstructor } : null,
+            };
+
+            const updatedRegister = await Register.findByIdAndUpdate(
+                registerToApprentice._id,
+                { $push: { assignment: newAssignment } },
+                { new: true } // Para devolver el documento actualizado
+            );
+
+            // Responder con el registro actualizado
+            res.status(201).json({ updatedRegister });
+        } catch (error) {
+            console.error("Error al agregar la asignación:", error);
+            res.status(500).json({ msg: "Error al agregar la asignación", error });
+        }
+    },
+
+
     updateRegisterModality: async (req, res) => {
         const { id } = req.params;
         const { idModality, docAlternative } = req.body;
