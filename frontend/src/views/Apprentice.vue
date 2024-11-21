@@ -1,13 +1,17 @@
 <template>
   <div class="q-pa-md q-gutter-md">
     <Header title="Aprendices"></Header>
-    <q-file v-model="file" label="Seleccionar archivo" accept=".csv, .txt" @input="handleFile" />
-
-    <div
-      style="display: flex; flex-direction: row; align-items: flex-start; justify-content: space-between; margin:  -30px 0">
-      <div class="btn" style="display: flex; flex-direction: row;  gap: 10px; margin-left: 10%">
-        <Btn :label="btnLabel" :onClickFunction="bringIdAndOpenModal" :loading="loading" />
+    <Modal :isVisible="showModalFile" @update:isVisible="showModalFile = $event" :label="'CREAR APRENDIZ SENA'">
+      <div class="q-pa-md" style="max-width: 600px">
+        <q-file v-model="file" label="Seleccionar archivo" accept=".csv, .txt" @input="handleFile" />
         <Btn :label="'Subir Archivo'" :onClickFunction="uploadFile" :loading="loading" />
+      </div>
+    </Modal>
+    <div
+    style="display: flex; flex-direction: row; align-items: flex-start; justify-content: space-between; margin:  -30px 0">
+    <div class="btn" style="display: flex; flex-direction: row;  gap: 10px; margin-left: 10%">
+      <Btn :label="btnLabel" :onClickFunction="bringIdAndOpenModal" :loading="loading" />
+      <Btn :label="btnLabelFile" :onClickFunction="openModalFile" :loading="loading" />
       </div>
       <div class="q-pa-md q-gutter-sm" style="display: flex; flex-direction: column; align-items: flex-start;">
         <div class="text-primary" style="margin-bottom: -30px;">Realizar filtro por</div>
@@ -178,8 +182,10 @@ let personalEmail = ref("");
 let idApprentice = ref("");
 const selectedValue = ref('');
 const showModal = ref(false);
+const showModalFile = ref(false);
 const route = useRoute();
 const file = ref(null)
+const btnLabelFile = "Subir Archivo"
 
 let change = ref(); // true: crear, false: modificar
 const rows = ref([]);
@@ -468,7 +474,7 @@ const uploadFile = async () => {
 
   try {
     const response = await postData('/apprentice/upload', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
+   
     });
     if (response.status === 200) {
       notifySuccessRequest("Archivo cargado exitosamente.");

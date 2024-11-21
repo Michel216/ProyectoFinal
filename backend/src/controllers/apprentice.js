@@ -1,5 +1,6 @@
 const Apprentice = require("../models/apprentice.js");
 const csvParser = require('csv-parser');
+const iconv = require('iconv-lite');
 const fs = require('fs');  // Asegúrate de incluir esto al principio del archivo
 
 const { generateJWT } = require('../middlewares/validateJWT');
@@ -63,42 +64,116 @@ const apprenticeController = {
         }
     },
 
-    postUploadFile: async (req, res) => {
-        console.log(req.file);  // Agregar esto para verificar que el archivo llegó correctamente
+    postuploadFile: async (req, res) => {
+        console.log("res",req.file);  // Verificar si el archivo llega correctamente
         const filePath = req.file?.path;
-      
+        
         if (!filePath) {
-          return res.status(400).json({ message: 'No se encontró el archivo en la solicitud' });
+            return res.status(400).json({ message: 'No se encontró el archivo en la solicitud' });
         }
-      
+        
         const aprendices = [];
+        
         try {
-          fs.createReadStream(filePath)
-            .pipe(csvParser())
-            .on('data', (row) => {
-              aprendices.push(row);
-            })
-            .on('end', async () => {
-              try {
-                // Validar y guardar registros en la base de datos
-                const savedRecords = await Apprentice.insertMany(aprendices, { ordered: false });
-                res.status(201).json({ message: 'Registros subidos exitosamente', savedRecords });
-              } catch (error) {
-                console.error('Error al guardar registros:', error);
-                res.status(500).json({ message: 'Error al procesar el archivo', error });
-              } finally {
-                // Eliminar el archivo temporal
-                fs.unlinkSync(filePath);
-              }
-            });
+            const readStream = fs.createReadStream(filePath)
+            .pipe(iconv.decodeStream('utf-8')); // Convertir el archivo a UTF-8
+        
+        readStream
+                .pipe(csvParser())
+                .on('data', (row) => {
+                    console.log('Fila leída:', row);
+                    aprendices.push(row);
+                })
+                .on('end', async () => {
+
+    console.log('Archivo procesado completamente');
+                    try {
+                        // Validar y guardar registros en la base de datos
+                        const savedRecords = await Apprentice.insertMany(aprendices, { ordered: false });
+                        res.status(201).json({ message: 'Registros subidos exitosamente', savedRecords });
+                    } catch (error) {
+                        console.error('Error al guardar registros:', error);
+                        res.status(500).json({ message: 'Error al procesar el archivo', error });
+                    } finally {
+                        // Eliminar el archivo temporal
+                        fs.unlinkSync(filePath);
+                    }
+                })
+                .on('error', (err) => {
+                    console.error('Error en el procesamiento del archivo CSV:', err);
+                    res.status(500).json({ message: 'Error al procesar el archivo CSV', error: err });
+                    fs.unlinkSync(filePath); // Eliminar el archivo incluso si ocurre un error
+                });
         } catch (error) {
-          console.error('Error al procesar la solicitud:', error);
-          res.status(500).json({ message: 'Error al procesar la solicitud', error });
+            console.error('Error al procesar la solicitud:', error);
+            res.status(500).json({ message: 'Error al procesar la solicitud', error });
         }
-      },
+    },
       
       
     // Añadir aprendiz
+   
+    // postuploadFile: async (req, res) => {
+    //     if (!req.file) {
+    //         return res.status(400).json({ message: "No se ha subido ningún archivo." });
+    //     }
+    
+    //     const filePath = req.file.path;
+    //     const aprendices = [];
+    
+    //     // Procesar el archivo CSV
+    //     fs.createReadStream(filePath)
+    //         .pipe(csvParser())
+    //         .on("data", (row) => {
+    //             // Log de los datos del CSV para asegurarte de que se está leyendo correctamente
+    //             console.log("Fila CSV:", row);
+    //             aprendices.push({
+    //                 tpdocument: row.tpdocument,
+    //                 numDocument: row.numDocument,
+    //                 firstName: row.firstName,
+    //                 lastName: row.lastName,
+    //                 phone: row.phone,
+    //                 institutionalEmail: row.institutionalEmail,
+    //                 personalEmail: row.personalEmail,
+    //                 fiche: row.fiche,
+    //                 modality: row.modality,
+    //             });
+    //         })
+    //         .on("end", async () => {
+    //             console.log("Datos de aprendices:", aprendices); // Verifica que los datos están en el formato correcto
+    
+    //             // Verificar si el archivo está vacío o no contiene datos válidos
+    //             if (aprendices.length === 0) {
+    //                 return res.status(400).json({ message: "El archivo CSV está vacío o no contiene datos válidos." });
+    //             }
+    
+    //             try {
+    //                 // Intentar guardar los registros en la base de datos
+    //                 const savedRecords = await Apprentice.insertMany(aprendices, { ordered: false });
+    //                 res.status(201).json({
+    //                     message: "Registros subidos exitosamente",
+    //                     savedRecords,
+    //                 });
+    //             } catch (error) {
+    //                 console.error("Error al guardar registros:", error);
+    //                 if (error.name === "BulkWriteError") {
+    //                     return res.status(400).json({
+    //                         message: "Algunos registros no pudieron ser guardados.",
+    //                         errors: error.writeErrors.map((e) => e.errmsg),
+    //                     });
+    //                 }
+    //                 res.status(500).json({ message: "Error al procesar el archivo", error: error.message });
+    //             } finally {
+    //                 // Eliminar el archivo CSV después de procesarlo
+    //                 fs.promises.unlink(filePath).catch(console.error);
+    //             }
+    //         })
+    //         .on("error", (error) => {
+    //             console.error("Error al procesar el archivo CSV:", error);
+    //             res.status(500).json({ message: "Error al procesar el archivo", error: error.message });
+    //         });
+    // },
+
     postAddAprentice: async (req, res) => {
         try {
             const { tpdocument, numDocument, firstName, lastName, phone, institutionalEmail, personalEmail, fiche, modality, status } = req.body;
