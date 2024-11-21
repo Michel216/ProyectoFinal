@@ -51,13 +51,16 @@
       </template>
 
       <template v-slot:body-cell-statusApprentice="scope">
-        <q-td :props="scope">
-          <span style="color: green" v-if="scope.row.status === 3">Por certificar</span>
-          <span style="color: green"
-            v-if="scope.row.status === 4">
-            Certificado</span>
-        </q-td>
-      </template>
+  <q-td :props="scope">
+    <q-btn
+      :label="scope.row.status === 4 ? 'Certificado' : 'Por certificar'"
+      :color="scope.row.status === 4 ? 'primary' : 'grey'"
+      :unelevated="true"
+         :text-color="scope.row.status === 4 ? 'white' : 'black'"
+      class="status-btn"
+    />
+  </q-td>
+</template>
 
       <template v-slot:body-cell-certificationDoc="scope">
         <q-td :props="scope">
@@ -149,3 +152,11 @@ function handleClick(row, change) {
 //   emit('openModal'); // Emite el evento al componente padre
 // }
 </script>
+
+<style scoped>
+.status-btn {
+
+  border-radius: 8px; /* Bordes redondeados */
+  font-size: 12px;
+}
+</style>
