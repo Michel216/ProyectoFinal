@@ -1,5 +1,6 @@
 const { check } = require('express-validator');
 const Register = require("../models/register.js")
+const { body } = require('express-validator');
 
 const validateDateRange = () => {
     return [
@@ -73,10 +74,21 @@ const verifyDocAlternative= async (docAlternative) => {
         throw new Error(error.message || "Error al verificar el enlace de OneDrive.");
     }
 }
+
+const validateAtLeastOneInstructor = () => {
+    return body().custom((value, { req }) => {
+        const { followInstructor, technicalInstructor, proyectInstructor } = req.body;
+        if (!followInstructor && !technicalInstructor && !proyectInstructor) {
+            throw new Error('Debe asignar al menos un instructor.');
+        }
+        return true;
+    });
+}
 module.exports = {
     validateDateRange,
     // validateCreateRegister,
     // validateUpdateRegister,
     verifyDocAlternative,
-    registerExists
+    registerExists,
+    validateAtLeastOneInstructor
 };
