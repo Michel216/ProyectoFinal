@@ -62,7 +62,7 @@ const apprenticeController = {
         }
     },
 
-    etListCertificatedApprentice: async (req, res) => {
+    getListCertificatedApprentice: async (req, res) => {
         try {
             const listCertificatedApprentice = await Apprentice.find({ status: { $in: [3, 4] } });
             res.status(200).json({ listCertificatedApprentice });

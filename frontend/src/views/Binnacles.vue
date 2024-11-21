@@ -1,33 +1,34 @@
 <template>
   <div class="q-pa-md q-gutter-md">
     <Header title="Bitácoras"></Header>
-    <div style="display: flex; flex-direction: row; align-items: flex-start; justify-content: flex-end; margin: -30px 0px">
-  <div class="q-pa-md q-gutter-sm" style="display: flex; flex-direction: column; align-items: flex-start;">
-    <div class="text-primary" style="margin-bottom: -30px;">Realizar filtro por</div>
+    <div
+      style="display: flex; flex-direction: row; align-items: flex-start; justify-content: flex-end; margin: -30px 0px">
+      <div class="q-pa-md q-gutter-sm" style="display: flex; flex-direction: column; align-items: flex-start;">
+        <div class="text-primary" style="margin-bottom: -30px;">Realizar filtro por</div>
 
-    <!-- Contenedor de los radio buttons y el input, alineados en una fila -->
-    <div style="display: flex; flex-direction: row; align-items: center; justify-content: flex-start; width: 100%;">
-      <!-- Radio buttons -->
-      <div style="display: flex; flex-direction: row; align-items: flex-start; margin-right: 10px;">
-        <q-radio v-model="selectedValue" val="instructor" label="Instructor" dense color="primary"
-          @update:model-value="handleFilter" style="margin-right: 10px;" />
-        <q-radio v-model="selectedValue" val="assignment" label="Aprendiz" dense color="primary"
-          @update:model-value="handleFilter" style="margin-right: -10px;" />
-      </div>
+        <!-- Contenedor de los radio buttons y el input, alineados en una fila -->
+        <div style="display: flex; flex-direction: row; align-items: center; justify-content: flex-start; width: 100%;">
+          <!-- Radio buttons -->
+          <div style="display: flex; flex-direction: row; align-items: flex-start; margin-right: 10px;">
+            <q-radio v-model="selectedValue" val="instructor" label="Instructor" dense color="primary"
+              @update:model-value="handleFilter" style="margin-right: 10px;" />
+            <q-radio v-model="selectedValue" val="assignment" label="Aprendiz" dense color="primary"
+              @update:model-value="handleFilter" style="margin-right: -10px;" />
+          </div>
 
-      <!-- Input de búsqueda alineado a la izquierda -->
-      <div class="q-pa-md" style="flex-grow: 1; display: flex; justify-content: flex-start;">
-        <div class="rounded-input" style=" width: 370px;">
-          <q-input class="q-ml-md" v-model="searchTerm" :label="searchLabel" @input="handleFilter" outlined
-            :disable="!selectedValue" />
+          <!-- Input de búsqueda alineado a la izquierda -->
+          <div class="q-pa-md" style="flex-grow: 1; display: flex; justify-content: flex-start;">
+            <div class="rounded-input" style=" width: 370px;">
+              <q-input class="q-ml-md" v-model="searchTerm" :label="searchLabel" @input="handleFilter" outlined
+                :disable="!selectedValue" />
+            </div>
+          </div>
+
         </div>
       </div>
-
     </div>
-  </div>
-</div>
 
-    <Btn :label="btnLabel" :onClickFunction="openModalCreate" :loading="loading" v-if="role === 'INSTRUCTOR'"/>
+    <Btn :label="btnLabel" :onClickFunction="openModalCreate" :loading="loading" v-if="role === 'INSTRUCTOR'" />
     <binnacleTable :title="title" :columns="columns" :rows="filteredRows" :options="options"
       :onUpdateStatus="handleUpdateStatus" :loading="loading" :val="true" :onClickFunction="openModalObservations" />
     <Modal :onClickFunction="onReset" :isVisible="showModalCreate" @update:isVisible="showModalCreate = $event"
@@ -100,8 +101,8 @@
         </q-form>
       </div>
     </Modal>
-    <Modal :onClickFunction="onReset" :isVisible="showModalObservations" @update:isVisible="showModalObservations = $event"
-      :label="'OBSERVACIONES'">
+    <Modal :onClickFunction="onReset" :isVisible="showModalObservations"
+      @update:isVisible="showModalObservations = $event" :label="'OBSERVACIONES'">
       <div class="q-pa-md" style="max-width: 600px">
         <q-form v-if="!change" @submit="onSubmitObservation" @reset="onReset" class="q-gutter-md" style="
             max-height: none;
@@ -165,13 +166,13 @@
             </q-card>
           </div>
 
-          
+
           <br>
           <div class="full-width" style="display: flex; justify-content: center; align-items: center;">
 
-<q-btn label="Cerrar" type="reset" icon="close" class="full-width" v-close-popup
-  style="background-color: white; color: black; box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);" />
-</div>
+            <q-btn label="Cerrar" type="reset" icon="close" class="full-width" v-close-popup
+              style="background-color: white; color: black; box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);" />
+          </div>
         </q-form>
       </div>
     </Modal>
@@ -196,7 +197,7 @@ import { useAuthStore } from './../store/useAuth.js'
 import Header from '../components/header/Header.vue';
 
 const authStore = useAuthStore();
-const role = computed(() => authStore.getRole()); 
+const role = computed(() => authStore.getRole());
 let loading = ref(false);
 let change = ref()
 let title = "Bitácoras";
@@ -252,12 +253,6 @@ const columns = computed(() => {
       sortable: true,
     },
     {
-      name: "instructor",
-      label: "Instructor",
-      align: "center",
-      field: "instructor"
-    },
-    {
       name: "options",
       label: "Estado",
       align: "center",
@@ -279,6 +274,16 @@ const columns = computed(() => {
       align: "center",
       field: "validateHour",
     });
+  }
+
+  if (role.value === 'ADMIN') {
+    baseColumns.splice(2, 0,
+      {
+        name: "instructor",
+        label: "Instructor",
+        align: "center",
+        field: "instructor"
+      },)
   }
 
   return baseColumns;
@@ -331,11 +336,11 @@ const filteredRows = computed(() => {
     console.log(row); // Añadir esto para depurar
     if (selectedValue.value === "instructor") {
       return (
-        ( row.instructor.toLowerCase().startsWith(searchTerm.value.toLowerCase())) 
+        (row.instructor.toLowerCase().startsWith(searchTerm.value.toLowerCase()))
       );
     } else if (selectedValue.value === "assignment") {
       return (
-        ( row.assignment.toLowerCase().startsWith(searchTerm.value.toLowerCase()))
+        (row.assignment.toLowerCase().startsWith(searchTerm.value.toLowerCase()))
       );
     }
     return false;  // Si no hay filtro seleccionado
