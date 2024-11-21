@@ -16,6 +16,11 @@ apprenticeRoute.get('/listallapprentice', [
     validateFields
 ], apprenticeController.getListApprentices);
 
+apprenticeRoute.get('/listcertificatedapprentice', [
+    // validateJWT,
+    validateFields
+], apprenticeController.getListCertificatedApprentice);
+
 apprenticeRoute.get('/searchapprentice', [
     // validateJWT,
     validateFields

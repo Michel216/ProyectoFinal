@@ -27,10 +27,10 @@
   </div>
 </div>
 
-    <!-- <Btn :label="btnLabel" :onClickFunction="openModalCreate" :loading="loading" /> -->
+    <Btn :label="btnLabel" :onClickFunction="openModalCreate" :loading="loading" v-if="role === 'INSTRUCTOR'"/>
     <binnacleTable :title="title" :columns="columns" :rows="filteredRows" :options="options"
       :onUpdateStatus="handleUpdateStatus" :loading="loading" :val="true" :onClickFunction="openModalObservations" />
-    <Modal :isVisible="showModalCreate" @update:isVisible="showModalCreate = $event"
+    <Modal :onClickFunction="onReset" :isVisible="showModalCreate" @update:isVisible="showModalCreate = $event"
       :label="'DILIGENCIA LA INFORMACION'">
       <div class="q-pa-md" style="max-width: 600px">
         <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md" style="
@@ -100,7 +100,7 @@
         </q-form>
       </div>
     </Modal>
-    <Modal :isVisible="showModalObservations" @update:isVisible="showModalObservations = $event"
+    <Modal :onClickFunction="onReset" :isVisible="showModalObservations" @update:isVisible="showModalObservations = $event"
       :label="'OBSERVACIONES'">
       <div class="q-pa-md" style="max-width: 600px">
         <q-form v-if="!change" @submit="onSubmitObservation" @reset="onReset" class="q-gutter-md" style="
@@ -196,6 +196,7 @@ import { useAuthStore } from './../store/useAuth.js'
 import Header from '../components/header/Header.vue';
 
 const authStore = useAuthStore();
+const role = computed(() => authStore.getRole()); 
 let loading = ref(false);
 let change = ref()
 let title = "Bitácoras";
@@ -228,50 +229,65 @@ function radiobtn(evt) {
 
   submitResult.value = data
 }
-let columns = ref([
-  {
-    name: "index",
-    label: "N°",
-    align: "center",
-    field: 'index'
-  },
-  {
-    name: "assignment",
-    label: "Etapa Productiva Asignada",
-    align: "center",
-    field: "assignment",
-  },
-  {
-    name: "number",
-    label: "N° Bitácora",
-    align: "center",
-    field: "number",
-    sortable: true,
-  },
-  {
-    name: "instructor",
-    label: "Instructor",
-    align: "center",
-    field: "instructor"
-  },
-  {
-    name: "options",
-    label: "Estado",
-    align: "center",
-    field: "status"
-  },
-  {
-    name: "observations",
-    label: "Observaciones",
-    align: "center",
-    field: "observations",
-  },
-]);
+const columns = computed(() => {
+  // Si el rol es 'INSTRUCTOR', agregar la columna 'validateHour'
+  let baseColumns = [
+    {
+      name: "index",
+      label: "N°",
+      align: "center",
+      field: 'index'
+    },
+    {
+      name: "assignment",
+      label: "Etapa Productiva Asignada",
+      align: "center",
+      field: "assignment",
+    },
+    {
+      name: "number",
+      label: "N° Bitácora",
+      align: "center",
+      field: "number",
+      sortable: true,
+    },
+    {
+      name: "instructor",
+      label: "Instructor",
+      align: "center",
+      field: "instructor"
+    },
+    {
+      name: "options",
+      label: "Estado",
+      align: "center",
+      field: "status"
+    },
+    {
+      name: "observations",
+      label: "Observaciones",
+      align: "center",
+      field: "observations",
+    },
+  ];
+
+  // Agregar la columna 'validateHour' solo si el rol es 'INSTRUCTOR'
+  if (role.value === 'INSTRUCTOR') {
+    baseColumns.push({
+      name: "validateHour",
+      label: "Validar horas",
+      align: "center",
+      field: "validateHour",
+    });
+  }
+
+  return baseColumns;
+});
+
 
 
 // valida que el tipo de la bitácora sea de 1 a 4. Programado: 1, Ejecutado: 2, Pendiente: 3, Verificado: 4// valida que el tipo de la bitácora sea de 1 a 4. Programado: 1, Ejecutado: 2, Pendiente: 3, Verificado: 4, Verificado técnico: 5, Verificado proyecto: 6
 let options = ref([
-
   {
     label: "Pendiente",
     value: 1,
@@ -283,6 +299,14 @@ let options = ref([
   {
     label: "Verificada",
     value: 3,
+  },
+  {
+    label: "Verificado técnico",
+    value: 5,
+  },
+  {
+    label: "Verificado proyecto",
+    value: 6,
   },
 ]);
 

@@ -4,7 +4,7 @@
     <Btn :label="btnLabel" :onClickFunction='bringIdAndOpenModal' :loading="loading" />
     <RegisterTable :title="title" :columns="columns" :rows="rows" :onToggleActivate="handleToggleActivate"
       :loading="loading" :onClickEdit="bringIdAndOpenModal" />
-    <Modal :isVisible="showModal" @update:isVisible="showModal = $event" :label="btnLabel">
+    <Modal :onClickFunction="onReset" :isVisible="showModal" @update:isVisible="showModal = $event" :label="btnLabel">
       <div class="q-pa-md" style="max-width: 400px">
         <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
           <q-select outlined v-model="apprentice" label="Aprendiz" :options="optionsApprentice" emit-value map-options
@@ -334,12 +334,16 @@ async function bringIdAndOpenModal(id) {
       value: modalities.listModalityById._id
     }];
     startDate.value = theRegister.startDate
-    endDate.value = theRegister.endDate
     company.value = theRegister.company
     phoneCompany.value = theRegister.phonecompany
+    emailCompany.value = theRegister.emailCompany
     addressCompany.value = theRegister.addresscompany
     owner.value = theRegister.owner
     docAlternative.value = theRegister.docAlternative
+    certificationDoc.value = theRegister.certificationDoc
+    judymentPhoto.value = theRegister.judymentPhoto
+    productiveProyectHour.value = theRegister.productiveProyectHour
+    businessProyectHour.value = theRegister.businessProyectHour
     hour.value = theRegister.hour
   } else {
     idRegister.value = ''

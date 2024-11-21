@@ -39,7 +39,7 @@
       :loading="loading" :onClickEdit="bringIdAndOpenModal" />
 
     <!-- Modal para crear aprendiz -->
-    <Modal :isVisible="showModal" @update:isVisible="showModal = $event" :label="'CREAR APRENDIZ SENA'">
+    <Modal :isVisible="showModal" @update:isVisible="showModal = $event" :label="'CREAR APRENDIZ SENA'" :onClickFunction="onReset">
       <div class="q-pa-md" style="max-width: 600px">
         <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md" style="
             display: grid;
@@ -129,7 +129,8 @@
             </template>
           </q-select>
 
-          <q-btn label="Guardar" type="submit" icon="save" color="primary" class="full-width" :loading="isLoading"  :disable="isLoading"  />
+          <q-btn label="Guardar" type="submit" icon="save" color="primary" class="full-width" :loading="isLoading"
+            :disable="isLoading" />
           <q-btn label="Cerrar" type="reset" icon="close" class="full-width" v-close-popup
             style="background-color: white; color: black; box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);" />
 
@@ -366,7 +367,7 @@ async function handleToggleActivate(id, status) {
 
 async function onSubmit() {
   loading.value = true;
-  isLoading.value = true; 
+  isLoading.value = true;
   try {
     let url = ref();
     let data = {
@@ -404,7 +405,7 @@ async function onSubmit() {
     );
   } finally {
     loading.value = false;
-    isLoading.value = false; 
+    isLoading.value = false;
   }
 }
 
@@ -428,8 +429,10 @@ async function bringIdAndOpenModal(id) {
     let modalities = await getData(
       `/modality/listmodalitybyid/${theApprentice.modality}`
     );
+    let response = await getDataRepfora(`/fiches/${theApprentice.fiche}`);
+    console.log(response);
+    
     idApprentice.value = id;
-    console.log(id);
     change.value = false;
     tpDoc.value = theApprentice.tpdocument;
     numDoc.value = theApprentice.numDocument;
@@ -439,6 +442,10 @@ async function bringIdAndOpenModal(id) {
     institutionalEmail.value = theApprentice.institutionalEmail;
     personalEmail.value = theApprentice.personalEmail;
     fiche.value = theApprentice.fiche;
+    options.value = [{
+      label: `${response.data.program.name} - ${response.data.program.code} `,
+      value: response.data._id,
+    }]
     modality.value = modalities.listModalityById._id;
     optionsModality.value = [
       {
@@ -472,7 +479,7 @@ const uploadFile = async () => {
     });
     if (response.status === 200) {
       notifySuccessRequest("Archivo cargado exitosamente.");
-  
+
     }
   } catch (error) {
     if (error.response) {
@@ -489,67 +496,67 @@ const uploadFile = async () => {
 
 
 
-  async function filterFiche(val, update) {
-    try {
-      // Llamada a la API para obtener los fiches
-      let response = await getDataRepfora("/fiches");
+async function filterFiche(val, update) {
+  try {
+    // Llamada a la API para obtener los fiches
+    let response = await getDataRepfora("/fiches");
 
-      // Comprueba si response.data está definido y es un arreglo
-      if (response.data && Array.isArray(response.data)) {
-        if (val === "") {
-          update(() => {
-            options.value = response.data.map((fiche) => ({
-              label: `${fiche.program.name} - ${fiche.program.code} `,  // Muestra el nombre y el código
-              value: fiche._id,  // Guarda el ID de la ficha
-            }));
-          });
-          return;
-        }
-
-        // Si hay un valor de búsqueda, filtra las fichas por nombre
+    // Comprueba si response.data está definido y es un arreglo
+    if (response.data && Array.isArray(response.data)) {
+      if (val === "") {
         update(() => {
-          const needle = val.toLowerCase();
-          options.value = response.data
-            .map((fiche) => ({
-              label: `${fiche.program.name} - ${fiche.program.code}`,  // Muestra el nombre y el código
-              value: fiche._id,  // Guarda el ID de la ficha
-            }))
-            .filter((option) => option.label.toLowerCase().includes(needle)); // Filtra por el nombre o código
+          options.value = response.data.map((fiche) => ({
+            label: `${fiche.program.name} - ${fiche.program.code} `,  // Muestra el nombre y el código
+            value: fiche._id,  // Guarda el ID de la ficha
+          }));
         });
-      } else {
-        console.error("La respuesta de la API no contiene datos válidos:", response.data);
+        return;
       }
-    } catch (error) {
-      // Manejo de errores en la llamada a la API
-      console.error("Error al obtener fiches:", error.response ? error.response.data : error);
-    }
-  }
 
-  async function filterModality(val, update) {
-    let modality = await getData("/modality/listallmodality");
-    let theModality = modality.listAllModalities.filter(
-      (modality) => modality.status === 1
-    );
-    if (val === "") {
+      // Si hay un valor de búsqueda, filtra las fichas por nombre
       update(() => {
-        optionsModality.value = theModality.map((modality) => ({
-          label: modality.name,
-          value: modality._id,
-        }));
+        const needle = val.toLowerCase();
+        options.value = response.data
+          .map((fiche) => ({
+            label: `${fiche.program.name} - ${fiche.program.code}`,  // Muestra el nombre y el código
+            value: fiche._id,  // Guarda el ID de la ficha
+          }))
+          .filter((option) => option.label.toLowerCase().includes(needle)); // Filtra por el nombre o código
       });
-      return;
+    } else {
+      console.error("La respuesta de la API no contiene datos válidos:", response.data);
     }
-
-    update(() => {
-      const needle = val.toLowerCase();
-      optionsModality.value = theModality
-        .map((modality) => ({
-          label: modality.name,
-          value: modality._id,
-        }))
-        .filter((option) => option.label.toLowerCase().includes(needle));
-    });
+  } catch (error) {
+    // Manejo de errores en la llamada a la API
+    console.error("Error al obtener fiches:", error.response ? error.response.data : error);
   }
+}
+
+async function filterModality(val, update) {
+  let modality = await getData("/modality/listallmodality");
+  let theModality = modality.listAllModalities.filter(
+    (modality) => modality.status === 1
+  );
+  if (val === "") {
+    update(() => {
+      optionsModality.value = theModality.map((modality) => ({
+        label: modality.name,
+        value: modality._id,
+      }));
+    });
+    return;
+  }
+
+  update(() => {
+    const needle = val.toLowerCase();
+    optionsModality.value = theModality
+      .map((modality) => ({
+        label: modality.name,
+        value: modality._id,
+      }))
+      .filter((option) => option.label.toLowerCase().includes(needle));
+  });
+}
 </script>
 
 <style scoped>

@@ -16,8 +16,11 @@ const modalityHelper = {
             const { hourInstructorFollow, hourInstructorTechnical, hourInstructorProject } = req.body;
             if (!hourInstructorFollow && !hourInstructorTechnical && !hourInstructorProject) {
                 throw new Error('Debe asignar al menos la hora un instructor.');
+            } else if (hourInstructorFollow == 0 || hourInstructorTechnical == 0 || hourInstructorProject == 0) {
+                throw new Error('Debe asignar al menos la hora un instructor.');
+            } else {
+                return true
             }
-            return true;
         });
     }
 }

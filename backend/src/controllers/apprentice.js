@@ -62,42 +62,51 @@ const apprenticeController = {
             res.status(400).json({ error });
         }
     },
+    getListCertificatedApprentice: async (req, res) => {
+        try {
+            const listCertificatedApprentice = await Apprentice.find({ status: { $in: [3, 4] } });
+            res.status(200).json({ listCertificatedApprentice });
+        } catch (error) {
+            res.status(400).json({ error });
+        }
+    },
+    
 
     postUploadFile: async (req, res) => {
         console.log(req.file);  // Agregar esto para verificar que el archivo llegó correctamente
         const filePath = req.file?.path;
-      
+
         if (!filePath) {
-          return res.status(400).json({ message: 'No se encontró el archivo en la solicitud' });
+            return res.status(400).json({ message: 'No se encontró el archivo en la solicitud' });
         }
-      
+
         const aprendices = [];
         try {
-          fs.createReadStream(filePath)
-            .pipe(csvParser())
-            .on('data', (row) => {
-              aprendices.push(row);
-            })
-            .on('end', async () => {
-              try {
-                // Validar y guardar registros en la base de datos
-                const savedRecords = await Apprentice.insertMany(aprendices, { ordered: false });
-                res.status(201).json({ message: 'Registros subidos exitosamente', savedRecords });
-              } catch (error) {
-                console.error('Error al guardar registros:', error);
-                res.status(500).json({ message: 'Error al procesar el archivo', error });
-              } finally {
-                // Eliminar el archivo temporal
-                fs.unlinkSync(filePath);
-              }
-            });
+            fs.createReadStream(filePath)
+                .pipe(csvParser())
+                .on('data', (row) => {
+                    aprendices.push(row);
+                })
+                .on('end', async () => {
+                    try {
+                        // Validar y guardar registros en la base de datos
+                        const savedRecords = await Apprentice.insertMany(aprendices, { ordered: false });
+                        res.status(201).json({ message: 'Registros subidos exitosamente', savedRecords });
+                    } catch (error) {
+                        console.error('Error al guardar registros:', error);
+                        res.status(500).json({ message: 'Error al procesar el archivo', error });
+                    } finally {
+                        // Eliminar el archivo temporal
+                        fs.unlinkSync(filePath);
+                    }
+                });
         } catch (error) {
-          console.error('Error al procesar la solicitud:', error);
-          res.status(500).json({ message: 'Error al procesar la solicitud', error });
+            console.error('Error al procesar la solicitud:', error);
+            res.status(500).json({ message: 'Error al procesar la solicitud', error });
         }
-      },
-      
-      
+    },
+
+
     // Añadir aprendiz
     postAddAprentice: async (req, res) => {
         try {

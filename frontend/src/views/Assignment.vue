@@ -5,7 +5,7 @@
     <!-- Contenedor de botón, formulario de radio y campo de entrada -->
     <div style="display: flex; align-items: center; justify-content: space-between;  margin: -30px 0">
       <div class="btn" style="display: flex; flex-direction: row;  gap: 10px; margin-left: 10%">
-        <Btn :label="btnLabel" :onClickFunction="bringIdAndOpenModal" :loading="loading" />
+        <Btn :label="btnLabel" :onClickFunction="bringIdAndOpenModal" :loading="loading" v-if="role === 'ADMIN'"/>
       </div>
       <!-- Formulario de radio centrado -->
       <div class="q-pa-md q-gutter-sm" style="display: flex; flex-direction: column; align-items: flex-start;">
@@ -45,7 +45,7 @@
       </q-card> -->
     <ApprenticeTable :title="title" :rows="filteredRows" :columns="columns" :onToggleActivate="handleToggleActivate"
       :loading="loading" :onClickEdit="bringIdAndOpenModal" />
-      <Modal :isVisible="showModal" @update:isVisible="showModal = $event" :label="btnLabel">
+      <Modal :isVisible="showModal" @update:isVisible="showModal = $event" :label="btnLabel" :onClickFunction="onReset">
       <div class="q-pa-md" style="max-width: 400px">
         <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
           <q-select outlined v-model="theApprentice" label="Seleccione al aprendiz" :options="optionsA" emit-value
@@ -127,9 +127,13 @@ import Header from '../components/header/Header.vue';
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faUserGraduate, faChalkboardUser } from '@fortawesome/free-solid-svg-icons';
+import { useAuthStore } from './../store/useAuth.js'
+
 
 library.add(faUserGraduate, faChalkboardUser)
 
+const authStore = useAuthStore();
+const role = computed(() => authStore.getRole()); 
 let loading = ref(false);
 let btnLabel = "Crear Asignación";
 const isLoading = ref(false);

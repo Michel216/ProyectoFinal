@@ -5,7 +5,7 @@
                 <q-card-section class="bg-primary row items-center">
                     <div class="text-h6 text-white" >{{ label }}</div>
                     <q-space />
-                    <q-btn icon="close" color="white" flat round dense v-close-popup />
+                    <q-btn icon="close" color="white" flat round dense v-close-popup @click="toggleReset"/>
                 </q-card-section>
 
                 <q-card-section>
@@ -25,6 +25,9 @@ const props = defineProps({
     isVisible: {
         type: Boolean,
         required: true
+    }, 
+    onClickFunction: {
+        type: Function
     }
 });
 
@@ -34,6 +37,10 @@ const emits = defineEmits(['update:isVisible']);
 function onSubmit() {
     console.log('Formulario enviado');
     emits('update:isVisible', false);
+}
+
+function toggleReset  ()  {
+  props.onClickFunction()
 }
 </script>
 
