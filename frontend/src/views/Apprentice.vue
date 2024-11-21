@@ -240,9 +240,7 @@ const columns = ref([
     align: "center",
     field: "modality",
   },
-
-
-
+  
 ]);
 
 

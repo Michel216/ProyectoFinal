@@ -87,13 +87,6 @@ const cards = [
     rol: ["ADMIN", "INSTRUCTOR", "APRENDIZ"],
   },
   {
-    title: "Informes",
-    buttonLink: "/reports",
-    buttonText: "Ver",
-    imageSrc: "https://img.freepik.com/vector-gratis/ilustracion-concepto-papel-investigacion_114360-8312.jpg?t=st=1731616658~exp=1731620258~hmac=94866a5855fba1ed6478cdc22e7eac191e8b420ada89bac3166bbb8c33325a6f&w=740",
-    rol: ["ADMIN"],
-  },
-  {
     title: "Registro de Horas",
     buttonLink: "/reports",
     buttonText: "Ver",
@@ -108,14 +101,7 @@ const cards = [
     rol: [, "ADMIN"],
   },
   {
-    title: "Instructores",
-    buttonLink: "/Instructors",
-    buttonText: "Ver",
-    imageSrc: "https://img.freepik.com/vector-gratis/gerente-presentando-solucion-tecnica_74855-7614.jpg?t=st=1731616873~exp=1731620473~hmac=c218c5acf507e543b0948d98e6c793700fbac8544849db406d9f18295065e432&w=740",
-    rol: [, "ADMIN"],
-  },
-  {
-    title: "Modalidades",
+    title: "Modalidad EP",
     buttonLink: "/modality",
     buttonText: "Ver",
     imageSrc: "https://img.freepik.com/vector-gratis/ilustracion-concepto-abstracto-desarrollo-software-sistema_335657-4892.jpg?t=st=1731617033~exp=1731620633~hmac=b70ad9c71b2e5b47f95cd828be8046dc70e0b223ddcea7ec0b60d69077dbecaa&w=740",
@@ -123,7 +109,7 @@ const cards = [
     
   },
   {
-    title: "Certificados",
+    title: "Certificaciónes",
     buttonLink: "/Certification",
     buttonText: "Ver",
     imageSrc: "https://img.freepik.com/vector-gratis/socios-comerciales-que-firman-documento-pequenos-personajes-boligrafo-papel-firma-sello-plano-ilustracion_74855-10491.jpg?ga=GA1.1.1307591831.1699306440&semt=ais_hybrid",

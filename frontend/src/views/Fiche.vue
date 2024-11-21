@@ -103,6 +103,7 @@ function handleViewApprentices(row) {
     console.error('ID de la ficha no encontrado en la fila.');
   }
 }
+
 </script>
 
 <style scoped>
