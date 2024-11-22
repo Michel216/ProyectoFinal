@@ -62,7 +62,7 @@ const apprenticeHelper = {
     validateTpDocument: async (tpdoc) => {
         const tpdocumentValidos = ["cédula de ciudadanía", "tarjeta de identidad", "cédula de extranjería"];
         if (!tpdocumentValidos.includes(tpdoc)) {
-            throw new Error("El tipo de documento bede ser 'cédula de ciudadanía','tarjeta de identidad','cedula de extranjería'");
+            throw new Error("El tipo de documento debe ser 'cédula de ciudadanía','tarjeta de identidad','cedula de extranjería'");
         } return true
     },
     // válida que la modalidad exista en la base de datos
@@ -126,11 +126,12 @@ const apprenticeHelper = {
     },
     // válida que el aprendiz exista en la base de datos
     validateLogin: async (numDocument, institutionalEmail) => {
-        let existUser = await Apprentice.findOne({ institutionalEmail, numDocument });
-        if (!existUser) {
-            throw new Error("El correo electrónico o el número de documento no es válido");
-        } return true
+        const apprentice = await Apprentice.findOne({ numDocument, institutionalEmail });
+        if (!apprentice) {
+            throw new Error('No se encontró un aprendiz con estos datos');
+        }
     },
+    
     validateStatus: async (institutionalEmail) => {
         let existUser = await Apprentice.findOne({ institutionalEmail });
         if (existUser.status === 0) {
@@ -143,6 +144,38 @@ const apprenticeHelper = {
         if (modalityActive.status === 0) {
             throw new Error("La modalidad está inactiva");
         } return true
+    },
+    validateApprenticeCsv: async (apprentice) => {
+        const errors = [];
+    
+        // Validar campos obligatorios
+        if (!apprentice.nombre) errors.push('El nombre es obligatorio');
+        if (!apprentice.email) errors.push('El correo es obligatorio');
+        if (!apprentice.documento) errors.push('El documento es obligatorio');
+    
+        // Validar formato del correo
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (apprentice.email && !emailRegex.test(apprentice.email)) {
+            errors.push('El formato del correo es inválido');
+        }
+    
+        // Validar unicidad del correo o documento en la base de datos
+        const existing = await Apprentice.findOne({
+            $or: [{ email: apprentice.email }, { documento: apprentice.documento }],
+        });
+    
+        if (existing) {
+            if (existing.email === apprentice.email) {
+                errors.push(`El correo ${apprentice.email} ya está registrado`);
+            }
+            if (existing.documento === apprentice.documento) {
+                errors.push(`El documento ${apprentice.documento} ya está registrado`);
+            }
+        }
+    
+        return errors;
     }
+    
 };
+
 module.exports = apprenticeHelper;

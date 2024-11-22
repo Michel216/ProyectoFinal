@@ -3,16 +3,18 @@
     <q-table :title="title" :rows="rows" :columns="columns">
       <template v-slot:body-cell-options="scope">
         <q-td :props="scope">
-          <div class="q-pa-md" align="center">
+          <div class="q-pa-md" align="center" v-if="role === 'ADMIN'">
             <q-select outlined v-model="scope.row.status" style="width: 200px;" :options="options" label="Estado"
               emit-value map-options @update:model-value="updateStatus($event, scope.row._id)" default="Ejecutada" />
           </div>
-          <!-- <div>
+          <div v-if="role === 'INSTRUCTOR'">
             <strong v-if="scope.row.status === 1">Programado</strong>
             <strong v-if="scope.row.status === 2">Ejecutado</strong>
             <strong v-if="scope.row.status === 3">Pendiente</strong>
             <strong v-if="scope.row.status === 4">Verificado</strong>
-          </div> -->
+            <strong v-if="scope.row.status === 5">Verificado técnico</strong>
+            <strong v-if="scope.row.status === 6">Verificado proyecto</strong>
+          </div>
         </q-td>
       </template>
       <!--valida que el tipo de la bitácora sea de 1 a 4. Programado: 1, Ejecutado: 2, Pendiente: 3, Verificado: 4 -->
@@ -41,6 +43,32 @@
           </Btn>
         </q-td>
       </template>
+
+      <template v-slot:body-cell-validateHour="props">
+        <q-td :props="props" align="center">
+          <q-checkbox />
+        </q-td>
+      </template>
+
+      <template v-slot:body-cell-statusApprentice="scope">
+        <q-td :props="scope">
+          <span style="color: green" v-if="scope.row.status === 3">Por certificar</span>
+          <span style="color: green"
+            v-if="scope.row.status === 4">
+            Certificado</span>
+        </q-td>
+      </template>
+
+      <template v-slot:body-cell-certificationDoc="scope">
+        <q-td :props="scope">
+          <a :href="scope.row.certificationDoc" target="_blank"><font-awesome-icon icon="fa-solid fa-folder" /></a> 
+        </q-td>
+      </template>
+      <template v-slot:body-cell-judymentPhoto="scope">
+        <q-td :props="scope">
+          <a :href="scope.row.judymentPhoto" target="_blank"><font-awesome-icon icon="fa-solid fa-folder" /></a> 
+        </q-td>
+      </template>
     </q-table>
   </div>
 </template>
@@ -50,11 +78,14 @@ import { ref, computed } from 'vue';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { useRouter } from 'vue-router';
-import { faMagnifyingGlass, faEye } from '@fortawesome/free-solid-svg-icons';
+import { faMagnifyingGlass, faEye, faFolder } from '@fortawesome/free-solid-svg-icons';
 import Btn from "./../buttons/Button.vue";
-import { getData } from './../../services/apiClient'
+import { getData } from './../../services/apiClient' 
+import { useAuthStore } from '../../store/useAuth';
 
-library.add(faMagnifyingGlass, faEye);
+const authStore = useAuthStore();
+const role = computed(() => authStore.getRole()); 
+library.add(faMagnifyingGlass, faEye, faFolder);
 const router = useRouter();
 let loading = ref(false)
 const props = defineProps({

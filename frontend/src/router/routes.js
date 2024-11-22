@@ -1,5 +1,6 @@
 import Logs from "./../views/Logs.vue";
 import Home from "./../views/Home.vue";
+import HomeApprentice from "../views/HomeApprentice.vue";
 import Binnacles from "./../views/Binnacles.vue";
 import Modality from "./../views/Modality.vue";
 import Certification from "./../views/Certification.vue";
@@ -20,12 +21,13 @@ const auth = (to, from, next) => {
     const authStore = useAuthStore();
     const token = authStore.getToken();
     const role = authStore.getRole();
+console.log(role);
 
     // Verificar si la ruta requiere autenticación
     if (to.meta.rol && !to.meta.rol.includes(role)) {
-        next({ path: '/unauthorized' }); // Redirigir si el rol no coincide
+        next({ path: '/' }); // Redirigir si el rol no coincide
     } else if (to.meta.requiresAuth && !token) {
-        next({ path: '/login' }); // Redirigir al login si no hay token
+        next({ path: '/' }); // Redirigir al login si no hay token
     } else {
         next(); // Continuar a la ruta solicitada
     }
@@ -38,7 +40,8 @@ const routes = [
         component: Layout,
         children: [
             { path: "/Home", component: Home, beforeEnter: auth, meta: { rol: ["ADMIN", "INSTRUCTOR"] } },
-            { path: "/Binnacles", component: Binnacles, beforeEnter: auth, meta: { rol: ["ADMIN", "INSTRUCTOR","APRENDIZ"] } },
+            { path: "/HomeApprentice", component: HomeApprentice, beforeEnter: auth, meta: { rol: ["CONSULTOR"] } },
+            { path: "/Binnacles", component: Binnacles, beforeEnter: auth, meta: { rol: ["ADMIN", "INSTRUCTOR"] } },
             { path: "/Instructors", component: Instructors, beforeEnter: auth, meta: { rol: ["ADMIN"] } },
             { path: "/Modality", component: Modality, beforeEnter: auth, meta: { rol: ["ADMIN"] } },
             { path: "/Assignment", component: Assignment, beforeEnter: auth, meta: { rol: ["ADMIN","INSTRUCTOR"] } },
@@ -65,15 +68,15 @@ router.beforeEach((to, from, next) => {
 
     // Verificar si no está autenticado y la ruta requiere autenticación
     if (to.meta.requiresAuth && !token) {
-        next({ path: '/login' }); // Redirigir al login si no hay token
+        next({ path: '/' }); // Redirigir al login si no hay token
     } 
     // Verificar si es "APRENDIZ" y está intentando acceder a algo que no sea "Binnacles"
-    // else if (role === 'APRENDIZ' && to.path !== '/Binnacles') {
-    //     next({ path: '/Binnacles' }); // Redirigir automáticamente a la única ruta permitida
+    // else if (role === 'CONSULTOR' && to.path !== '/HomeApprentice') {
+    //     next({ path: '/HomeApprentice' }); // Redirigir automáticamente a la única ruta permitida
     // } 
     // Verificar si el rol no coincide con el rol requerido por la ruta
     else if (to.meta.rol && !to.meta.rol.includes(role)) {
-        next({ path: '/unauthorized' }); // Redirigir si el rol no coincide
+        next({ path: '/login' }); // Redirigir si el rol no coincide
     } else {
         next(); // Continuar a la ruta solicitada
     }

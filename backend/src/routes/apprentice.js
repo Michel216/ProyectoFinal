@@ -16,6 +16,11 @@ apprenticeRoute.get('/listallapprentice', [
     validateFields
 ], apprenticeController.getListApprentices);
 
+apprenticeRoute.get('/listcertificatedapprentice', [
+    // validateJWT,
+    validateFields
+], apprenticeController.getListCertificatedApprentice);
+
 apprenticeRoute.get('/searchapprentice', [
     // validateJWT,
     validateFields
@@ -48,31 +53,17 @@ apprenticeRoute.get('/listapprenticebystatus/:status', [
 // Ruta para subir el archivo
 apprenticeRoute.post('/upload', upload.single('file'), [
     // validateJWT,
-    // check('tpdocument', 'El tipo de documento es obligatorio').notEmpty(),
+
     // check('tpdocument').custom(apprenticeHelper.validateTpDocument),
-    // check('numDocument', 'El número docuemnto es obligatorio').notEmpty(),
     // check('numDocument').custom(apprenticeHelper.validateNumDocument),
-    // check('numDocument', 'El número docuemnto debe tener mínimo 8 y maximo 10 caracteres').isLength({ min: 8, max: 10 }),
-    // check('firstName', 'El nombre es obligatorio').notEmpty(),
-    // check('lastName', 'El apellido es obligatorio').notEmpty(),
-    // check('phone', 'El teléfono es obligatorio').notEmpty(),
-    // check('phone', 'El teléfono debe ser válido').isMobilePhone(),
     // check('phone').custom(apprenticeHelper.validatePhone),
-    // check('institutionalEmail', 'El correo institucional es obligatorio').notEmpty(),
-    // check('institutionalEmail', 'El correo institucional debe ser válido').isEmail(),
     // check('institutionalEmail').custom(apprenticeHelper.validateInstitutionalEmail),
-    // check('personalEmail', 'El correo personal es obligatorio').notEmpty(),
-    // check('personalEmail', 'El correo personal debe ser válido').isEmail(),
     // check('personalEmail').custom(apprenticeHelper.validatePersonalEmail),
-    // check('fiche', 'La ficha debe ser obligatoria').notEmpty(),
-    // check('fiche', 'El Id de la ficha debe ser válido').isMongoId(),
-    // check('modality', 'La modalidad debe ser obligatoria').notEmpty(),
-    // check('modality', 'El Id de la modalidad debe ser válido').isMongoId(),
     // check('modality').custom(apprenticeHelper.validateModality),
     // check('modality').custom(apprenticeHelper.validateModalityStatus),
     // check('status').optional().custom(apprenticeHelper.validateStatus),
-    // validateFields
-], apprenticeController.postuploadFile);
+    validateFields
+], apprenticeController.postUploadFile);
 
 // Añadir aprendiz
 apprenticeRoute.post('/addapprentice',[
@@ -106,12 +97,16 @@ apprenticeRoute.post('/addapprentice',[
 //Login para el aprendiz
 apprenticeRoute.post('/loginapprentice', [
     check('institutionalEmail', 'El correo electrónico es obligatorio').notEmpty(),
-    check('institutionalEmail').custom(apprenticeHelper.validateStatus),
-    check('numDocument', 'El número docuemnto es obligatorio').notEmpty(),
+    check('institutionalEmail').isEmail().withMessage('El correo electrónico debe ser válido'),
+    check('numDocument', 'El número de documento es obligatorio').notEmpty(),
+    check('numDocument').isString().withMessage('El número de documento debe ser una cadena de caracteres'),
     check('numDocument').custom(async (numDocument, { req }) => {
-        await apprenticeHelper.validateLogin(numDocument, req.body.institutionalEmail);
+        const { institutionalEmail } = req.body;
+        await apprenticeHelper.validateLogin(numDocument, institutionalEmail); // Validación adicional
     }),
+    validateFields
 ], apprenticeController.postLoginApprentice);
+
 
 // Actualizar aprendiz por ID (Solo valida ID y updatedAt)
 apprenticeRoute.put('/updateapprenticebyid/:id', [

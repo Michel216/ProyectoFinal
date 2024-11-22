@@ -1,36 +1,37 @@
 <template>
   <div class="q-pa-md q-gutter-md">
     <Header title="Bitácoras"></Header>
-    <div style="display: flex; flex-direction: row; align-items: flex-start; justify-content: flex-end; margin: -30px 0px">
-  <div class="q-pa-md q-gutter-sm" style="display: flex; flex-direction: column; align-items: flex-start;">
-    <div class="text-primary" style="margin-bottom: -30px;">Realizar filtro por</div>
+    <div
+      style="display: flex; flex-direction: row; align-items: flex-start; justify-content: flex-end; margin: -30px 0px">
+      <div class="q-pa-md q-gutter-sm" style="display: flex; flex-direction: column; align-items: flex-start;">
+        <div class="text-primary" style="margin-bottom: -30px;">Realizar filtro por</div>
 
-    <!-- Contenedor de los radio buttons y el input, alineados en una fila -->
-    <div style="display: flex; flex-direction: row; align-items: center; justify-content: flex-start; width: 100%;">
-      <!-- Radio buttons -->
-      <div style="display: flex; flex-direction: row; align-items: flex-start; margin-right: 10px;">
-        <q-radio v-model="selectedValue" val="instructor" label="Instructor" dense color="primary"
-          @update:model-value="handleFilter" style="margin-right: 10px;" />
-        <q-radio v-model="selectedValue" val="assignment" label="Aprendiz" dense color="primary"
-          @update:model-value="handleFilter" style="margin-right: -10px;" />
-      </div>
+        <!-- Contenedor de los radio buttons y el input, alineados en una fila -->
+        <div style="display: flex; flex-direction: row; align-items: center; justify-content: flex-start; width: 100%;">
+          <!-- Radio buttons -->
+          <div style="display: flex; flex-direction: row; align-items: flex-start; margin-right: 10px;">
+            <q-radio v-model="selectedValue" val="instructor" label="Instructor" dense color="primary"
+              @update:model-value="handleFilter" style="margin-right: 10px;" />
+            <q-radio v-model="selectedValue" val="assignment" label="Aprendiz" dense color="primary"
+              @update:model-value="handleFilter" style="margin-right: -10px;" />
+          </div>
 
-      <!-- Input de búsqueda alineado a la izquierda -->
-      <div class="q-pa-md" style="flex-grow: 1; display: flex; justify-content: flex-start;">
-        <div class="rounded-input" style=" width: 370px;">
-          <q-input class="q-ml-md" v-model="searchTerm" :label="searchLabel" @input="handleFilter" outlined
-            :disable="!selectedValue" />
+          <!-- Input de búsqueda alineado a la izquierda -->
+          <div class="q-pa-md" style="flex-grow: 1; display: flex; justify-content: flex-start;">
+            <div class="rounded-input" style=" width: 370px;">
+              <q-input class="q-ml-md" v-model="searchTerm" :label="searchLabel" @input="handleFilter" outlined
+                :disable="!selectedValue" />
+            </div>
+          </div>
+
         </div>
       </div>
-
     </div>
-  </div>
-</div>
 
-    <!-- <Btn :label="btnLabel" :onClickFunction="openModalCreate" :loading="loading" /> -->
+    <Btn :label="btnLabel" :onClickFunction="openModalCreate" :loading="loading" v-if="role === 'INSTRUCTOR'" />
     <binnacleTable :title="title" :columns="columns" :rows="filteredRows" :options="options"
       :onUpdateStatus="handleUpdateStatus" :loading="loading" :val="true" :onClickFunction="openModalObservations" />
-    <Modal :isVisible="showModalCreate" @update:isVisible="showModalCreate = $event"
+    <Modal :onClickFunction="onReset" :isVisible="showModalCreate" @update:isVisible="showModalCreate = $event"
       :label="'DILIGENCIA LA INFORMACION'">
       <div class="q-pa-md" style="max-width: 600px">
         <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md" style="
@@ -100,8 +101,8 @@
         </q-form>
       </div>
     </Modal>
-    <Modal :isVisible="showModalObservations" @update:isVisible="showModalObservations = $event"
-      :label="'OBSERVACIONES'">
+    <Modal :onClickFunction="onReset" :isVisible="showModalObservations"
+      @update:isVisible="showModalObservations = $event" :label="'OBSERVACIONES'">
       <div class="q-pa-md" style="max-width: 600px">
         <q-form v-if="!change" @submit="onSubmitObservation" @reset="onReset" class="q-gutter-md" style="
             max-height: none;
@@ -165,13 +166,13 @@
             </q-card>
           </div>
 
-          
+
           <br>
           <div class="full-width" style="display: flex; justify-content: center; align-items: center;">
 
-<q-btn label="Cerrar" type="reset" icon="close" class="full-width" v-close-popup
-  style="background-color: white; color: black; box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);" />
-</div>
+            <q-btn label="Cerrar" type="reset" icon="close" class="full-width" v-close-popup
+              style="background-color: white; color: black; box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);" />
+          </div>
         </q-form>
       </div>
     </Modal>
@@ -196,6 +197,7 @@ import { useAuthStore } from './../store/useAuth.js'
 import Header from '../components/header/Header.vue';
 
 const authStore = useAuthStore();
+const role = computed(() => authStore.getRole());
 let loading = ref(false);
 let change = ref()
 let title = "Bitácoras";
@@ -228,50 +230,69 @@ function radiobtn(evt) {
 
   submitResult.value = data
 }
-let columns = ref([
-  {
-    name: "index",
-    label: "N°",
-    align: "center",
-    field: 'index'
-  },
-  {
-    name: "assignment",
-    label: "Etapa Productiva Asignada",
-    align: "center",
-    field: "assignment",
-  },
-  {
-    name: "number",
-    label: "N° Bitácora",
-    align: "center",
-    field: "number",
-    sortable: true,
-  },
-  {
-    name: "instructor",
-    label: "Instructor",
-    align: "center",
-    field: "instructor"
-  },
-  {
-    name: "options",
-    label: "Estado",
-    align: "center",
-    field: "status"
-  },
-  {
-    name: "observations",
-    label: "Observaciones",
-    align: "center",
-    field: "observations",
-  },
-]);
+const columns = computed(() => {
+  // Si el rol es 'INSTRUCTOR', agregar la columna 'validateHour'
+  let baseColumns = [
+    {
+      name: "index",
+      label: "N°",
+      align: "center",
+      field: 'index'
+    },
+    {
+      name: "assignment",
+      label: "Etapa Productiva Asignada",
+      align: "center",
+      field: "assignment",
+    },
+    {
+      name: "number",
+      label: "N° Bitácora",
+      align: "center",
+      field: "number",
+      sortable: true,
+    },
+    {
+      name: "options",
+      label: "Estado",
+      align: "center",
+      field: "status"
+    },
+    {
+      name: "observations",
+      label: "Observaciones",
+      align: "center",
+      field: "observations",
+    },
+  ];
+
+  // Agregar la columna 'validateHour' solo si el rol es 'INSTRUCTOR'
+  if (role.value === 'INSTRUCTOR') {
+    baseColumns.push({
+      name: "validateHour",
+      label: "Validar horas",
+      align: "center",
+      field: "validateHour",
+    });
+  }
+
+  if (role.value === 'ADMIN') {
+    baseColumns.splice(2, 0,
+      {
+        name: "instructor",
+        label: "Instructor",
+        align: "center",
+        field: "instructor"
+      },)
+  }
+
+  return baseColumns;
+});
+
 
 
 // valida que el tipo de la bitácora sea de 1 a 4. Programado: 1, Ejecutado: 2, Pendiente: 3, Verificado: 4// valida que el tipo de la bitácora sea de 1 a 4. Programado: 1, Ejecutado: 2, Pendiente: 3, Verificado: 4, Verificado técnico: 5, Verificado proyecto: 6
 let options = ref([
-
   {
     label: "Pendiente",
     value: 1,
@@ -283,6 +304,14 @@ let options = ref([
   {
     label: "Verificada",
     value: 3,
+  },
+  {
+    label: "Verificado técnico",
+    value: 5,
+  },
+  {
+    label: "Verificado proyecto",
+    value: 6,
   },
 ]);
 
@@ -307,11 +336,11 @@ const filteredRows = computed(() => {
     console.log(row); // Añadir esto para depurar
     if (selectedValue.value === "instructor") {
       return (
-        ( row.instructor.toLowerCase().startsWith(searchTerm.value.toLowerCase())) 
+        (row.instructor.toLowerCase().startsWith(searchTerm.value.toLowerCase()))
       );
     } else if (selectedValue.value === "assignment") {
       return (
-        ( row.assignment.toLowerCase().startsWith(searchTerm.value.toLowerCase()))
+        (row.assignment.toLowerCase().startsWith(searchTerm.value.toLowerCase()))
       );
     }
     return false;  // Si no hay filtro seleccionado

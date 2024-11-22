@@ -1,8 +1,8 @@
 <template>
-  <q-drawer :model-value="leftDrawerOpen" @update:model-value="$emit('update:leftDrawerOpen', $event)" side="left"
+  <q-drawer v-if="role === '!CONSULTOR'" :model-value="leftDrawerOpen" @update:model-value="$emit('update:leftDrawerOpen', $event)" side="left"
     overlay bordered :width="300" :breakpoint="400">
 
-    <q-scroll-area style="height: calc(100% - 150px); margin-top: 150px; border-right: 1px solid #ddd">
+    <q-scroll-area  style="height: calc(100% - 150px); margin-top: 150px; border-right: 1px solid #ddd">
       <q-list padding class="drawer-content">
         <q-item clickable v-ripple v-for="item in filteredMenuItems" :key="item.label" :to="item.path"
           active-class="active-item" class="custom-button">

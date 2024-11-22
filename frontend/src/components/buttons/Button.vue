@@ -47,7 +47,7 @@ setTimeout(() => {
   }
 
   isLoading.value = false;
-}, 2000);
+});
 }
 
 </script>

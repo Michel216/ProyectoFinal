@@ -9,24 +9,28 @@
       <div class="q-pa-md">
         <q-form @submit="handleSubmit" class="q-gutter-md">
           <q-select outlined v-model="rol" :options="optionsLogin" emit-value map-options label="Rol" lazy-rules
-            :rules="[val => val && val.length > 0 || 'Por favor, ingrese un rol']" >
+            :rules="[val => val && val.length > 0 || 'Por favor, ingrese un rol']">
             <template v-slot:prepend>
               <font-awesome-icon icon="fa-solid fa-users" />
             </template>
           </q-select>
           <q-input outlined v-model="email" type="email" label="Correo electrónico" lazy-rules
-            :rules="[val => val && val.length > 0 || 'Por favor, ingrese un correo electrónico']" >
+            :rules="[val => val && val.length > 0 || 'Por favor, ingrese un correo electrónico']">
             <template v-slot:prepend>
               <font-awesome-icon icon="fa-solid fa-envelope" />
             </template>
           </q-input>
-          <q-input outlined v-if="rol === 'APRENDIZ'" v-model="document" label="N° Documento" lazy-rules
-            :rules="[val => val && val.length > 0 || 'Por favor, ingrese un número de documento']" >
+          
+          <!-- N° Documento solo visible para CONSULTOR -->
+          <q-input outlined v-if="rol === 'CONSULTOR'" v-model="document" label="N° Documento" lazy-rules
+            :rules="[val => val && val.length > 0 || 'Por favor, ingrese un número de documento']">
             <template v-slot:prepend>
               <font-awesome-icon icon="fa-solid fa-id-card" />
             </template>
           </q-input>
-          <q-input outlined v-if="rol === 'ADMIN' || rol === 'INSTRUCTOR'" v-model="password"
+          
+          <!-- Contraseña solo visible para ADMIN e INSTRUCTOR -->
+          <q-input outlined v-if="rol === 'INSTRUCTOR' || rol === 'ADMIN'" v-model="password"
             :type="isPwd ? 'password' : 'text'" label="Contraseña" lazy-rules
             :rules="[val => val && val.length > 0 || 'Por favor, ingrese la contraseña']">
             <template v-slot:append>
@@ -36,8 +40,9 @@
               <font-awesome-icon icon="fa-solid fa-lock" />
             </template>
           </q-input>
+          
           <div align="center">
-            <q-btn class="full-width" label="Iniciar sesión" type="submit" color="primary"  :loading="isLoading"  :disable="isLoading" />
+            <q-btn class="full-width" label="Iniciar sesión" type="submit" color="primary" :loading="isLoading" :disable="isLoading" />
           </div>
         </q-form>
       </div>
@@ -48,8 +53,6 @@
   </div>
 </template>
 
-
-
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
@@ -57,25 +60,28 @@ import { Notify } from "quasar";
 import { postDataLogin } from "../services/apiRepfora.js";
 import { postLogin } from "../services/apiClient.js";
 import { useAuthStore } from "../store/useAuth.js";
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faUsers, faEnvelope, faIdCard, faLock } from '@fortawesome/free-solid-svg-icons';
 
-library.add(faUsers, faEnvelope, faIdCard, faLock)
+// Añadiendo iconos de FontAwesome
+library.add(faUsers, faEnvelope, faIdCard, faLock);
+
 const router = useRouter();
 const authStore = useAuthStore();
 
-let btnLabel = "INICIAR SESIÓN";
-const rol = ref("APRENDIZ");
+const rol = ref("CONSULTOR");
 const email = ref("");
-const cedula = ref("");
+const document = ref("");
 const password = ref("");
 const isPwd = ref(true);
 const isLoading = ref(false);
+
+// Opciones de roles
 const optionsLogin = [
   {
     label: "CONSULTOR",
-    value: "APRENDIZ",
+    value: "CONSULTOR",
   },
   {
     label: "INSTRUCTOR",
@@ -88,7 +94,7 @@ const optionsLogin = [
 ];
 
 const handleSubmit = async () => {
-  if (!email.value.trim() || !password.value.trim()) {
+  if (!email.value.trim() || (rol.value !== 'CONSULTOR' && !password.value.trim())) {
     Notify.create({
       type: 'negative',
       message: 'Por favor ingresa todos los campos.',
@@ -104,38 +110,27 @@ const handleSubmit = async () => {
     return;
   }
 
-  console.log(
-    "Inicio de sesión con rol:",
-    rol.value,
-    email.value,
-    "y contraseña:", password.value
-  );
   isLoading.value = true;
 
   try {
-    let endpoint;
     let data;
+    let endpoint;
 
-    if (rol.value === "ADMIN") {
-      data = await postDataLogin("/users/login", {
-        role: rol.value,
-        email: email.value,
-        password: password.value,
-      });
-    } else if (rol.value === "INSTRUCTOR") {
-      data = await postDataLogin("/instructors/login", {
+    // Manejo de inicio de sesión para ADMIN y INSTRUCTOR
+    if (rol.value === "ADMIN" || rol.value === "INSTRUCTOR") {
+      endpoint = rol.value === "ADMIN" ? "/users/login" : "/instructors/login";
+      data = await postDataLogin(endpoint, {
         role: rol.value,
         email: email.value,
         password: password.value,
       });
     }
-
-    if (rol.value === "APRENDIZ") {
+    // Manejo de inicio de sesión para CONSULTOR
+    else if (rol.value === "CONSULTOR") {
       data = await postLogin("/apprentice/loginapprentice", {
         institutionalEmail: email.value,
-        numDocument: cedula.value,
+        numDocument: document.value,
       });
-      console.log("Datos de inicio de sesión del aprendiz:", data);
     }
 
     if (!data) {
@@ -151,6 +146,10 @@ const handleSubmit = async () => {
 
     // Redirigir a la página de inicio
     router.replace("/Home");
+    
+    if(rol.value=== "CONSULTOR"){
+      router.replace("/HomeApprentice");
+    }
 
     Notify.create({
       type: 'positive',
@@ -167,16 +166,12 @@ const handleSubmit = async () => {
 };
 
 const forgotPassword = () => {
-  router.replace("./forgotpassword");
-  console.log("Olvidé mi contraseña");
-};
-
-const ClickFunctionLogin = async () => {
-  handleSubmit();
+  router.replace("/forgotpassword");
 };
 </script>
 
 <style scoped>
+/* Estilos del formulario */
 .login-container {
   display: flex;
   justify-content: center;
@@ -185,23 +180,11 @@ const ClickFunctionLogin = async () => {
   background-color: #f0f0f0;
 }
 
-.login-container p {
-  margin-top: 10px !important;
-  margin-bottom: 10px !important;
-  text-decoration: underline;
-}
-
-.container-form {
-  padding: 10px !important;
-}
-
 .login-box {
   width: 40%;
-
   border-radius: 10px;
   background-color: #fff;
-  box-shadow: 0 5px 5px -3px #0003, 0 8px 10px 1px #00000024,
-    0 3px 14px 2px #0000001f;
+  box-shadow: 0 5px 5px -3px #0003, 0 8px 10px 1px #00000024, 0 3px 14px 2px #0000001f;
   text-align: center;
   height: auto;
 }
@@ -228,38 +211,6 @@ const ClickFunctionLogin = async () => {
   margin: 0;
 }
 
-.form-group {
-  margin-bottom: 15px;
-}
-
-.form-group label {
-  font-weight: bold !important;
-}
-
-.input-field {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 14px;
-}
-
-.login-button {
-  width: 40%;
-  padding: 10px;
-  background-color: green;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-.login-button:hover {
-  background-color: green;
-  font-weight: 600;
-}
-
 .forgot-password {
   color: green;
   text-decoration: none;
@@ -276,7 +227,6 @@ const ClickFunctionLogin = async () => {
 
 .full-width:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-
   text-shadow: 0px 0px 10px white;
 }
 </style>

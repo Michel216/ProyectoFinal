@@ -1,9 +1,12 @@
 const Apprentice = require("../models/apprentice.js");
 const csvParser = require('csv-parser');
-const iconv = require('iconv-lite');
+const apprenticeHelper= require('../helpers/apprentice.js')
 const fs = require('fs');  // Asegúrate de incluir esto al principio del archivo
+const iconv = require('iconv-lite'); // Importar iconv-lite
+const chardet = require('chardet');
+ 
+const {generateJWT} = require('./../middlewares/validateJWT.js');
 
-const { generateJWT } = require('../middlewares/validateJWT');
 
 const apprenticeController = {
     // Obtener todos los aprendices
@@ -64,53 +67,76 @@ const apprenticeController = {
         }
     },
 
-    postuploadFile: async (req, res) => {
-        console.log("res",req.file);  // Verificar si el archivo llega correctamente
+    getListCertificatedApprentice: async (req, res) => {
+        try {
+            const listCertificatedApprentice = await Apprentice.find({ status: { $in: [3, 4] } });
+            res.status(200).json({ listCertificatedApprentice });
+        } catch (error) {
+            res.status(400).json({ error });
+        }
+    },
+
+    postUploadFile: async (req, res) => {
         const filePath = req.file?.path;
-        
+    
         if (!filePath) {
             return res.status(400).json({ message: 'No se encontró el archivo en la solicitud' });
         }
-        
-        const aprendices = [];
-        
+    
         try {
+            const aprendices = [];
+            const errores = [];
+    
+            // Leer y procesar el archivo CSV
             const readStream = fs.createReadStream(filePath)
-            .pipe(iconv.decodeStream('utf-8')); // Convertir el archivo a UTF-8
-        
-        readStream
-                .pipe(csvParser())
-                .on('data', (row) => {
-                    console.log('Fila leída:', row);
+                .pipe(iconv.decodeStream('utf-8'))
+                .pipe(csvParser());
+    
+            for await (const row of readStream) {
+                // Validar cada fila
+                const validationErrors = await apprenticeHelper.validateApprenticeCsv(row);
+    
+                if (validationErrors.length > 0) {
+                    errores.push({ fila: row, errores: validationErrors });
+                } else {
                     aprendices.push(row);
-                })
-                .on('end', async () => {
-
-    console.log('Archivo procesado completamente');
-                    try {
-                        // Validar y guardar registros en la base de datos
-                        const savedRecords = await Apprentice.insertMany(aprendices, { ordered: false });
-                        res.status(201).json({ message: 'Registros subidos exitosamente', savedRecords });
-                    } catch (error) {
-                        console.error('Error al guardar registros:', error);
-                        res.status(500).json({ message: 'Error al procesar el archivo', error });
-                    } finally {
-                        // Eliminar el archivo temporal
-                        fs.unlinkSync(filePath);
-                    }
-                })
-                .on('error', (err) => {
-                    console.error('Error en el procesamiento del archivo CSV:', err);
-                    res.status(500).json({ message: 'Error al procesar el archivo CSV', error: err });
-                    fs.unlinkSync(filePath); // Eliminar el archivo incluso si ocurre un error
+                }
+            }
+    
+            // Si hay errores, no guardar en la base de datos
+            if (errores.length > 0) {
+                return res.status(400).json({
+                    message: 'Errores encontrados durante el procesamiento',
+                    guardados: 0,
+                    errores,
                 });
-        } catch (error) {
-            console.error('Error al procesar la solicitud:', error);
-            res.status(500).json({ message: 'Error al procesar la solicitud', error });
+            }
+    
+            // Guardar registros válidos si no hay errores
+            let savedRecords = [];
+            if (aprendices.length > 0) {
+                savedRecords = await Apprentice.insertMany(aprendices, { ordered: false });
+            }
+    
+            res.status(201).json({
+                message: 'Registros subidos exitosamente',
+                guardados: savedRecords.length,
+                errores: [],
+            });
+          }  catch (error) {
+                console.error('Error al procesar el archivo:', error); // Agregar más detalles
+                res.status(500).json({
+                    message: 'Error al procesar el archivo',
+                    error: error.message || 'Error desconocido',
+                    stack: error.stack || 'Sin stack disponible'
+                });
+
+                    } finally {
+            fs.unlinkSync(filePath); // Eliminar el archivo temporal
         }
     },
-      
-      
+    
+    
     // Añadir aprendiz
    
     // postuploadFile: async (req, res) => {
@@ -200,12 +226,18 @@ const apprenticeController = {
         try {
             const { numDocument, institutionalEmail } = req.body;
             const apprentice = await Apprentice.findOne({ numDocument, institutionalEmail });
+            
+            if (!apprentice) {
+                return res.status(404).json({ error: 'Aprendiz no encontrado' });
+            }
+    
             const token = await generateJWT(apprentice._id);
             res.status(200).json({ token, apprentice });
         } catch (error) {
-            res.status(400).json({ error });
+            res.status(400).json({ error: error.message });
         }
     },
+    
     // Actualizar aprendiz
     putUpdateApprentice: async (req, res) => {
         try {

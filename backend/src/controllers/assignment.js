@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const nodemailer = require('nodemailer');
+const register = require('../models/register');
 
 const assignmentController = {
     // Obtener todas las asignaciones
@@ -93,9 +94,13 @@ const assignmentController = {
 
     // Agregar una nueva asignación
     postAddAssignment: async (req, res) => {
-        const { register, followInstructor, technicalInstructor, proyectInstructor, certificationdoc, judymenthphoto, productiveStage } = req.body;
+        const { apprentice, followInstructor, technicalInstructor, proyectInstructor } = req.body;
 
-        let assignmentData = { register, certificationdoc, judymenthphoto, productiveStage };
+        const registerToApprentice = register.findOne({apprentice: apprentice})
+        if (!register) {
+            console.error("No se encontró un registro para el aprendiz especificado.");
+            return;
+          }
 
         if (followInstructor) assignmentData.followInstructor = followInstructor;
         if (technicalInstructor) assignmentData.technicalInstructor = technicalInstructor;

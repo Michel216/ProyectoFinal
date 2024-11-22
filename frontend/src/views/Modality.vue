@@ -17,7 +17,7 @@
   
   <modalityTable :title="title" :columns="columns" :rows="filteredRows" :onToggleActivate="handleToggleActivate"
     :onClickEdit="bringId" />
-    <Modal
+    <Modal :onClickFunction="onReset"
       :isVisible="showModal"
       @update:isVisible="showModal = $event"
       :label="btnLabel"

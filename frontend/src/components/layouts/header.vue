@@ -44,9 +44,9 @@ function toggleLeftDrawer() {
 }
 </script> -->
 <template>
-  <q-header elevated class="bg-green-8 text-white">
+  <q-header  elevated class="bg-green-8 text-white">
     <q-toolbar>
-      <q-btn dense flat round icon="menu" @click="$emit('toggle-drawer')" />
+      <q-btn v-if="role === '!CONSULTOR'" dense flat round icon="menu" @click="$emit('toggle-drawer')" />
       <router-link to="/home" class="q-toolbar-title" style="text-decoration: none; color: white;   font-weight: bold; ">
         ETAPAS PRODUCTIVAS
       </router-link>
