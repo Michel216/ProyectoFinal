@@ -219,7 +219,7 @@ library.add(faCalendarDay, faChalkboardUser, faHandPointer)
 
 const title = "Seguimientos";
 const authStore = useAuthStore();
-const role = computed(() => authStore.getRole()); 
+const role = computed(() => authStore.getRole());
 const rows = ref([]);
 let loading = ref(false);
 let change = ref();
@@ -317,9 +317,9 @@ const filteredRows = computed(() => {
   });
 });
 
-async function handleUpdateStatus(status, row) {
+async function handleUpdateStatus(status, id) {
   try {
-    await putData(`/followup/updatestatus/${row}/${status}`);
+    await putData(`/followup/updatestatus/${id}/${status}`, { data: "Cambió estado seguimiento", status: status, idBinnacle: id});
     bring();
   } catch (error) {
     console.log(error);
@@ -335,6 +335,7 @@ async function onSubmit() {
       number: numFollowUp.value,
       document: document.value,
       month: month.value,
+      data: "Creó seguimiento"
     };
     await postData(`/followup/addfollowup`, data);
     notifySuccessRequest("Seguimiento creado exitosamente");
@@ -360,8 +361,10 @@ async function onSubmitObservation() {
           observation: observation.value,
           observationDate: observationDate,
           user: user.value
-        },
+        }
       ],
+      data: "Creó observación seguimiento",
+      idFollowUp: idFollowUp.value
     };
     console.log(observationDate);
 

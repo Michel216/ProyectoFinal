@@ -1,4 +1,5 @@
 const Apprentice = require("../models/apprentice.js");
+const Logs = require("./../models/log.js")
 const csvParser = require('csv-parser');
 const apprenticeHelper= require('../helpers/apprentice.js')
 const fs = require('fs');  // Asegúrate de incluir esto al principio del archivo

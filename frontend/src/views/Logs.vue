@@ -116,20 +116,27 @@ const handleSubmit = async () => {
     let data;
     let endpoint;
 
-    // Manejo de inicio de sesión para ADMIN y INSTRUCTOR
-    if (rol.value === "ADMIN" || rol.value === "INSTRUCTOR") {
-      endpoint = rol.value === "ADMIN" ? "/users/login" : "/instructors/login";
-      data = await postDataLogin(endpoint, {
+    if (rol.value === "ADMIN") {
+      data = await postDataLogin("/users/login", {
         role: rol.value,
         email: email.value,
         password: password.value,
+        data: "Log in de administrador"
+      });
+    } else if (rol.value === "INSTRUCTOR") {
+      data = await postDataLogin("/instructors/login", {
+        role: rol.value,
+        email: email.value,
+        password: password.value,
+        data: "Log in de instructor"
       });
     }
     // Manejo de inicio de sesión para CONSULTOR
     else if (rol.value === "CONSULTOR") {
       data = await postLogin("/apprentice/loginapprentice", {
         institutionalEmail: email.value,
-        numDocument: document.value,
+        numDocument: cedula.value,
+        data: "Log in de aprendiz"
       });
     }
 

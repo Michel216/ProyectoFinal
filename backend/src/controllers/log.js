@@ -29,8 +29,8 @@ const logController = {
     //agregar log
     postaddlog: async (req, res) => {
         try {
-            const { name,email, action, information} = req.body
-            const newlog = new Log ({ name, email, action, information})
+            const { name, data, action, information} = req.body
+            const newlog = new Log ({ name, data, action, information})
             await newlog.save()
             res.json({ newlog })
         } catch (error) {

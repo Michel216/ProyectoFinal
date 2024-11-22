@@ -362,7 +362,7 @@ async function handleToggleActivate(id, status) {
       status === 0
         ? `/apprentice/enableapprentice/${id}`
         : `/apprentice/disableapprentice/${id}`;
-    await putData(url);
+    await putData(url, { data: "Cambió estado aprendiz", status: status===0?1:0, idApprentice: id});
     bring();
   } catch (error) {
     console.log(error);
@@ -387,16 +387,20 @@ async function onSubmit() {
     };
     if (change.value === true) {
       console.log("creo");
-      url.value = await postData(apprentice/addapprentice, data);
+      data.data = "Creó a un aprendiz"
+      url.value = await postData(`apprentice/addapprentice`, data);
       console.log(data);
 
       notifySuccessRequest("Aprendiz creado exitosamente");
     } else {
       console.log("edito");
+      data.data = "Editó a un aprendiz"
+      data.idApprentice = idApprentice.value
       url.value = await putData(
         `/apprentice/updateapprenticebyid/${idApprentice.value}`,
         data
       );
+      console.log(data);
       notifySuccessRequest("Aprendiz actualizado exitosamente");
     }
     showModal.value = false;

@@ -198,6 +198,7 @@ import Header from '../components/header/Header.vue';
 
 const authStore = useAuthStore();
 const role = computed(() => authStore.getRole());
+const user = computed(() => authStore.getEmail());
 let loading = ref(false);
 let change = ref()
 let title = "Bitácoras";
@@ -208,7 +209,6 @@ let numBinnacle = ref("");
 let document = ref("");
 let observation = ref("");
 let observationDate = moment().tz('America/Bogota').format('YYYY-MM-DD HH:mm:ss')
-const user = computed(() => authStore.getEmail());
 let listObservations = ref("")
 let idBinnacle = ref("")
 const showModalCreate = ref(false);
@@ -231,7 +231,6 @@ function radiobtn(evt) {
   submitResult.value = data
 }
 const columns = computed(() => {
-  // Si el rol es 'INSTRUCTOR', agregar la columna 'validateHour'
   let baseColumns = [
     {
       name: "index",
@@ -395,9 +394,9 @@ async function bring() {
 
 
 
-async function handleUpdateStatus(status, row) {
+async function handleUpdateStatus(status, id) {
   try {
-    let data = await putData(`/binnacles/updatestatus/${row}/${status}`);
+    let data = await putData(`/binnacles/updatestatus/${id}/${status}`, {data: "Cambió estado bitácora", status: status, idBinnacle: id});
     bring();
   } catch (error) {
     console.log(error);
@@ -412,13 +411,7 @@ async function onSubmit() {
       instructor: instructor.value,
       number: numBinnacle.value,
       document: document.value,
-      // observations: [
-      //   {
-      //     observation: observation.value,
-      //     user: "66eb7269c249bb3aaed686e1",
-      //     observationDate: observationDate.value,
-      //   },
-      // ],
+      data: "Creó bitácora"
     };
     let url = await postData(`/binnacles/addbinnacles`, data);
     notifySuccessRequest("Bitácora creada exitosamente");
@@ -457,7 +450,9 @@ async function onSubmitObservation() {
           observationDate: observationDate,
           user: user.value
         }
-      ]
+      ],
+      data: "Creó observación bitácora",
+      idBinnacle: idBinnacle.value
     }
 
     let url = await putData(`/binnacles/addobservation/${idBinnacle.value}`, data)
