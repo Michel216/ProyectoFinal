@@ -198,6 +198,7 @@ import Header from '../components/header/Header.vue';
 
 const authStore = useAuthStore();
 const role = computed(() => authStore.getRole());
+const user = computed(() => authStore.getEmail());
 let loading = ref(false);
 let change = ref()
 let title = "Bitácoras";
@@ -208,7 +209,6 @@ let numBinnacle = ref("");
 let document = ref("");
 let observation = ref("");
 let observationDate = moment().tz('America/Bogota').format('YYYY-MM-DD HH:mm:ss')
-const user = computed(() => authStore.getEmail());
 let listObservations = ref("")
 let idBinnacle = ref("")
 const showModalCreate = ref(false);
@@ -231,7 +231,6 @@ function radiobtn(evt) {
   submitResult.value = data
 }
 const columns = computed(() => {
-  // Si el rol es 'INSTRUCTOR', agregar la columna 'validateHour'
   let baseColumns = [
     {
       name: "index",

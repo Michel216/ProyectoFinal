@@ -5,7 +5,7 @@
     <!-- Contenedor de botón, formulario de radio y campo de entrada -->
     <div style="display: flex; align-items: center; justify-content: space-between;  margin: -30px 0">
       <div class="btn" style="display: flex; flex-direction: row;  gap: 10px; margin-left: 10%">
-        <Btn :label="btnLabel" :onClickFunction="bringIdAndOpenModal" :loading="loading" v-if="role === 'ADMIN'"/>
+        <Btn :label="btnLabel" :onClickFunction="bringIdAndOpenModal" :loading="loading" v-if="role === 'ADMIN'" />
       </div>
       <!-- Formulario de radio centrado -->
       <div class="q-pa-md q-gutter-sm" style="display: flex; flex-direction: column; align-items: flex-start;">
@@ -45,11 +45,11 @@
       </q-card> -->
     <ApprenticeTable :title="title" :rows="filteredRows" :columns="columns" :onToggleActivate="handleToggleActivate"
       :loading="loading" :onClickEdit="bringIdAndOpenModal" />
-      <Modal :isVisible="showModal" @update:isVisible="showModal = $event" :label="btnLabel" :onClickFunction="onReset">
+    <Modal :isVisible="showModal" @update:isVisible="showModal = $event" :label="btnLabel" :onClickFunction="onReset">
       <div class="q-pa-md" style="max-width: 400px">
         <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
-          <q-select outlined v-model="theApprentice" label="Seleccione al aprendiz" :options="optionsApprentice" emit-value
-            map-options clearable use-input input-debounce="0" behavior="menu" @filter="filterApprentice">
+          <q-select outlined v-model="theApprentice" label="Seleccione al aprendiz" :options="optionsApprentice"
+            emit-value map-options clearable use-input input-debounce="0" behavior="menu" @filter="filterApprentice">
             <template v-slot:no-option>
               <q-item>
                 <q-item-section class="text-grey"> No results </q-item-section>
@@ -101,7 +101,8 @@
 
 
           <div>
-            <q-btn label="Guardar" type="submit" color="primary" class="full-width" :loading="isLoading"  :disable="isLoading"  />
+            <q-btn label="Guardar" type="submit" color="primary" class="full-width" :loading="isLoading"
+              :disable="isLoading" />
             <q-btn label="Cerrar" type="reset" icon="close" class="full-width" v-close-popup
               style="background-color: white; color: black; box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);" />
           </div>
@@ -133,7 +134,7 @@ import { useAuthStore } from './../store/useAuth.js'
 library.add(faUserGraduate, faChalkboardUser)
 
 const authStore = useAuthStore();
-const role = computed(() => authStore.getRole()); 
+const role = computed(() => authStore.getRole());
 let loading = ref(false);
 let btnLabel = "Crear Asignación";
 const isLoading = ref(false);
@@ -166,50 +167,102 @@ function radiobtn(evt) {
 const text = ref('')
 let change = ref(); // true: crear, false: modificar
 let idAssignment = ref();
-const columns = ref([
-  {
-    name: "index",
-    label: "#",
-    align: "center",
-    field: 'index'
-  },
-  {
-    name: "apprentice",
-    label: "NOMBRE APRENDIZ",
-    align: "center",
-    field: "apprentice",
-  },
-  {
-    name: "fiche",
-    label: "PROGRAMA",
-    align: "center",
-    field: "fiche",
-  },
-  {
-    name: "modality",
-    label: "MODALIDAD",
-    align: "center",
-    field: "modality",
-  },
-  {
-    name: "followUpInstructor",
-    label: "INS. SEGUIMIENTO",
-    align: "center",
-    field: "followUpInstructor",
-  },
-  {
-    name: "technicalInstructor",
-    label: "INS. TÉCNICO",
-    align: "center",
-    field: "technicalInstructor",
-  },
-  {
-    name: "projectInstructor",
-    label: "INS. PROYECTO",
-    align: "center",
-    field: "projectInstructor",
-  },
-]);
+const columns = computed(() => {
+  let baseColumns = [
+    {
+      name: "index",
+      label: "#",
+      align: "center",
+      field: 'index'
+    },
+    
+  ];
+
+  if (role.value === 'INSTRUCTOR') {
+    baseColumns.splice(2, 0,
+    
+    {
+      name: "apprentice",
+      label: "NOMBRE APRENDIZ",
+      align: "center",
+      field: "apprentice",
+    },
+    {
+      name: "numDocument",
+      label: "N° DOCUMENTO",
+      align: "center",
+      field: "numDocument",
+    },
+    {
+      name: "modality",
+      label: "MODALIDAD",
+      align: "center",
+      field: "modality",
+    },
+    {
+      name: "tpInstructor",
+      label: "TIPO INSTRUCTOR",
+      align: "center",
+      field: "tpInstructor",
+    },
+    {
+      name: "binnacles",
+      label: "BITACORAS",
+      align: "center",
+      field: "binnacles",
+    },
+    {
+      name: "followups",
+      label: "SEGUIMIENTOS",
+      align: "center",
+      field: "followups",
+    }
+  )
+  }
+
+  if (role.value === 'ADMIN') {
+    baseColumns.splice(4, 0,
+    {
+      name: "apprentice",
+      label: "NOMBRE APRENDIZ",
+      align: "center",
+      field: "apprentice",
+    },
+    {
+      name: "fiche",
+      label: "PROGRAMA",
+      align: "center",
+      field: "fiche",
+    },
+    {
+      name: "modality",
+      label: "MODALIDAD",
+      align: "center",
+      field: "modality",
+    },
+    
+    {
+      name: "followUpInstructor",
+      label: "INS. SEGUIMIENTO",
+      align: "center",
+      field: "followUpInstructor",
+    },
+    {
+      name: "technicalInstructor",
+      label: "INS. TÉCNICO",
+      align: "center",
+      field: "technicalInstructor",
+    },
+    {
+      name: "projectInstructor",
+      label: "INS. PROYECTO",
+      align: "center",
+      field: "projectInstructor",
+    })
+  }
+
+  return baseColumns;
+})
 
 onBeforeMount(() => {
   bring();
@@ -252,7 +305,7 @@ async function bring() {
     }
 
     // Filtra los registros que tienen asignaciones
-    const registersWithAssignments = data.register.filter(register => 
+    const registersWithAssignments = data.register.filter(register =>
       Array.isArray(register.assignment) && register.assignment.length > 0
     );
 
@@ -318,7 +371,7 @@ async function handleToggleActivate(id, status) {
 
 async function onSubmit() {
   loading.value = true;
-  isLoading.value = true; 
+  isLoading.value = true;
   try {
     let url = ref();
     let data = {
@@ -350,7 +403,7 @@ async function onSubmit() {
     );
   } finally {
     loading.value = false;
-    isLoading.value = false; 
+    isLoading.value = false;
   }
 }
 
