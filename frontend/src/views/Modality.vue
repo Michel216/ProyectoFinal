@@ -186,7 +186,7 @@ async function handleToggleActivate(id, status) {
       status === 0
         ? `/modality/enablemodalitybyid/${id}`
         : `/modality/disablemodalitybyid/${id}`;
-    let data = await putData(url);
+    let data = await putData(url, {data: "Cambió estado modalidad", status: status===0?1:0, idModality: id});
     bring();
   } catch (error) {
     console.log(error);
@@ -210,11 +210,13 @@ async function onSubmit() {
 
     if (change.value === true) {
       console.log("creo");
-      console.log(data);
+      data.data = "Creó modalidad"
       url.value = await postData(`/modality/addmodality`, data);
       notifySuccessRequest("Modalidad creada exitosamente");
     } else {
       console.log("edito");
+      data.data = "Editó modalidad"
+      data.idModality = idModality.value
       url.value = await putData(
         `/modality/updatemodalitybyid/${idModality.value}`,
         data

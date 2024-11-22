@@ -242,10 +242,10 @@ async function bring() {
 
 
 
-async function handleToggleActivate(rows, status) {
+async function handleToggleActivate(id, status) {
   try {
-    const url = status === 0 ? `/register/enableregister/${rows}` : `/register/disableregister/${rows}`
-    let data = await putData(url);
+    const url = status === 0 ? `/register/enableregister/${id}` : `/register/disableregister/${id}`
+    let data = await putData(url, {data: "Cambió estado registro", status: status===0?1:0, idRegister: id});
     bring()
 
   } catch (error) {
@@ -279,9 +279,12 @@ async function onSubmit() {
       "productiveProyectHour": productiveProyectHour.value
     }
     if (change.value === true) {
+      data.data = "Creó registro"
       url.value = await postData('/register/addregister', data);
       notifySuccessRequest('Registro creado exitosamente');
     } else {
+      data.data = "Editó registro"
+      data.idRegister = idRegister.value
       url.value = await putData(`/register/updateregisterbyid/${idRegister.value}`, data);
       notifySuccessRequest('Registro actualizado exitosamente');
     }

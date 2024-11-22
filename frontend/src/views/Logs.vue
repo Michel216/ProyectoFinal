@@ -121,12 +121,14 @@ const handleSubmit = async () => {
         role: rol.value,
         email: email.value,
         password: password.value,
+        data: "Log in de administrador"
       });
     } else if (rol.value === "INSTRUCTOR") {
       data = await postDataLogin("/instructors/login", {
         role: rol.value,
         email: email.value,
         password: password.value,
+        data: "Log in de instructor"
       });
     }
 
@@ -134,6 +136,7 @@ const handleSubmit = async () => {
       data = await postLogin("/apprentice/loginapprentice", {
         institutionalEmail: email.value,
         numDocument: cedula.value,
+        data: "Log in de aprendiz"
       });
       console.log("Datos de inicio de sesión del aprendiz:", data);
     }

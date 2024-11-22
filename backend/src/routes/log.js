@@ -8,7 +8,7 @@ const logRoute = express.Router()
 
 //obtener registros
 logRoute.get('/listlogs', [
-    validateJWT,
+    // validateJWT,
     validateFields], logController.getlistlogs);
 
 //obtener registros por id
@@ -20,11 +20,12 @@ logRoute.get('/listlogs/:id', [
 //añadir registros
 logRoute.post('/addlog', [
     // validateJWT,
-    check('users', 'El campo users es obligatorio y debe ser una cadena de texto con al menos 10 caracteres y solo letras').not().isEmpty().isString(),
-    check('email', 'El campo email es obligatorio y debe ser una cadena de texto con un formato de email válido').not().isEmpty().isString().isEmail(),
+    check('name', 'El campo name es obligatorio y debe ser una cadena de texto con al menos 10 caracteres y solo letras').not().isEmpty().isString(),
+    check('data', 'El campo data es obligatorio y debe ser una cadena de texto con al menos 5 caracteres').not().isEmpty().isString(),
     check('action', 'El campo action es obligatorio, debe ser una cadena de texto con un máximo de 5 caracteres y solo letras').not().isEmpty().isString(),
-    check('information', 'El campo information es obligatorio y debe ser una cadena de texto con al menos 20 caracteres').not().isEmpty().isString(), 
-    validateFields], logController.postaddlog);
+    check('information', 'El campo information es obligatorio y debe ser una cadena de texto con al menos 5 caracteres').not().isEmpty(), 
+    validateFields
+], logController.postaddlog);
 
 //habilitar registros por id
 logRoute.put('/enablelogsbyid/:id', [

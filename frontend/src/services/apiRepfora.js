@@ -1,11 +1,13 @@
 import apiRepfora from './../plugins/axiosRepfora.js'; // Importa tu instancia de Axios si está configurada en /plugins
-
+import apiClient from './../plugins/axios.js'; // Importa tu instancia de Axios si está configurada en /plugins
 
 // Función POST Login
 export async function postDataLogin(url, data) {
     try {
         const response = await apiRepfora.post(url, data);
         const { token, role } = response.data; // Desestructuramos el token y el rol de la respuesta
+        
+        const infoLog = await apiClient.post("/logs/addlog", {name:data.email, data:`POST`, information: data, action: data.data})
 
         localStorage.setItem('token', token); // Guardamos el token
         localStorage.setItem('role', role); // Guardamos el rol

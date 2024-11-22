@@ -1,4 +1,5 @@
 const Apprentice = require("../models/apprentice.js");
+const Logs = require("./../models/log.js")
 const csvParser = require('csv-parser');
 const fs = require('fs');  // Asegúrate de incluir esto al principio del archivo
 const iconv = require('iconv-lite'); // Importar iconv-lite
@@ -98,6 +99,7 @@ const apprenticeController = {
                         // Validar y guardar registros en la base de datos
                         const savedRecords = await Apprentice.insertMany(aprendices, { ordered: false });
                         res.status(201).json({ message: 'Registros subidos exitosamente', savedRecords });
+
                     } catch (error) {
                         console.error('Error al guardar registros:', error);
                         res.status(500).json({ message: 'Error al procesar el archivo', error });
