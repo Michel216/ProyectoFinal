@@ -11,6 +11,8 @@
         <q-spinner/>
       </template>
         <slot name="prepend"></slot>
+        <i v-if="icon" :class="`material-icons`">{{ icon }}</i>
+  
       </q-btn>
     </div>
   </template>
@@ -32,7 +34,11 @@ const props = defineProps({
     onClickFunction:{
         type:Function,
         required: false
-    }
+    },
+    icon: {
+      type: String, // Define que es un string para el nombre del ícono
+      default: null // Si no se pasa, no mostrará nada
+    },
 })
 
 
@@ -59,6 +65,10 @@ setTimeout(() => {
 .custom-btn:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
   text-shadow: 0px 0px 10px white;
+}
+
+.material-icons {
+  font-size: 20px; /* Ajusta el tamaño del ícono */
 }
 </style>
 
