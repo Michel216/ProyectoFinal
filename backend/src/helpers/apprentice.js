@@ -51,13 +51,6 @@ const apprenticeHelper = {
             throw new Error("El correo personal ya existe");
         } return true
     },
-    // válida que el estado sea permitido
-    validateStatus: (status) => {
-        const validStatus = [0, 1, 2, 3, 4];// inactivo: 0, activo: 1, en etapa productiva: 2, por certificación: 3, certificado: 4
-        if (!validStatus.includes(status)) {
-            throw new Error("El estado debe ser 0 a 4");
-        } return true;
-    },
     // válida que el tipo de documento sea permitido
     validateTpDocument: async (tpdoc) => {
         const tpdocumentValidos = ["cédula de ciudadanía", "tarjeta de identidad", "cédula de extranjería"];
@@ -132,7 +125,7 @@ const apprenticeHelper = {
         }
     },
     
-    validateStatus: async (institutionalEmail) => {
+    validateStatusEmail: async (institutionalEmail) => {
         let existUser = await Apprentice.findOne({ institutionalEmail });
         if (existUser.status === 0) {
             throw new Error("El aprendiz está inactivo");

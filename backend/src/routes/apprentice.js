@@ -45,8 +45,8 @@ apprenticeRoute.get('/listapprenticebyfiche/:idFiche', [
 // Obtener aprendices por estado
 apprenticeRoute.get('/listapprenticebystatus/:status', [
     // validateJWT,
-    check('status', 'El estado es obligatorio').notEmpty().isNumeric(),
-    check('status').custom(apprenticeHelper.validateStatus),
+    check('status', 'El estado es obligatorio y debe ser número').notEmpty().isNumeric(),
+    check('status', "El estado debe ser 0 a 4").isInt({ min: 0, max: 4 }),
     validateFields
 ], apprenticeController.getListApprenticeByStatus);
 
@@ -61,7 +61,7 @@ apprenticeRoute.post('/upload', upload.single('file'), [
     // check('personalEmail').custom(apprenticeHelper.validatePersonalEmail),
     // check('modality').custom(apprenticeHelper.validateModality),
     // check('modality').custom(apprenticeHelper.validateModalityStatus),
-    // check('status').optional().custom(apprenticeHelper.validateStatus),
+    // check('status', "El estado debe ser 0 a 4").isInt({ min: 0, max: 4 }),
     validateFields
 ], apprenticeController.postUploadFile);
 
@@ -73,8 +73,8 @@ apprenticeRoute.post('/addapprentice',[
     check('numDocument', 'El número docuemnto es obligatorio').notEmpty(),
     check('numDocument').custom(apprenticeHelper.validateNumDocument),
     check('numDocument', 'El número docuemnto debe tener mínimo 8 y maximo 10 caracteres').isLength({ min: 8, max: 10 }),
-    check('firstName', 'El nombre es obligatorio').notEmpty(),
-    check('lastName', 'El apellido es obligatorio').notEmpty(),
+    check('firstName', 'El nombre es obligatorio y debe ser una línea de texto').notEmpty().isString().isLength({min: 2, max: 50}),
+    check('lastName', 'El apellido es obligatorio y debe ser una línea de texto').notEmpty().isString().isLength({min: 2, max: 50}),
     check('phone', 'El teléfono es obligatorio').notEmpty(),
     check('phone', 'El teléfono debe ser válido').isMobilePhone(),
     check('phone').custom(apprenticeHelper.validatePhone),
@@ -90,16 +90,16 @@ apprenticeRoute.post('/addapprentice',[
     check('modality', 'El Id de la modalidad debe ser válido').isMongoId(),
     check('modality').custom(apprenticeHelper.validateModality),
     check('modality').custom(apprenticeHelper.validateModalityStatus),
-    check('status').optional().custom(apprenticeHelper.validateStatus),
+    check('status', "El estado debe ser 0 a 4").optional().isInt({ min: 0, max: 4 }),
     validateFields
 ], apprenticeController.postAddAprentice);
 
 //Login para el aprendiz
 apprenticeRoute.post('/loginapprentice', [
     check('institutionalEmail', 'El correo electrónico es obligatorio').notEmpty(),
-    check('institutionalEmail').isEmail().withMessage('El correo electrónico debe ser válido'),
+    check('institutionalEmail', 'El correo electrónico debe ser válido').isEmail(),
     check('numDocument', 'El número de documento es obligatorio').notEmpty(),
-    check('numDocument').isString().withMessage('El número de documento debe ser una cadena de caracteres'),
+    check('numDocument', 'El número de documento debe ser una cadena de caracteres').isString(),
     check('numDocument').custom(async (numDocument, { req }) => {
         const { institutionalEmail } = req.body;
         await apprenticeHelper.validateLogin(numDocument, institutionalEmail); // Validación adicional
@@ -118,8 +118,8 @@ apprenticeRoute.put('/updateapprenticebyid/:id', [
     check('numDocument').custom(async (numDocument, { req }) => {
         await apprenticeHelper.validateNumDocumentIfIsDiferent(numDocument, req.params.id);
     }),
-    check('firstName', 'El nombre es obligatorio').notEmpty(),
-    check('lastName', 'El apellido es obligatorio').notEmpty(),
+    check('firstName', 'El nombre es obligatorio y debe ser una línea de texto').notEmpty().isString().isLength({min: 2, max: 50}),
+    check('lastName', 'El apellido es obligatorio y debe ser una línea de texto').notEmpty().isString().isLength({min: 2, max: 50}),
     check('phone', 'El teléfono es obligatorio').notEmpty(),
     check('phone', 'El teléfono es obligatorio').isMobilePhone(),
     check('phone').custom(async (phone, { req }) => {
@@ -141,7 +141,7 @@ apprenticeRoute.put('/updateapprenticebyid/:id', [
     check('modality', 'El Id de la modalidad debe ser válido').isMongoId(),
     check('modality').custom(apprenticeHelper.validateModality),
     check('modality').custom(apprenticeHelper.validateModalityStatus),
-    check('status').optional().custom(apprenticeHelper.validateStatus),
+    check('status', "El estado debe ser 0 a 4").optional().isInt({ min: 0, max: 4 }),
     validateFields
 ], apprenticeController.putUpdateApprentice);
 
