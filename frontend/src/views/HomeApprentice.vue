@@ -107,13 +107,20 @@
                 </div>
             </div>
         </div>
-
+        <Btn 
+  :label="'HISTORIAL'" 
+  :onClickFunction="uploadFile" 
+  :loading="loading" 
+  icon="history" 
+  style="  margin-left: 90%;" 
+/>
     </div>
+    
 </template>
 
 <script setup>
 import { ref } from "vue";
-
+import Btn from "../components/buttons/Button.vue";
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faUser, faInfoCircle, faBook, faCertificate } from '@fortawesome/free-solid-svg-icons';
