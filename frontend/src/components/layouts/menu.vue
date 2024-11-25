@@ -1,5 +1,5 @@
 <template>
-  <q-drawer v-if="role === '!CONSULTOR'" :model-value="leftDrawerOpen" @update:model-value="$emit('update:leftDrawerOpen', $event)" side="left"
+  <q-drawer  :model-value="leftDrawerOpen" @update:model-value="$emit('update:leftDrawerOpen', $event)" side="left"
     overlay bordered :width="300" :breakpoint="400">
 
     <q-scroll-area  style="height: calc(100% - 150px); margin-top: 150px; border-right: 1px solid #ddd">
@@ -29,13 +29,13 @@
             style="max-width: 100%; max-height: 100%; margin-left: 195px;">
         </div>
 
-        <div class="titulo" v-if="role === 'INSTRUCTOR'"
+        <div class="titulo" v-if="rol === 'INSTRUCTOR'"
           style="display: flex; justify-content: center; align-items: center; color: black; font-size: 18px;">INSTRUCTOR
         </div>
-        <div class="titulo" v-if="role === 'ADMIN'"
+        <div class="titulo" v-if="rol === 'ADMIN'"
           style="display: flex; justify-content: center; align-items: center; color: black; font-size: 14px;">USUARIO EP
         </div>
-        <div class="titulo" v-if="role === 'ADMIN' || role === 'INSTRUCTOR'"
+        <div class="titulo" v-if="rol === 'ADMIN' || role === 'INSTRUCTOR'"
           style="display: flex; justify-content: center; align-items: center; color: black; font-size: 10px;">{{ nombre }}</div>
         <div style="display: flex; justify-content: center; align-items: center; color: black;font-size: 12px;">
           {{ correo }}</div>
@@ -50,7 +50,6 @@ import { useAuthStore } from '../../store/useAuth'; // Ajusta la ruta según sea
 
 const authStore = useAuthStore();
 const role = computed(() => authStore.getRole()); // Asegúrate de que esto devuelva el rol correctamente
-
 // Computados para nombre y correo
 const nombre = computed(() => authStore.getName());
 const correo = computed(() => authStore.getEmail());
@@ -60,6 +59,9 @@ const props = defineProps({
   menuItems: Array,
   isActiveRoute: Function
 });
+
+const rol= role.value
+console.log(rol)
 
 const filteredMenuItems = computed(() =>
   props.menuItems.filter(item => item.rol.includes(role.value))

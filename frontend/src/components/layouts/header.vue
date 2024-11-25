@@ -44,21 +44,47 @@ function toggleLeftDrawer() {
 }
 </script> -->
 <template>
-  <q-header  elevated class="bg-green-8 text-white">
+  <q-header elevated class="bg-green-8 text-white">
     <q-toolbar>
-      <q-btn v-if="role === '!CONSULTOR'" dense flat round icon="menu" @click="$emit('toggle-drawer')" />
-      <router-link to="/home" class="q-toolbar-title" style="text-decoration: none; color: white;   font-weight: bold; ">
+      <!-- Mostrar el botón de menú si el rol no es "CONSULTOR" -->
+      <q-btn 
+        v-if="role !== 'CONSULTOR'" 
+        dense 
+        flat 
+        round 
+        icon="menu" 
+        @click="$emit('toggle-drawer')" 
+      />
+      <!-- Enlace al inicio -->
+      <router-link 
+        to="/home" 
+        class="q-toolbar-title" 
+        style="text-decoration: none; color: white; font-weight: bold;"
+      >
         ETAPAS PRODUCTIVAS
       </router-link>
-      <router-link to="/" class="iconExit" style="display: flex; text-decoration: none; color: white; margin-left: 80%;">
+      <!-- Enlace para salir -->
+      <router-link 
+        to="/" 
+        class="iconExit" 
+        style="display: flex; text-decoration: none; color: white; margin-left: auto;"
+      >
         <q-btn dense flat round icon="logout" />
-        </router-link>
+      </router-link>
     </q-toolbar>
   </q-header>
 </template>
 
-<script>
-export default {
-  name: 'Header',
-};
+<script setup>
+import { computed } from 'vue';
+import { useAuthStore } from '../../store/useAuth'; // Ajusta la ruta según sea necesario
+
+// Usar el store de autenticación
+const authStore = useAuthStore();
+
+// Obtener el rol del usuario desde el store
+const role = computed(() => authStore.getRole());
 </script>
+
+
+

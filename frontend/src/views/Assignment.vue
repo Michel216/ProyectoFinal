@@ -45,75 +45,101 @@
       </q-card> -->
     <ApprenticeTable :title="title" :rows="filteredRows" :columns="columns" :onToggleActivate="handleToggleActivate"
       :loading="loading" :onClickEdit="bringIdAndOpenModal" />
-    <Modal :isVisible="showModal" @update:isVisible="showModal = $event" :label="btnLabel" :onClickFunction="onReset">
-      <div class="q-pa-md" style="max-width: 400px">
-        <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
-          <q-select outlined v-model="theApprentice" label="Seleccione al aprendiz" :options="optionsApprentice"
-            emit-value map-options clearable use-input input-debounce="0" behavior="menu" @filter="filterApprentice">
-            <template v-slot:no-option>
-              <q-item>
-                <q-item-section class="text-grey"> No results </q-item-section>
-              </q-item>
-            </template>
-            <template v-slot:prepend>
-              <font-awesome-icon icon="fa-solid fa-user-graduate" />
-            </template>
-          </q-select>
+      <Modal 
+  :isVisible="showModal" 
+  @update:isVisible="showModal = $event" 
+  :label="btnLabel" 
+  :onClickFunction="onReset"
+>
+  <div class="q-pa-md" style="max-width: 400px">
+    <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
+      <!-- Select para escoger al aprendiz -->
+      <q-select 
+        outlined 
+        v-model="theApprentice" 
+        label="Seleccione al aprendiz" 
+        :options="optionsApprentice" 
+        emit-value 
+        map-options 
+        clearable 
+        use-input 
+        input-debounce="0" 
+        behavior="menu" 
+        @filter="filterApprentice"
+      >
+        <template v-slot:no-option>
+          <q-item>
+            <q-item-section class="text-grey">No results</q-item-section>
+          </q-item>
+        </template>
+        <template v-slot:prepend>
+          <font-awesome-icon icon="fa-solid fa-user-graduate" />
+        </template>
+      </q-select>
 
-          <q-select outlined v-model="filterInstructorFollowUp" label="Seleccione al instructor de seguimiento"
-            :options="optionsInstructor" emit-value map-options clearable use-input input-debounce="0" behavior="menu"
-            @filter="filterInstructors">
-            <template v-slot:no-option>
-              <q-item>
-                <q-item-section class="text-grey"> No results </q-item-section>
-              </q-item>
-            </template>
-            <template v-slot:prepend>
-              <font-awesome-icon icon="fa-solid fa-chalkboard-user" />
-            </template>
-          </q-select>
+      <!-- Botón de guardar -->
+      <q-btn 
+        label="Guardar" 
+        type="button" 
+        color="primary" 
+        class="full-width" 
+        @click="onSubmit" 
+        :disable="!theApprentice" 
+      />
 
-          <q-select outlined v-model="filterInstructorProyecto" label="Seleccione al instructor de proyecto"
-            :options="optionsInstructor" emit-value map-options clearable use-input input-debounce="0" behavior="menu"
-            @filter="filterInstructors">
-            <template v-slot:no-option>
-              <q-item>
-                <q-item-section class="text-grey"> No results </q-item-section>
-              </q-item>
-            </template>
-            <template v-slot:prepend>
-              <font-awesome-icon icon="fa-solid fa-chalkboard-user" />
-            </template>
-          </q-select>
+      <!-- Inputs dinámicos -->
+      <div v-if="showInputs">
+        <q-select 
+          v-if="allowedAssignments.value.includes('followUpInstructor')" 
+          outlined 
+          v-model="filterInstructorFollowUp" 
+          :options="optionsInstructor" 
+          emit-value 
+          map-options 
+          clearable 
+          use-input 
+          input-debounce="0" 
+          behavior="menu" 
+          label="Seleccione instructor de seguimiento"
+        ></q-select>
 
-          <q-select outlined v-model="filterInstructorTecnico" label="Seleccione al instructo técnico"
-            :options="optionsInstructor" emit-value map-options clearable use-input input-debounce="0" behavior="menu"
-            @filter="filterInstructors">
-            <template v-slot:no-option>
-              <q-item>
-                <q-item-section class="text-grey"> No results </q-item-section>
-              </q-item>
-            </template>
-            <template v-slot:prepend>
-              <font-awesome-icon icon="fa-solid fa-chalkboard-user" />
-            </template>
-          </q-select>
+        <q-select 
+          v-if="allowedAssignments.value.includes('projectInstructor')" 
+          outlined 
+          v-model="filterInstructorProyecto" 
+          :options="optionsInstructor" 
+          emit-value 
+          map-options 
+          clearable 
+          use-input 
+          input-debounce="0" 
+          behavior="menu" 
+          label="Seleccione instructor de proyecto"
+        ></q-select>
 
-
-          <div>
-            <q-btn label="Guardar" type="submit" color="primary" class="full-width" :loading="isLoading"
-              :disable="isLoading" />
-            <q-btn label="Cerrar" type="reset" icon="close" class="full-width" v-close-popup
-              style="background-color: white; color: black; box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);" />
-          </div>
-        </q-form>
+        <q-select 
+          v-if="allowedAssignments.includes('technicalInstructor')" 
+          outlined 
+          v-model="filterInstructorTecnico" 
+          :options="optionsInstructor" 
+          emit-value 
+          map-options 
+          clearable 
+          use-input 
+          input-debounce="0" 
+          behavior="menu" 
+          label="Seleccione instructor técnico"
+        ></q-select>
       </div>
-    </Modal>
+    </q-form>
+  </div>
+</Modal>
+
   </div>
 </template>
 
 <script setup>
-import { ref, onBeforeMount, computed } from "vue";
+import { ref, onBeforeMount, computed, onMounted } from "vue";
 import { getData, putData, postData } from "../services/apiClient.js";
 import { getDataRepfora } from "../services/apiRepfora";
 import ApprenticeTable from "../components/tables/BasicTable.vue";
@@ -140,8 +166,10 @@ let btnLabel = "Crear Asignación";
 const isLoading = ref(false);
 const rows = ref([]);
 const showModal = ref(false);
+const showInputs = ref(false);
 const optionsInstructor = ref([]);
 const optionsApprentice = ref([]);
+// const optionsApprentice = ref("672c279c480b78d5a60ac3ea");
 const theApprentice = ref();
 const textCertificacion = ref("");
 const textFotoJudicial = ref("");
@@ -153,6 +181,8 @@ const submitResult = ref([]);
 let searchTerm = ref("");
 let searchLabel = ref('Buscar')
 const selectedValue = ref('');
+// const allowedAssignments = ([]);
+// const allowedAssignments = ref(['followUpInstructor', 'technicalInstructor', 'projectInstructor']);
 
 function radiobtn(evt) {
   const formData = new FormData(evt.target)
@@ -175,90 +205,90 @@ const columns = computed(() => {
       align: "center",
       field: 'index'
     },
-    
+
   ];
 
   if (role.value === 'INSTRUCTOR') {
     baseColumns.splice(2, 0,
-    
-    {
-      name: "apprentice",
-      label: "NOMBRE APRENDIZ",
-      align: "center",
-      field: "apprentice",
-    },
-    {
-      name: "numDocument",
-      label: "N° DOCUMENTO",
-      align: "center",
-      field: "numDocument",
-    },
-    {
-      name: "modality",
-      label: "MODALIDAD",
-      align: "center",
-      field: "modality",
-    },
-    {
-      name: "tpInstructor",
-      label: "TIPO INSTRUCTOR",
-      align: "center",
-      field: "tpInstructor",
-    },
-    {
-      name: "binnacles",
-      label: "BITACORAS",
-      align: "center",
-      field: "binnacles",
-    },
-    {
-      name: "followups",
-      label: "SEGUIMIENTOS",
-      align: "center",
-      field: "followups",
-    }
-  )
+
+      {
+        name: "apprentice",
+        label: "NOMBRE APRENDIZ",
+        align: "center",
+        field: "apprentice",
+      },
+      {
+        name: "numDocument",
+        label: "N° DOCUMENTO",
+        align: "center",
+        field: "numDocument",
+      },
+      {
+        name: "modality",
+        label: "MODALIDAD",
+        align: "center",
+        field: "modality",
+      },
+      {
+        name: "tpInstructor",
+        label: "TIPO INSTRUCTOR",
+        align: "center",
+        field: "tpInstructor",
+      },
+      {
+        name: "binnacles",
+        label: "BITACORAS",
+        align: "center",
+        field: "binnacles",
+      },
+      {
+        name: "followups",
+        label: "SEGUIMIENTOS",
+        align: "center",
+        field: "followups",
+      }
+    )
   }
 
   if (role.value === 'ADMIN') {
     baseColumns.splice(4, 0,
-    {
-      name: "apprentice",
-      label: "NOMBRE APRENDIZ",
-      align: "center",
-      field: "apprentice",
-    },
-    {
-      name: "fiche",
-      label: "PROGRAMA",
-      align: "center",
-      field: "fiche",
-    },
-    {
-      name: "modality",
-      label: "MODALIDAD",
-      align: "center",
-      field: "modality",
-    },
-    
-    {
-      name: "followUpInstructor",
-      label: "INS. SEGUIMIENTO",
-      align: "center",
-      field: "followUpInstructor",
-    },
-    {
-      name: "technicalInstructor",
-      label: "INS. TÉCNICO",
-      align: "center",
-      field: "technicalInstructor",
-    },
-    {
-      name: "projectInstructor",
-      label: "INS. PROYECTO",
-      align: "center",
-      field: "projectInstructor",
-    })
+      {
+        name: "apprentice",
+        label: "NOMBRE APRENDIZ",
+        align: "center",
+        field: "apprentice",
+      },
+      {
+        name: "fiche",
+        label: "PROGRAMA",
+        align: "center",
+        field: "fiche",
+      },
+      {
+        name: "modality",
+        label: "MODALIDAD",
+        align: "center",
+        field: "modality",
+      },
+
+      {
+        name: "followUpInstructor",
+        label: "INS. SEGUIMIENTO",
+        align: "center",
+        field: "followUpInstructor",
+      },
+      {
+        name: "technicalInstructor",
+        label: "INS. TÉCNICO",
+        align: "center",
+        field: "technicalInstructor",
+      },
+      {
+        name: "projectInstructor",
+        label: "INS. PROYECTO",
+        align: "center",
+        field: "projectInstructor",
+      })
   }
 
   return baseColumns;
@@ -369,43 +399,94 @@ async function handleToggleActivate(id, status) {
   }
 }
 
-async function onSubmit() {
+const allowedAssignments = ref([]);
+const onSubmit = async () => {
   loading.value = true;
   isLoading.value = true;
+
+  console.log("resApp", theApprentice.value);
+  const apprenticeId = theApprentice.value;
+
   try {
-    let url = ref();
-    let data = {
-      register: fichaRegistro.value,
-      certificationdoc: textCertificacion.value,
-      judymenthphoto: textFotoJudicial.value,
-    };
-    if (filterInstructorFollowUp != "")
-      data.followInstructor = filterInstructorFollowUp.value;
-    // if (filterInstructorTecnico != '') data.technicalInstructor = filterInstructorTecnico.value
-    // if (filterInstructorProyecto != '') data.proyectInstructor = filterInstructorProyecto.value
-    if (change.value === true) {
-      url.value = await postData(`/assignment/addassignment`, data);
-      notifySuccessRequest("Asignación creado exitosamente");
+    const response = await getData(`register/listregisterbyapprentice/${apprenticeId}`);
+
+    // Acceder directamente a la propiedad 'data' en la respuesta
+    const data = response.data; // Esto obtiene el array que buscas
+
+    console.log("Contenido de data:", data);
+
+    if (Array.isArray(data) && data.length > 0) {
+      const firstItem = data[0];
+      console.log("Primer elemento de data:", firstItem);
+
+      if (firstItem?.allowedAssignments) {
+        allowedAssignments.value = firstItem.allowedAssignments;
+        console.log("Allowed Assignments actualizado:", allowedAssignments.value);
+      } else {
+        console.error("El primer elemento no contiene 'allowedAssignments'.");
+        allowedAssignments.value = [];
+      }
     } else {
-      url.value = await putData(
-        `/assignment/updateassignmentbyid/${idAssignment.value}`,
-        data
-      );
-      notifySuccessRequest("Asignación actualizada exitosamente");
+      console.error("No se encontraron registros válidos en 'data'.");
+      allowedAssignments.value = [];
     }
-    showModal.value = false;
-    bring();
-    onReset();
   } catch (error) {
-    console.log(error);
-    notifyErrorRequest(
-      error?.response?.data?.errors?.[0]?.msg || "Error desconocido"
-    );
+    console.error('Error al obtener los datos:', error);
   } finally {
     loading.value = false;
     isLoading.value = false;
   }
+};
+
+
+function onApprenticeSelected() {
+  if (theApprentice.value) {
+    showInputs.value = true; // Activa los inputs
+  }
 }
+
+// Ejecutar la función al montar el componente
+onMounted(() => {
+  onSubmit();
+});
+
+// async function onSubmit() {
+//   loading.value = true;
+//   isLoading.value = true;
+//   try {
+//     let url = ref();
+//     let data = {
+//       register: fichaRegistro.value,
+//       certificationdoc: textCertificacion.value,
+//       judymenthphoto: textFotoJudicial.value,
+//     };
+//     if (filterInstructorFollowUp != "")
+//       data.followInstructor = filterInstructorFollowUp.value;
+//     // if (filterInstructorTecnico != '') data.technicalInstructor = filterInstructorTecnico.value
+//     // if (filterInstructorProyecto != '') data.proyectInstructor = filterInstructorProyecto.value
+//     if (change.value === true) {
+//       url.value = await postData(`/assignment/addassignment`, data);
+//       notifySuccessRequest("Asignación creado exitosamente");
+//     } else {
+//       url.value = await putData(
+//         `/assignment/updateassignmentbyid/${idAssignment.value}`,
+//         data
+//       );
+//       notifySuccessRequest("Asignación actualizada exitosamente");
+//     }
+//     showModal.value = false;
+//     bring();
+//     onReset();
+//   } catch (error) {
+//     console.log(error);
+//     notifyErrorRequest(
+//       error?.response?.data?.errors?.[0]?.msg || "Error desconocido"
+//     );
+//   } finally {
+//     loading.value = false;
+//     isLoading.value = false;
+//   }
+// }
 
 function onReset() {
   fichaRegistro.value = "";
@@ -521,7 +602,6 @@ const filterApprentice = async (val, update) => {
   try {
     // Llamada a la API para obtener los datos
     let response = await getData("/register/listallregister");
-    console.log("Respuesta de la API:", response);
 
     // Verifica si la respuesta contiene un arreglo en la propiedad register
     if (response.register && Array.isArray(response.register)) {
@@ -565,6 +645,20 @@ const filterApprentice = async (val, update) => {
     );
   }
 };
+
+// const functionAllowedAssignment = async (optionsApprentice) => {
+//   const apprenticeId = optionsApprentice.value;
+//   const response = await axios.get(`register/listregisterbyapprentice/${apprenticeId}`);
+//   console.log(response);
+
+//   if (response.data.success) {
+//     allowedAssignments.value = response.data.data[0]?.allowedAssignments || [];
+//     allowedAssignments.value.forEach(role => {
+//       formValues.value[typeInstructor] = ""; // Inicializa cada rol en blanco.
+//     });
+//   }
+
+// }
 
 </script>
 <style scoped>

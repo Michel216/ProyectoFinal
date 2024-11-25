@@ -32,19 +32,56 @@ const register = {
     },
 
     //listar registro por aprendiz
-    getlistregisterbyapprentice: async (req, res) => {
-
+    getListRegisterByApprentice: async (req, res) => {
         try {
-            const idapprentice = req.params.idapprentice
-            const listRegisterByapprentice = await Register.find({ apprentice: idapprentice });
-            res.json({ listRegisterByapprentice });
-
+            const { idapprentice } = req.params;
+    
+            // Validar el ID del aprendiz
+            if (!idapprentice) {
+                return res.status(400).json({ message: "ID del aprendiz no proporcionado." });
+            }
+    
+            // Obtener registros asociados al aprendiz
+            const listRegisterByApprentice = await Register.find({ apprentice: idapprentice }).populate("modality");
+    
+            if (!listRegisterByApprentice || listRegisterByApprentice.length === 0) {
+                return res.status(404).json({ message: "No se encontraron registros para el aprendiz proporcionado." });
+            }
+    
+            // Modalidades y asignaciones válidas
+            const validModalities = {
+                "PASANTIA": ["followupInstructor"],
+                "VINCULO LABORAL": ["followupInstructor"],
+                "UNIDAD PRODUCTIVA FAMILIAR": ["followupInstructor"],
+                "CONTRATO DE APRENDIZAJE": ["followupInstructor"],
+                "PROYECTO EMPRESARIAL": ["followupInstructor", "technicalInstructor", "projectInstructor"],
+                "PROYECTO PRODUCTIVO": ["followupInstructor", "technicalInstructor"],
+                "PROYECTO PRODUCTIVO  I+D": ["followupInstructor", "technicalInstructor", "projectInstructor"],
+                "PROYECTO SOCIAL": ["followupInstructor", "technicalInstructor"]
+            };
+    
+            // Verificar las modalidades y asignaciones permitidas para cada registro
+            const response = listRegisterByApprentice.map(register => {
+                const modalityName = register.modality?.name;
+                const allowedAssignments = validModalities[modalityName] || [];
+                return {
+                    registerId: register._id,
+                    modality: modalityName || "Sin modalidad",
+                    allowedAssignments
+                };
+            });
+    
+            res.status(200).json({
+                success: true,
+                message: "Registros obtenidos correctamente.",
+                data: response
+            });
         } catch (error) {
-            console.log({ error })
-            res.status(400).json({ error: 'error al listar el registro del id del aprendiz ' })
+            console.error("Error al listar los registros por aprendiz:", error);
+            res.status(500).json({ error: "Error al listar los registros del aprendiz." });
         }
-
     },
+    
 
     //listar por ficha
 
@@ -273,39 +310,158 @@ const register = {
             res.status(400).json({ error: "Error al desactivar registro" })
         }
     },
-    putAddAssignment: async (req, res) => {
-        const { apprentice, followInstructor, technicalInstructor, proyectInstructor } = req.body;
+    // putAddAssignment: async (req, res) => {
+    //     const { apprentice, followInstructor, technicalInstructor, proyectInstructor } = req.body;
 
+    //     try {
+    //         // Busca el registro asociado al aprendiz
+    //         const registerToApprentice = await Register.findOne({ apprentice });
+
+    //         if (!registerToApprentice) {
+    //             return res.status(404).json({ msg: "No se encontró un registro para el aprendiz especificado." });
+    //         }
+
+    //         // Crear el objeto de la nueva asignación
+    //         const newAssignment = {
+    //             followUpInstructor: followInstructor ? { name: followInstructor } : null,
+    //             technicalInstructor: technicalInstructor ? { name: technicalInstructor } : null,
+    //             projectInstructor: proyectInstructor ? { name: proyectInstructor } : null,
+    //         };
+
+    //         const updatedRegister = await Register.findByIdAndUpdate(
+    //             registerToApprentice._id,
+    //             { $push: { assignment: newAssignment } },
+    //             { new: true } // Para devolver el documento actualizado
+    //         );
+
+    //         // Responder con el registro actualizado
+    //         res.status(201).json({ updatedRegister });
+    //     } catch (error) {
+    //         console.error("Error al agregar la asignación:", error);
+    //         res.status(500).json({ msg: "Error al agregar la asignación", error });
+    //     }
+    // },
+
+    addAssignment: async (req, res) => {
+        const { id, assignment } = req.body;
+    
         try {
-            // Busca el registro asociado al aprendiz
-            const registerToApprentice = await Register.findOne({ apprentice });
-
-            if (!registerToApprentice) {
-                return res.status(404).json({ msg: "No se encontró un registro para el aprendiz especificado." });
+            // Validación del ID
+            // if (!id || typeof id !== "string") {
+            //     return res.status(400).json({ message: "ID inválido o no proporcionado" });
+            // }
+    
+            // Buscar el registro en la base de datos
+            const register = await Register.findOne({ apprentice: id }).populate("modality");
+            if (!register) {
+                return res.status(404).json({ message: "Registro no encontrado para el aprendiz" });
             }
-
-            // Crear el objeto de la nueva asignación
-            const newAssignment = {
-                followUpInstructor: followInstructor ? { name: followInstructor } : null,
-                technicalInstructor: technicalInstructor ? { name: technicalInstructor } : null,
-                projectInstructor: proyectInstructor ? { name: proyectInstructor } : null,
+            
+    
+            // Modalidades y tipos de instructores permitidos
+            const validModalities = {
+                "PASANTIA": ["followupInstructor"],
+                "VINCULO LABORAL": ["followupInstructor"],
+                "UNIDAD PRODUCTIVA FAMILIAR": ["followupInstructor"],
+                "CONTRATO DE APRENDIZAJE": ["followupInstructor"],
+                "PROYECTO EMPRESARIAL": ["followupInstructor", "technicalInstructor", "projectInstructor"],
+                "PROYECTO PRODUCTIVO": ["followupInstructor", "technicalInstructor"],
+                "PROYECTO PRODUCTIVO  I+D": ["followupInstructor", "technicalInstructor", "projectInstructor"],
+                "PROYECTO SOCIAL": ["followupInstructor", "technicalInstructor"]
             };
-
-            const updatedRegister = await Register.findByIdAndUpdate(
-                registerToApprentice._id,
-                { $push: { assignment: newAssignment } },
-                { new: true } // Para devolver el documento actualizado
-            );
-
-            // Responder con el registro actualizado
-            res.status(201).json({ updatedRegister });
+    
+            const modalityName = register.modality?.name;
+            const allowedAssignments = validModalities[modalityName];
+    
+            if (!allowedAssignments) {
+                return res.status(400).json({
+                    message: `La modalidad "${modalityName}" no permite asignaciones.`
+                });
+            }
+    
+            // Si no se envió la asignación, devolver los roles permitidos
+            if (!assignment) {
+                return res.status(200).json({
+                    success: true,
+                    message: "Roles permitidos para esta modalidad",
+                    allowedAssignments
+                });
+            }
+    
+            // Validar que la asignación sea un objeto válido
+            if (typeof assignment !== "object") {
+                return res.status(400).json({ message: "La asignación no es válida o no se proporcionó correctamente." });
+            }
+    
+            // Crear o recuperar la asignación activa
+            let currentAssignment = register.assignment.find(a => a.status === 1);
+            if (!currentAssignment) {
+                currentAssignment = { status: 1 };
+                register.assignment.push(currentAssignment);
+            }
+    
+            // Desactivar instructores previos en roles permitidos
+            allowedAssignments.forEach(role => {
+                if (currentAssignment[role]) {
+                    currentAssignment[role].forEach(instructor => {
+                        instructor.status = 0; // Desactivar instructores previos
+                    });
+                }
+            });
+    
+            // Procesar y actualizar instructores enviados
+            allowedAssignments.forEach(role => {
+                if (assignment[role]) {
+                    if (!Array.isArray(assignment[role])) {
+                        assignment[role] = [assignment[role]]; // Convertir a arreglo si es un único instructor
+                    }
+    
+                    assignment[role].forEach(instructor => {
+                        if (!currentAssignment[role]) {
+                            currentAssignment[role] = []; // Inicializar si no existe
+                        }
+    
+                        const existingInstructor = currentAssignment[role].find(
+                            existing =>
+                                existing.idInstructor &&
+                                existing.idInstructor.toString() === instructor.idInstructor.toString()
+                        );
+    
+                        if (existingInstructor) {
+                            // Actualizar datos del instructor existente
+                            existingInstructor.name = instructor.name;
+                            existingInstructor.email = instructor.email;
+                            existingInstructor.status = 1; // Activar el instructor
+                        } else {
+                            // Agregar nuevo instructor
+                            currentAssignment[role].push({
+                                idInstructor: instructor.idInstructor,
+                                name: instructor.name,
+                                email: instructor.email,
+                                status: 1 // Nuevo instructor activo
+                            });
+                        }
+                    });
+                }
+            });
+    
+            // Guardar cambios en la base de datos
+            await register.save();
+    
+            res.status(200).json({
+                success: true,
+                message: "Asignación actualizada correctamente",
+                data: register
+            });
         } catch (error) {
-            console.error("Error al agregar la asignación:", error);
-            res.status(500).json({ msg: "Error al agregar la asignación", error });
+            console.error("Error al actualizar la asignación:", error);
+            res.status(500).json({
+                success: false,
+                message: error.message || "Error al actualizar la asignación"
+            });
         }
     },
-
-
+    
     updateRegisterModality: async (req, res) => {
         const { id } = req.params;
         const { idModality, docAlternative } = req.body;

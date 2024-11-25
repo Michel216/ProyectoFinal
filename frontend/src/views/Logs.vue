@@ -135,7 +135,7 @@ const handleSubmit = async () => {
     else if (rol.value === "CONSULTOR") {
       data = await postLogin("/apprentice/loginapprentice", {
         institutionalEmail: email.value,
-        numDocument: cedula.value,
+        numDocument: document.value,
         data: "Log in de aprendiz"
       });
     }

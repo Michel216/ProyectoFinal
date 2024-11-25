@@ -24,7 +24,7 @@ registerRoute.get('/listregisterbyid/:id', [
 registerRoute.get('/listregisterbyapprentice/:idapprentice', [
     // validateJWT,
     check('idapprentice', 'El ID del aprendiz debe ser un ID válido de MongoDB').notEmpty().isMongoId(),
-    validateFields], registerController.getlistregisterbyapprentice);
+    validateFields], registerController.getListRegisterByApprentice);
 
 //obtener registro por id de la ficha   
 registerRoute.get('/listregistersbyfiche/:idfiche', [
@@ -105,13 +105,13 @@ registerRoute.put('/disableregister/:id', [
     validateFields], registerController.putdisableregister)
 
     registerRoute.put('/addassignment', [
-        validateJWT,
+        // validateJWT,
 check('apprentice', 'El aprendiz es obligatio Y tiene que ser un id').notEmpty().isMongoId(),
         check('followInstructor', 'El followInstructor debe ser un ID de MongoDB válido').optional().isMongoId(),
         check('technicalInstructor', 'El technicalInstructor debe ser un ID de MongoDB válido').optional().isMongoId(),
         check('proyectInstructor', 'El proyectInstructor debe ser un ID de MongoDB válido').optional().isMongoId(),
-        validateAtLeastOneInstructor(),
+        // validateAtLeastOneInstructor(),
         validateFields
-    ], registerController.putAddAssignment);
+    ], registerController.addAssignment);
 
 module.exports = registerRoute;
