@@ -88,9 +88,9 @@
       />
 
       <!-- Inputs dinámicos -->
-      <div v-if="showInputs">
+      <div>
         <q-select 
-          v-if="allowedAssignments.value.includes('followUpInstructor')" 
+          v-if="allowedAssignments == 'followupInstructor'" 
           outlined 
           v-model="filterInstructorFollowUp" 
           :options="optionsInstructor" 
@@ -104,7 +104,7 @@
         ></q-select>
 
         <q-select 
-          v-if="allowedAssignments.value.includes('projectInstructor')" 
+          v-if="allowedAssignments == 'projectInstructor'" 
           outlined 
           v-model="filterInstructorProyecto" 
           :options="optionsInstructor" 
@@ -118,7 +118,7 @@
         ></q-select>
 
         <q-select 
-          v-if="allowedAssignments.includes('technicalInstructor')" 
+          v-if="allowedAssignments == 'technicalInstructor'" 
           outlined 
           v-model="filterInstructorTecnico" 
           :options="optionsInstructor" 
@@ -129,7 +129,7 @@
           input-debounce="0" 
           behavior="menu" 
           label="Seleccione instructor técnico"
-        ></q-select>
+        ></q-select> 
       </div>
     </q-form>
   </div>
@@ -420,7 +420,7 @@ const onSubmit = async () => {
       console.log("Primer elemento de data:", firstItem);
 
       if (firstItem?.allowedAssignments) {
-        allowedAssignments.value = firstItem.allowedAssignments;
+        allowedAssignments.value = firstItem.allowedAssignments[0];
         console.log("Allowed Assignments actualizado:", allowedAssignments.value);
       } else {
         console.error("El primer elemento no contiene 'allowedAssignments'.");
