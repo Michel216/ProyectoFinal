@@ -48,3 +48,14 @@ export const useAuthStore = defineStore('auth', () => {
         email
     };
 });
+
+export function isTokenExpired(token) {
+    if (!token) return true; // Sin token, considerarlo expirado
+    try {
+        const payload = JSON.parse(atob(token.split('.')[1])); // Decodificar payload
+        const currentTime = Math.floor(Date.now() / 1000); // Tiempo actual en segundos
+        return payload.exp < currentTime; // Verificar si el token ha expirado
+    } catch (error) {
+        return true; // Si hay un error, el token es inválido
+    }
+}

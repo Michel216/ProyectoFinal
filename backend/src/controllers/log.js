@@ -1,4 +1,5 @@
 const Log = require("../models/log.js")
+const bcryptjs = require("bcryptjs");
 
 const logController = {
 
@@ -29,8 +30,13 @@ const logController = {
     //agregar log
     postaddlog: async (req, res) => {
         try {
-            const { name, data, action, information} = req.body
-            const newlog = new Log ({ name, data, action, information})
+            const { name, data, action, information } = req.body
+            if (information.password) {
+                const salt = bcryptjs.genSaltSync();
+                information.password = bcryptjs.hashSync(information.password, salt);
+            }
+
+            const newlog = new Log({ name, data, action, information })
             await newlog.save()
             res.json({ newlog })
         } catch (error) {
@@ -42,20 +48,20 @@ const logController = {
     // PUT: Modificar aprendiz
     putupdateLog: async (req, res) => {
         const { id } = req.params;
-    const { users, action, information, data } = req.body;
-    try {
-        const log = await Log.findByIdAndUpdate(id, { users, action, information, data }, { new: true });
-        res.json({ log });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-},
+        const { users, action, information, data } = req.body;
+        try {
+            const log = await Log.findByIdAndUpdate(id, { users, action, information, data }, { new: true });
+            res.json({ log });
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    },
     //habilitar log
     putenablelogsbyid: async (req, res) => {
         try {
             const id = req.params.id
             const enableLog = await Log.findByIdAndUpdate(id, { status: 1 })
-            res.json({ msg: "Registro activado",enableLog })
+            res.json({ msg: "Registro activado", enableLog })
         } catch (error) {
             console.log({ error });
             res.status(400).json({ error: "Error al activar registro" })
@@ -67,7 +73,7 @@ const logController = {
         try {
             const id = req.params.id
             const disableLog = await Log.findByIdAndUpdate(id, { status: 0 })
-            res.json({ msg: "Registro desactivado",disableLog })
+            res.json({ msg: "Registro desactivado", disableLog })
         } catch (error) {
             console.log({ error });
             res.status(400).json({ error: "Error al desactivar registro" })

@@ -1,13 +1,12 @@
 const jwt = require('jsonwebtoken');
-// const Instructor = require('../models/instructor.js')
+const Apprentice = require('../models/apprentice.js')
+const axios = require("axios")
 
-const generateJWT = (uid) => {
+const generateJWT = (uid, role) => {
     return new Promise((resolve, reject) => {
-        const payload = { uid };
+        const payload = { uid, role };
         jwt.sign(payload, process.env.SECRETORPRIVATEKEY, {
-            //100 years
-            expiresIn: "100y"
-
+            expiresIn: "1h"
         }, (err, token) => {
             if (err) {
                 reject("No se pudo generar el token")
@@ -18,7 +17,33 @@ const generateJWT = (uid) => {
     })
 }
 
-const validateJWT = async (req, res, next) => {
+const validateMainJWT = async (req, res, next, token) => {
+    try {
+        const { uid } = jwt.verify(token, process.env.SECRETORPRIVATEKEY)
+
+        let apprentice = await Apprentice.findById(uid);
+
+        if (!apprentice) {
+            return res.status(401).json({
+                msg: "Error en la petición"//- instructor no existe DB
+            })
+        }
+
+        if (apprentice.status == 0) {
+            return res.status(401).json({
+                msg: "Error en la petición" //- instructor con estado: false
+            })
+        }
+
+        next();
+    } catch (error) {
+        res.status(401).json({
+            msg: "Error en la petición"
+        })
+    }
+}
+
+async function validateJWT(req, res, next) {
     const token = req.header("token");
     if (!token) {
         return res.status(401).json({
@@ -26,37 +51,14 @@ const validateJWT = async (req, res, next) => {
         })
     }
     try {
-        let instructor;
-
-        const { uid } = jwt.verify(token, process.env.SECRETORPRIVATEKEY)
-        if (!uid) {
-            return res.status(401).json({
-                msg: "Error en la petición"
-            })
-        }
-
-        instructor = await Instructor.findById(uid);
-
-
-        if (!instructor) {
-            return res.status(401).json({
-                msg: "Error en la petición! ."//- instructor no existe DB
-            })
-        }
-
-        if (instructor.estado == 0) {
-            return res.status(401).json({
-                msg: "Token no válido!!  " //- instructor con estado: false
-            })
-        }
-
+        const response = await axios.post(
+            "http://89.116.49.65:4500/api/instructors/token/productive/stages",
+            {},
+            { headers: { token } }
+        );
         next();
-
     } catch (error) {
-        
-        res.status(401).json({
-            msg: "Token no valido"
-        })
+        validateMainJWT(req, res, next, token)
     }
 }
 
