@@ -78,20 +78,12 @@
       </q-select>
 
       <!-- Botón de guardar -->
-      <q-btn 
-        label="Guardar" 
-        type="button" 
-        color="primary" 
-        class="full-width" 
-        @click="onSubmit" 
-        :disable="!theApprentice" 
-      />
+   
 
       <!-- Inputs dinámicos -->
-       
-      <div>
+      <div v-for="(item, index) in allowedAssignments" :key="index">
         <q-select 
-          v-if="allowedAssignments =='followpInstructor'" 
+          v-if="item.include('followupInstructor' )" 
           outlined 
           v-model="filterInstructorFollowUp" 
           :options="optionsInstructor" 
@@ -104,8 +96,8 @@
           label="Seleccione instructor de seguimiento"
         ></q-select>
 
-        <!-- <q-select 
-          v-if="allowedAssignments =='projectInstructor'" 
+        <q-select 
+          v-if="item.include('projectInstructor')" 
           outlined 
           v-model="filterInstructorProyecto" 
           :options="optionsInstructor" 
@@ -119,7 +111,7 @@
         ></q-select>
 
         <q-select 
-          v-if="allowedAssignments =='technicalInstructor'" 
+          v-if="item.include('technicalInstructor')" 
           outlined 
           v-model="filterInstructorTecnico" 
           :options="optionsInstructor" 
@@ -130,8 +122,17 @@
           input-debounce="0" 
           behavior="menu" 
           label="Seleccione instructor técnico"
-        ></q-select> -->
+        ></q-select> 
+        <br>
       </div>
+      <q-btn 
+      label="Guardar" 
+      type="button" 
+      color="primary" 
+      class="full-width" 
+      @click="onSubmit" 
+      :disable="!theApprentice" 
+    />
     </q-form>
   </div>
 </Modal>
@@ -417,11 +418,11 @@ const onSubmit = async () => {
     console.log("Contenido de data:", data);
 
     if (Array.isArray(data) && data.length > 0) {
-      const firstItem = data[0];
-      console.log("Primer elemento de data:", firstItem);
+  
+      console.log("Primer elemento de data:", data);
 
-      if (firstItem?.allowedAssignments) {
-        allowedAssignments.value = firstItem.allowedAssignments[0];
+      if (data?.allowedAssignments) {
+        allowedAssignments.value = data.allowedAssignments;
         console.log("Allowed Assignments actualizado:", allowedAssignments.value);
       } else {
         console.error("El primer elemento no contiene 'allowedAssignments'.");
