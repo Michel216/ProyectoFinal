@@ -1,5 +1,4 @@
 import axios from 'axios'
-
 const token = localStorage.getItem('token');  // Ejemplo de cómo obtener el token
 // "token": token,
 const apiClient = axios.create({
@@ -11,7 +10,5 @@ const apiClient = axios.create({
         "token": token
     }
 });
-
-
 
 export default apiClient;
