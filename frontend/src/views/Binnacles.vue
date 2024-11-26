@@ -360,8 +360,7 @@ async function bring() {
       rows.value = await Promise.all(data.ListAllBinnacles.map(async (item, idx) => {
         // Obtener los datos del instructor desde su ID
         const instructorId = item.instructor;  // Accedemos al 'instructor' de cada 'item'
-        const instructorData = await getDataRepfora(`/instructors/${instructorId}`);  // Obtener datos del instructor por ID
-        // console.log(instructorData)
+        const instructorData = await getDataRepfora(`/instructors/${instructorId}`)
 
         // Verificar que 'assignment' y 'apprentice' existen antes de acceder a ellos
         const assignmentApprentice = item.assignment && item.assignment.apprentice

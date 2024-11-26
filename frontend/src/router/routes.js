@@ -61,6 +61,27 @@ const router = createRouter({
     routes
 });
 
+// router.beforeEach((to, from, next) => {
+//     const authStore = useAuthStore();
+//     const token = authStore.getToken();
+//     const role = authStore.getRole();
+
+//     // Verificar si no está autenticado y la ruta requiere autenticación
+//     if (to.meta.requiresAuth && !token) {
+//         next({ path: '/' }); // Redirigir al login si no hay token
+//     } 
+//     // Verificar si es "APRENDIZ" y está intentando acceder a algo que no sea "Binnacles"
+//     // else if (role === 'CONSULTOR' && to.path !== '/HomeApprentice') {
+//     //     next({ path: '/HomeApprentice' }); // Redirigir automáticamente a la única ruta permitida
+//     // } 
+//     // Verificar si el rol no coincide con el rol requerido por la ruta
+//     else if (to.meta.rol && !to.meta.rol.includes(role)) {
+//         next({ path: '/login' }); // Redirigir si el rol no coincide
+//     } else {
+//         next(); // Continuar a la ruta solicitada
+//     }
+// });
+
 router.beforeEach((to, from, next) => {
     const authStore = useAuthStore();
     const token = authStore.getToken();
@@ -81,5 +102,6 @@ router.beforeEach((to, from, next) => {
         next(); // Continuar a la ruta solicitada
     }
 });
+
 
 export default router;

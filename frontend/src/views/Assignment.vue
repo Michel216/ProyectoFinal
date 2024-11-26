@@ -78,19 +78,12 @@
       </q-select>
 
       <!-- Botón de guardar -->
-      <q-btn 
-        label="Guardar" 
-        type="button" 
-        color="primary" 
-        class="full-width" 
-        @click="onSubmit" 
-        :disable="!theApprentice" 
-      />
+   
 
       <!-- Inputs dinámicos -->
-      <div v-if="showInputs">
+      <div >
         <q-select 
-          v-if="allowedAssignments.value.includes('followUpInstructor')" 
+          v-if="allowedAssignments.includes('followupInstructor')" 
           outlined 
           v-model="filterInstructorFollowUp" 
           :options="optionsInstructor" 
@@ -98,19 +91,21 @@
           map-options 
           clearable 
           use-input 
+          @filter="filterInstructors"
           input-debounce="0" 
           behavior="menu" 
           label="Seleccione instructor de seguimiento"
         ></q-select>
 
         <q-select 
-          v-if="allowedAssignments.value.includes('projectInstructor')" 
+          v-if="allowedAssignments.includes('projectInstructor')" 
           outlined 
           v-model="filterInstructorProyecto" 
           :options="optionsInstructor" 
           emit-value 
           map-options 
           clearable 
+          @filter="filterInstructors"
           use-input 
           input-debounce="0" 
           behavior="menu" 
@@ -123,14 +118,25 @@
           v-model="filterInstructorTecnico" 
           :options="optionsInstructor" 
           emit-value 
+          @filter="filterInstructors"
           map-options 
           clearable 
           use-input 
           input-debounce="0" 
           behavior="menu" 
           label="Seleccione instructor técnico"
-        ></q-select>
+        ></q-select> 
+        <br>
       </div>
+      <!-- <q-btn 
+      label="Guardar" 
+      type="button" 
+      color="primary" 
+      class="full-width" 
+      @click="onSubmit" 
+      :disable="!theApprentice" 
+    /> -->
+    <q-btn :label="buttonText" @click="onSubmit" color="primary"  :disable="!theApprentice" />
     </q-form>
   </div>
 </Modal>
@@ -181,8 +187,8 @@ const submitResult = ref([]);
 let searchTerm = ref("");
 let searchLabel = ref('Buscar')
 const selectedValue = ref('');
-// const allowedAssignments = ([]);
-// const allowedAssignments = ref(['followUpInstructor', 'technicalInstructor', 'projectInstructor']);
+const assignment = ref([]);
+//  const allowedAssignments = ref(['followUpInstructor', 'technicalInstructor', 'projectInstructor']);
 
 function radiobtn(evt) {
   const formData = new FormData(evt.target)
@@ -398,16 +404,41 @@ async function handleToggleActivate(id, status) {
     console.log(error);
   }
 }
-
 const allowedAssignments = ref([]);
+
+const buttonText = ref("") 
+// computed(() => {
+//   return assignment.value.length > 0 ? 'Asignar' : 'Guardar';
+// });
+
 const onSubmit = async () => {
   loading.value = true;
   isLoading.value = true;
+
+  allowedAssignments.value = [];
+ 
 
   console.log("resApp", theApprentice.value);
   const apprenticeId = theApprentice.value;
 
   try {
+  if(assignment.value.length > 0){
+    buttonText.value = "Guardar"
+    const assignmentData = {
+      apprentice: theApprentice.value,
+
+    };
+    if (filterInstructorFollowUp != "") assignmentData.followInstructor = filterInstructorFollowUp.value;
+      if (filterInstructorTecnico != "") assignmentData.technicalInstructor = filterInstructorTecnico.value;
+      if (filterInstructorProyecto != "") assignmentData.proyectInstructor = filterInstructorProyecto.value;
+
+      // Si el cambio es verdadero, realizamos la creación o actualización
+
+console.log(assignmentData)
+        const url = await putData(`/register/addassignment`, assignmentData)
+        notifySuccessRequest("Asignación Creada")
+  }else{
+      buttonText.value = "Asignar"
     const response = await getData(`register/listregisterbyapprentice/${apprenticeId}`);
 
     // Acceder directamente a la propiedad 'data' en la respuesta
@@ -416,11 +447,13 @@ const onSubmit = async () => {
     console.log("Contenido de data:", data);
 
     if (Array.isArray(data) && data.length > 0) {
-      const firstItem = data[0];
-      console.log("Primer elemento de data:", firstItem);
+      console.log("Primer elemento de data:", data[0]);
 
-      if (firstItem?.allowedAssignments) {
-        allowedAssignments.value = firstItem.allowedAssignments;
+      if (data[0]?.allowedAssignments ) {
+        for (let index = 0; index < data[0].allowedAssignments.length; index++) {
+          allowedAssignments.value.push(data[0].allowedAssignments[index])
+          
+        }
         console.log("Allowed Assignments actualizado:", allowedAssignments.value);
       } else {
         console.error("El primer elemento no contiene 'allowedAssignments'.");
@@ -429,9 +462,10 @@ const onSubmit = async () => {
     } else {
       console.error("No se encontraron registros válidos en 'data'.");
       allowedAssignments.value = [];
-    }
+    }}
   } catch (error) {
     console.error('Error al obtener los datos:', error);
+    allowedAssignments.value = [];
   } finally {
     loading.value = false;
     isLoading.value = false;
@@ -517,42 +551,6 @@ async function bringIdAndOpenModal(id) {
   }
 }
 
-// const filterRegister = async (val, update) => {
-//   try {
-//     let res = await getData("/register/listallregister");
-//     console.log("Respuesta de la API:", res);
-
-//     // Verificar si la respuesta tiene la propiedad 'register'
-//     if (res && res.register && Array.isArray(res.register)) {
-//       if (val === "") {
-//         update(() => {
-//           options.value = res.register.map((register) => ({
-//             label: register.apprentice.firstName,
-//             value: register.id,
-//           }));
-//         });
-//         return;
-//       }
-
-//       update(() => {
-//         const needle = val.toLowerCase();
-//         options.value = res.register
-//           .map((register) => ({
-//             label: register.apprentice.firstName,
-//             value: register._id,
-//           }))
-//           .filter((option) => option.label.toLowerCase().includes(needle));
-//       });
-//     } else {
-//       console.error("La respuesta de la API no contiene datos válidos:", res);
-//     }
-//   } catch (error) {
-//     console.error(
-//       "Error al obtener registros:",
-//       error.response ? error.response.data : error
-//     );
-//   }
-// };
 
 const filterInstructors = async (val, update) => {
   try {
@@ -646,19 +644,6 @@ const filterApprentice = async (val, update) => {
   }
 };
 
-// const functionAllowedAssignment = async (optionsApprentice) => {
-//   const apprenticeId = optionsApprentice.value;
-//   const response = await axios.get(`register/listregisterbyapprentice/${apprenticeId}`);
-//   console.log(response);
-
-//   if (response.data.success) {
-//     allowedAssignments.value = response.data.data[0]?.allowedAssignments || [];
-//     allowedAssignments.value.forEach(role => {
-//       formValues.value[typeInstructor] = ""; // Inicializa cada rol en blanco.
-//     });
-//   }
-
-// }
 
 </script>
 <style scoped>
