@@ -15,7 +15,6 @@ import Register from "../views/Register.vue";
 import { useAuthStore } from '../store/useAuth.js'; 
 import Instructors from "../views/Instructors.vue";
 import Layout from "./../layouts/layout.vue";
-import { isTokenExpired } from './../store/useAuth.js'
 
 // Definir la función de autenticación
 const auth = (to, from, next) => {
@@ -88,16 +87,19 @@ router.beforeEach((to, from, next) => {
     const token = authStore.getToken();
     const role = authStore.getRole();
 
-    if (!token || isTokenExpired(token)) {
-        // Eliminar token si está vencido o no existe
-        localStorage.removeItem('token');
-        next({ path: '/' }); // Redirigir al login
+    // Verificar si no está autenticado y la ruta requiere autenticación
+    if (to.meta.requiresAuth && !token) {
+        next({ path: '/' }); // Redirigir al login si no hay token
     } 
-    // Verificar si la ruta requiere autenticación y el rol no coincide
+    // Verificar si es "APRENDIZ" y está intentando acceder a algo que no sea "Binnacles"
+    // else if (role === 'CONSULTOR' && to.path !== '/HomeApprentice') {
+    //     next({ path: '/HomeApprentice' }); // Redirigir automáticamente a la única ruta permitida
+    // } 
+    // Verificar si el rol no coincide con el rol requerido por la ruta
     else if (to.meta.rol && !to.meta.rol.includes(role)) {
-        next({ path: '/' }); // Redirigir si no tiene permisos
+        next({ path: '/login' }); // Redirigir si el rol no coincide
     } else {
-        next(); // Continuar normalmente
+        next(); // Continuar a la ruta solicitada
     }
 });
 
