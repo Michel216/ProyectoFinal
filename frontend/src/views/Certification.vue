@@ -1,7 +1,34 @@
 <template>
   <div class="q-pa-md q-gutter-md">
     <Header title="Certificaciones"></Header>
+  
+    <div style="display: flex; flex-direction: row; align-items: flex-start; justify-content: flex-end; margin: -30px 0px">
 
+      <div class="q-pa-md q-gutter-sm" style="display: flex; flex-direction: column; align-items: flex-start;">
+        <div class="text-primary" style="margin-bottom: -30px;">Realizar filtro por</div>
+
+        <!-- Contenedor de los radio buttons y el input, alineados en una fila -->
+        <div style="display: flex; flex-direction: row; align-items: center; justify-content: flex-start; width: 100%;">
+          <!-- Radio buttons -->
+          <div style="display: flex; flex-direction: row; align-items: flex-start; margin-right: 10px;">
+            <q-radio v-model="selectedValue" val="fiche" label="Ficha" dense color="primary"
+              @update:model-value="handleFilter" style="margin-right: 10px;" />
+            <q-radio v-model="selectedValue" val="apprentice" label="Aprendiz" dense color="primary"
+              @update:model-value="handleFilter" style="margin-right: -10px;" />
+          </div>
+
+          <!-- Input de búsqueda alineado a la izquierda -->
+          <div class="q-pa-md" style="flex-grow: 1; display: flex; justify-content: flex-start;">
+            <div class="rounded-input" style=" width: 370px;">
+              <q-input class="q-ml-md" v-model="searchTerm" :label="searchLabel" @input="handleFilter" outlined
+                :disable="!selectedValue" />
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+        <Btn icon="control_point" :label="btnLabel" :onClickFunction="openModalCreate" :loading="loading" />
     <ficheTable :title="title" :columns="columns" :rows="rows" :options="options"
       :toggleSeeApprentice="handleViewApprentices">
     </ficheTable>
@@ -16,10 +43,25 @@ import { useRouter } from 'vue-router';
 import { getDataRepfora } from '../services/apiRepfora.js';
 import Header from '../components/header/Header.vue';
 import { getData, postData, putData } from '../services/apiClient';
+import Btn from "../components/buttons/Button.vue"
+import { icon } from '@fortawesome/fontawesome-svg-core';
 
 const router = useRouter();
 const rows = ref([]); // Almacena la respuesta completa
 const rowsForTable = ref([]); // Solo los datos de `program` para mostrar en la tabla
+let btnLabel = "Crear ";
+let searchTerm = ref("");
+let searchLabel = ref('Ingrese el nombre o número de documento')
+const selectedValue = ref('');function radiobtn(evt) {
+  const formData = new FormData(evt.target)
+  const data = []
+
+  for (const [name, value] of formData.entries()) {
+    data.push({ name, value })
+  }
+
+  submitResult.value = data
+}
 const columns = ref([
   {
     name: "index",
@@ -69,6 +111,7 @@ async function bring() {
     console.log(error);
   }
 }
+
 
 
 </script>

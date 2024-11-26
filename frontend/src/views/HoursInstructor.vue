@@ -1,56 +1,34 @@
 <template>
     <div class="q-pa-md q-gutter-md">
       <Header title="Proyección Horas Instructor EP" />
-  
-      <div class="q-gutter-md row">
-        <!-- Contenedor principal para alinear los elementos -->
-        <div style="display: flex; flex-direction: column; width: 100%;">
-          <!-- Texto arriba de los radio buttons -->
-          <div class="text-primary">Realizar filtro por</div>
-          <!-- Contenedor de los radio buttons y el input de búsqueda -->
-          <div style="display: flex; flex-direction: row; justify-content: flex-end; align-items: center; width: 100%;">
-            <!-- Radio buttons alineados al lado izquierdo del contenedor -->
-            <div style="display: flex; flex-direction: row; margin-right: 20px;">
-              <q-radio
-                v-model="selectedValue"
-                val="year"
-                label="Año"
-                dense
-                color="primary"
-                @update:model-value="handleFilter"
-                style="margin-right: 10px;"
-              />
-              <q-radio
-                v-model="selectedValue"
-                val="month"
-                label="Mes"
-                dense
-                color="primary"
-                @update:model-value="handleFilter"
-                style="margin-right: 10px;"
-              />
-              <q-radio
-                v-model="selectedValue"
-                val="instructor"
-                label="Instructor"
-                dense
-                color="primary"
-                @update:model-value="handleFilter"
-                style="margin-right: 10px;"
-              />
-            </div>
-  
-            <!-- Input de búsqueda alineado a la derecha -->
-            <div class="rounded-input" style="width: 370px;">
-              <q-input
-                filled
-                v-model="text"
-                label="Ingrese el nombre o número de documento"
-              />
+      <div
+      style="display: flex; flex-direction: row; align-items: flex-start; justify-content: flex-end; margin: -30px 0px">
+      <div class="q-pa-md q-gutter-sm" style="display: flex; flex-direction: column; align-items: flex-start;">
+        <div class="text-primary" style="margin-bottom: -30px;">Realizar filtro por</div>
+
+        <!-- Contenedor de los radio buttons y el input, alineados en una fila -->
+        <div style="display: flex; flex-direction: row; align-items: center; justify-content: flex-start; width: 100%;">
+          <!-- Radio buttons -->
+          <div style="display: flex; flex-direction: row; align-items: flex-start; margin-right: 10px;">
+            <q-radio v-model="selectedValue" val="year" label="Año" dense color="primary"
+              @update:model-value="handleFilter" style="margin-right: 10px;" />
+            <q-radio v-model="selectedValue" val="month" label="Mes" dense color="primary"
+              @update:model-value="handleFilter" style="margin-right: 10px;" />
+            <q-radio v-model="selectedValue" val="instructor" label="Instructor" dense color="primary"
+              @update:model-value="handleFilter" style="margin-right: 10px;" />
+          </div>
+
+          <!-- Input de búsqueda alineado a la izquierda -->
+          <div class="q-pa-md" style="flex-grow: 1; display: flex; justify-content: flex-start;">
+            <div class="rounded-input" style=" width: 370px;">
+              <q-input class="q-ml-md" v-model="searchTerm" :label="searchLabel" @input="handleFilter" outlined
+                :disable="!selectedValue" />
             </div>
           </div>
+
         </div>
       </div>
+    </div>
   
       <ficheTable
         :title="title"

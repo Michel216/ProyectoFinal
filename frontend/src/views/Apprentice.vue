@@ -10,8 +10,8 @@
     <div
     style="display: flex; flex-direction: row; align-items: flex-start; justify-content: space-between; margin:  -30px 0">
     <div class="btn" style="display: flex; flex-direction: row;  gap: 10px; margin-left: 10%">
-      <Btn :label="btnLabel" :onClickFunction="bringIdAndOpenModal" :loading="loading" />
-      <Btn :label="btnLabelFile" :onClickFunction="openModalFile" :loading="loading" />
+      <Btn :icon="icons" :label="btnLabel" :onClickFunction="bringIdAndOpenModal" :loading="loading" />
+      <Btn :icon="archive" :label="btnLabelFile" :onClickFunction="openModalFile" :loading="loading" />
       </div>
       <div class="q-pa-md q-gutter-sm" style="display: flex; flex-direction: column; align-items: flex-start;">
         <div class="text-primary" style="margin-bottom: -30px;">Realizar filtro por</div>
@@ -168,6 +168,8 @@ const options = ref([]);
 let loading = ref(false);
 const isLoading = ref(false);
 let title = "Aprendices";
+let icons="history"
+let archive="control_point"
 let btnLabel = "Crear";
 let searchTerm = ref("");
 let searchLabel = ref('Buscar')

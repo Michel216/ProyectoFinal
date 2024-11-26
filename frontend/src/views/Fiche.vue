@@ -95,17 +95,3 @@ function handleViewApprentices(row) {
 
 </script>
 
-<style scoped>
-/* .bg-green-9 {
-  color: green;
-  width: 99%;
-  height: 3.5px;
-  border-radius: 10px;
-  align-items: center;
-}
-.title-table {
-  text-align: center;
-  margin-bottom: 0;
-  font-size: 45px;
-} */
-</style>

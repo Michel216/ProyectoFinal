@@ -1,11 +1,12 @@
 <template>
     <div class="btn">
       <q-btn
-        color="primary"
-        @click="handleClick"
-        :label="isLoading ? '' : label" 
-        :disabled="isLoading" 
-        class="custom-btn"
+      :icon="icon"
+      color="primary"
+      @click="handleClick"
+      :label="isLoading ? '' : label" 
+      :disabled="isLoading" 
+      class="custom-btn"
       >
       <template v-if="isLoading">
         <q-spinner/>
@@ -26,6 +27,10 @@ import {  faEye } from '@fortawesome/free-solid-svg-icons';
 library.add( faEye);
 
 const props = defineProps({
+    icon: {
+      type: String, // Define que es un string para el nombre del ícono
+      default: null // Si no se pasa, no mostrará nada
+    },
     label:{
         type:String,
         require:true,
@@ -35,10 +40,7 @@ const props = defineProps({
         type:Function,
         required: false
     },
-    icon: {
-      type: String, // Define que es un string para el nombre del ícono
-      default: null // Si no se pasa, no mostrará nada
-    },
+
 })
 
 

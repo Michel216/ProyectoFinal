@@ -4,17 +4,16 @@
     <div
       style="display: flex; flex-direction: row; align-items: flex-start; justify-content: flex-end; margin: -30px 0px">
       <div class="q-pa-md q-gutter-sm" style="display: flex; flex-direction: column; align-items: flex-start;">
-        <div class="text-primary" style="margin-bottom: -30px;">Realizar filtro por</div>
-
+        <!-- <div class="text-primary" style="margin-bottom: -30px;">Realizar filtro por</div> -->
         <!-- Contenedor de los radio buttons y el input, alineados en una fila -->
         <div style="display: flex; flex-direction: row; align-items: center; justify-content: flex-start; width: 100%;">
           <!-- Radio buttons -->
-          <div style="display: flex; flex-direction: row; align-items: flex-start; margin-right: 10px;">
+          <!-- <div style="display: flex; flex-direction: row; align-items: flex-start; margin-right: 10px;">
             <q-radio v-model="selectedValue" val="instructor" label="Instructor" dense color="primary"
               @update:model-value="handleFilter" style="margin-right: 10px;" />
             <q-radio v-model="selectedValue" val="assignment" label="Aprendiz" dense color="primary"
               @update:model-value="handleFilter" style="margin-right: -10px;" />
-          </div>
+          </div> -->
 
           <!-- Input de búsqueda alineado a la izquierda -->
           <div class="q-pa-md" style="flex-grow: 1; display: flex; justify-content: flex-start;">
@@ -27,7 +26,6 @@
         </div>
       </div>
     </div>
-
     <Btn :label="btnLabel" :onClickFunction="openModalCreate" :loading="loading" v-if="role === 'INSTRUCTOR'" />
     <binnacleTable :title="title" :columns="columns" :rows="filteredRows" :options="options"
       :onUpdateStatus="handleUpdateStatus" :loading="loading" :val="true" :onClickFunction="openModalObservations" />
@@ -43,8 +41,6 @@
             gap: 20px;
             border-radius: 50px;
           ">
-
-
           <q-select outlined v-model="assignment" label="Seleccione una asignación" :options="optionsAssignment"
             emit-value map-options clearable use-input input-debounce="0" behavior="menu" @filter="filterAssignment"
             lazy-rules :rules="[(val) => (val && val.length > 0) || 'Por favor, seleccione una asignación']">
@@ -109,7 +105,6 @@
             max-width: 100%;
             width: 100vw;
             margin: auto;
-           
             gap: 20px;
             border-radius: 50px;
           ">
