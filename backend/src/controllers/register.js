@@ -35,19 +35,19 @@ const register = {
     getListRegisterByApprentice: async (req, res) => {
         try {
             const { idapprentice } = req.params;
-    
+
             // Validar el ID del aprendiz
             if (!idapprentice) {
                 return res.status(400).json({ message: "ID del aprendiz no proporcionado." });
             }
-    
+
             // Obtener registros asociados al aprendiz
             const listRegisterByApprentice = await Register.find({ apprentice: idapprentice }).populate("modality");
-    
+
             if (!listRegisterByApprentice || listRegisterByApprentice.length === 0) {
                 return res.status(404).json({ message: "No se encontraron registros para el aprendiz proporcionado." });
             }
-    
+
             // Modalidades y asignaciones válidas
             const validModalities = {
                 "PASANTIA": ["followupInstructor"],
@@ -59,7 +59,7 @@ const register = {
                 "PROYECTO PRODUCTIVO  I+D": ["followupInstructor", "technicalInstructor", "projectInstructor"],
                 "PROYECTO SOCIAL": ["followupInstructor", "technicalInstructor"]
             };
-    
+
             // Verificar las modalidades y asignaciones permitidas para cada registro
             const response = listRegisterByApprentice.map(register => {
                 const modalityName = register.modality?.name;
@@ -70,7 +70,7 @@ const register = {
                     allowedAssignments
                 };
             });
-    
+
             res.status(200).json({
                 success: true,
                 message: "Registros obtenidos correctamente.",
@@ -81,7 +81,7 @@ const register = {
             res.status(500).json({ error: "Error al listar los registros del aprendiz." });
         }
     },
-    
+
 
     //listar por ficha
 
@@ -343,21 +343,21 @@ const register = {
     // },
 
     addAssignment: async (req, res) => {
-        const { id, assignment } = req.body;
-    
+        const { apprentice, assignment } = req.body;
+
         try {
             // Validación del ID
             // if (!id || typeof id !== "string") {
             //     return res.status(400).json({ message: "ID inválido o no proporcionado" });
             // }
-    
+
             // Buscar el registro en la base de datos
-            const register = await Register.findOne({ apprentice: id }).populate("modality");
+            const register = await Register.findOne({ apprentice }).populate("modality");
             if (!register) {
                 return res.status(404).json({ message: "Registro no encontrado para el aprendiz" });
             }
-            
-    
+
+
             // Modalidades y tipos de instructores permitidos
             const validModalities = {
                 "PASANTIA": ["followupInstructor"],
@@ -369,16 +369,16 @@ const register = {
                 "PROYECTO PRODUCTIVO  I+D": ["followupInstructor", "technicalInstructor", "projectInstructor"],
                 "PROYECTO SOCIAL": ["followupInstructor", "technicalInstructor"]
             };
-    
+
             const modalityName = register.modality?.name;
             const allowedAssignments = validModalities[modalityName];
-    
+
             if (!allowedAssignments) {
                 return res.status(400).json({
                     message: `La modalidad "${modalityName}" no permite asignaciones.`
                 });
             }
-    
+
             // Si no se envió la asignación, devolver los roles permitidos
             if (!assignment) {
                 return res.status(200).json({
@@ -387,19 +387,19 @@ const register = {
                     allowedAssignments
                 });
             }
-    
+
             // Validar que la asignación sea un objeto válido
             if (typeof assignment !== "object") {
                 return res.status(400).json({ message: "La asignación no es válida o no se proporcionó correctamente." });
             }
-    
+
             // Crear o recuperar la asignación activa
             let currentAssignment = register.assignment.find(a => a.status === 1);
             if (!currentAssignment) {
                 currentAssignment = { status: 1 };
                 register.assignment.push(currentAssignment);
             }
-    
+
             // Desactivar instructores previos en roles permitidos
             allowedAssignments.forEach(role => {
                 if (currentAssignment[role]) {
@@ -408,25 +408,25 @@ const register = {
                     });
                 }
             });
-    
+
             // Procesar y actualizar instructores enviados
             allowedAssignments.forEach(role => {
                 if (assignment[role]) {
                     if (!Array.isArray(assignment[role])) {
                         assignment[role] = [assignment[role]]; // Convertir a arreglo si es un único instructor
                     }
-    
+
                     assignment[role].forEach(instructor => {
                         if (!currentAssignment[role]) {
                             currentAssignment[role] = []; // Inicializar si no existe
                         }
-    
+
                         const existingInstructor = currentAssignment[role].find(
                             existing =>
                                 existing.idInstructor &&
                                 existing.idInstructor.toString() === instructor.idInstructor.toString()
                         );
-    
+
                         if (existingInstructor) {
                             // Actualizar datos del instructor existente
                             existingInstructor.name = instructor.name;
@@ -444,10 +444,10 @@ const register = {
                     });
                 }
             });
-    
+
             // Guardar cambios en la base de datos
             await register.save();
-    
+
             res.status(200).json({
                 success: true,
                 message: "Asignación actualizada correctamente",
@@ -461,7 +461,7 @@ const register = {
             });
         }
     },
-    
+
     updateRegisterModality: async (req, res) => {
         const { id } = req.params;
         const { idModality, docAlternative } = req.body;

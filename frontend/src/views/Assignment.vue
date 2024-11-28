@@ -45,90 +45,45 @@
       </q-card> -->
     <ApprenticeTable :title="title" :rows="filteredRows" :columns="columns" :onToggleActivate="handleToggleActivate"
       :loading="loading" :onClickEdit="bringIdAndOpenModal" />
-      <Modal 
-  :isVisible="showModal" 
-  @update:isVisible="showModal = $event" 
-  :label="btnLabel" 
-  :onClickFunction="onReset"
->
-  <div class="q-pa-md" style="max-width: 400px">
-    <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
-      <!-- Select para escoger al aprendiz -->
-      <q-select 
-        outlined 
-        v-model="theApprentice" 
-        label="Seleccione al aprendiz" 
-        :options="optionsApprentice" 
-        emit-value 
-        map-options 
-        clearable 
-        use-input 
-        input-debounce="0" 
-        behavior="menu" 
-        @filter="filterApprentice"
-      >
-        <template v-slot:no-option>
-          <q-item>
-            <q-item-section class="text-grey">No results</q-item-section>
-          </q-item>
-        </template>
-        <template v-slot:prepend>
-          <font-awesome-icon icon="fa-solid fa-user-graduate" />
-        </template>
-      </q-select>
+    <Modal :isVisible="showModal" @update:isVisible="showModal = $event" :label="btnLabel" :onClickFunction="onReset">
+      <div class="q-pa-md" style="max-width: 400px">
+        <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
+          <!-- Select para escoger al aprendiz -->
+          <q-select outlined v-model="theApprentice" label="Seleccione al aprendiz" :options="optionsApprentice"
+            emit-value map-options clearable use-input input-debounce="0" behavior="menu" @filter="filterApprentice"
+            @update:model-value="listSelect()">
+            <template v-slot:no-option>
+              <q-item>
+                <q-item-section class="text-grey">No results</q-item-section>
+              </q-item>
+            </template>
+            <template v-slot:prepend>
+              <font-awesome-icon icon="fa-solid fa-user-graduate" />
+            </template>
+          </q-select>
 
-      <!-- Botón de guardar -->
-   
+          <!-- Botón de guardar -->
 
-      <!-- Inputs dinámicos -->
-      <div >
-        <q-select 
-          v-if="allowedAssignments.includes('followupInstructor')" 
-          outlined 
-          v-model="filterInstructorFollowUp" 
-          :options="optionsInstructor" 
-          emit-value 
-          map-options 
-          clearable 
-          use-input 
-          @filter="filterInstructors"
-          input-debounce="0" 
-          behavior="menu" 
-          label="Seleccione instructor de seguimiento"
-        ></q-select>
 
-        <q-select 
-          v-if="allowedAssignments.includes('projectInstructor')" 
-          outlined 
-          v-model="filterInstructorProyecto" 
-          :options="optionsInstructor" 
-          emit-value 
-          map-options 
-          clearable 
-          @filter="filterInstructors"
-          use-input 
-          input-debounce="0" 
-          behavior="menu" 
-          label="Seleccione instructor de proyecto"
-        ></q-select>
+          <!-- Inputs dinámicos -->
+          <div>
+            <q-select v-if="allowedAssignments.includes('followupInstructor')" outlined
+              v-model="filterInstructorFollowUp" :options="optionsInstructor" emit-value map-options clearable use-input
+              @filter="filterInstructors" input-debounce="0" behavior="menu"
+              label="Seleccione instructor de seguimiento"></q-select>
 
-        <q-select 
-          v-if="allowedAssignments.includes('technicalInstructor')" 
-          outlined 
-          v-model="filterInstructorTecnico" 
-          :options="optionsInstructor" 
-          emit-value 
-          @filter="filterInstructors"
-          map-options 
-          clearable 
-          use-input 
-          input-debounce="0" 
-          behavior="menu" 
-          label="Seleccione instructor técnico"
-        ></q-select> 
-        <br>
-      </div>
-      <!-- <q-btn 
+            <q-select v-if="allowedAssignments.includes('projectInstructor')" outlined
+              v-model="filterInstructorProyecto" :options="optionsInstructor" emit-value map-options clearable
+              @filter="filterInstructors" use-input input-debounce="0" behavior="menu"
+              label="Seleccione instructor de proyecto"></q-select>
+
+            <q-select v-if="allowedAssignments.includes('technicalInstructor')" outlined
+              v-model="filterInstructorTecnico" :options="optionsInstructor" emit-value @filter="filterInstructors"
+              map-options clearable use-input input-debounce="0" behavior="menu"
+              label="Seleccione instructor técnico"></q-select>
+            <br>
+          </div>
+          <!-- <q-btn 
       label="Guardar" 
       type="button" 
       color="primary" 
@@ -136,10 +91,10 @@
       @click="onSubmit" 
       :disable="!theApprentice" 
     /> -->
-    <q-btn :label="buttonText" @click="onSubmit" color="primary"  :disable="!theApprentice" />
-    </q-form>
-  </div>
-</Modal>
+          <q-btn label="Guardar" type="submit" color="primary" :disable="!theApprentice" />
+        </q-form>
+      </div>
+    </Modal>
 
   </div>
 </template>
@@ -406,39 +361,22 @@ async function handleToggleActivate(id, status) {
 }
 const allowedAssignments = ref([]);
 
-const buttonText = ref("") 
 // computed(() => {
 //   return assignment.value.length > 0 ? 'Asignar' : 'Guardar';
 // });
 
-const onSubmit = async () => {
+async function listSelect() {
   loading.value = true;
   isLoading.value = true;
 
   allowedAssignments.value = [];
- 
+
 
   console.log("resApp", theApprentice.value);
   const apprenticeId = theApprentice.value;
 
   try {
-  if(assignment.value.length > 0){
-    buttonText.value = "Guardar"
-    const assignmentData = {
-      apprentice: theApprentice.value,
-
-    };
-    if (filterInstructorFollowUp != "") assignmentData.followInstructor = filterInstructorFollowUp.value;
-      if (filterInstructorTecnico != "") assignmentData.technicalInstructor = filterInstructorTecnico.value;
-      if (filterInstructorProyecto != "") assignmentData.proyectInstructor = filterInstructorProyecto.value;
-
-      // Si el cambio es verdadero, realizamos la creación o actualización
-
-console.log(assignmentData)
-        const url = await putData(`/register/addassignment`, assignmentData)
-        notifySuccessRequest("Asignación Creada")
-  }else{
-      buttonText.value = "Asignar"
+    console.log(assignment.value.length);
     const response = await getData(`register/listregisterbyapprentice/${apprenticeId}`);
 
     // Acceder directamente a la propiedad 'data' en la respuesta
@@ -449,10 +387,9 @@ console.log(assignmentData)
     if (Array.isArray(data) && data.length > 0) {
       console.log("Primer elemento de data:", data[0]);
 
-      if (data[0]?.allowedAssignments ) {
+      if (data[0]?.allowedAssignments) {
         for (let index = 0; index < data[0].allowedAssignments.length; index++) {
           allowedAssignments.value.push(data[0].allowedAssignments[index])
-          
         }
         console.log("Allowed Assignments actualizado:", allowedAssignments.value);
       } else {
@@ -462,7 +399,7 @@ console.log(assignmentData)
     } else {
       console.error("No se encontraron registros válidos en 'data'.");
       allowedAssignments.value = [];
-    }}
+    }
   } catch (error) {
     console.error('Error al obtener los datos:', error);
     allowedAssignments.value = [];
@@ -472,6 +409,29 @@ console.log(assignmentData)
   }
 };
 
+async function onSubmit() {
+  try {
+
+    const assignmentData = {
+      apprentice: theApprentice.value,
+      data: "Creó asignación"
+    };
+    if (filterInstructorFollowUp.value != "") assignmentData.followInstructor = filterInstructorFollowUp.value
+    if (filterInstructorTecnico.value != "") assignmentData.technicalInstructor = filterInstructorTecnico.value
+    if (filterInstructorProyecto.value != "") assignmentData.proyectInstructor = filterInstructorProyecto.value
+
+    // Si el cambio es verdadero, realizamos la creación o actualización
+
+    console.log(assignmentData)
+    const url = await putData(`/register/addassignment`, assignmentData)
+    notifySuccessRequest("Asignación Creada")
+    onReset()
+    showModal.value = false;
+  } catch (error) {
+    console.log(error);
+    notifyErrorRequest(error?.response?.data?.errors?.[0]?.msg || "Error desconocido")
+  }
+}
 
 function onApprenticeSelected() {
   if (theApprentice.value) {
@@ -480,9 +440,9 @@ function onApprenticeSelected() {
 }
 
 // Ejecutar la función al montar el componente
-onMounted(() => {
-  onSubmit();
-});
+// onMounted(() => {
+//   onSubmit();
+// });
 
 // async function onSubmit() {
 //   loading.value = true;
@@ -529,6 +489,8 @@ function onReset() {
   filterInstructorProyecto.value = "";
   textCertificacion.value = "";
   textFotoJudicial.value = "";
+  theApprentice.value = "";
+  allowedAssignments.value = [];
 }
 
 async function bringIdAndOpenModal(id) {

@@ -4,7 +4,7 @@ const { validateFields } = require('../middlewares/validate-fields.js');
 const { validateJWT } = require('../middlewares/validateJWT.js');
 const { check } = require('express-validator');
 const { validateDateRange } = require('../helpers/register.js');
-const {validateAtLeastOneInstructor} = require('../helpers/register.js')
+const { validateAtLeastOneInstructor } = require('../helpers/register.js')
 
 const registerRoute = express.Router()
 
@@ -42,15 +42,15 @@ registerRoute.get('/listregisterbymodality/:idmodality', [
 
 
 //actualizar por modalidad
-    registerRoute.put('/updateModalityregister/:id', [
-        // validateJWT, 
-        check('id', 'El id es obligatorio y debe ser un ID de MongoDB válido').notEmpty().isMongoId(),
-        validateFields 
-    ], registerController.updateregisterbyid);
-  
+registerRoute.put('/updateModalityregister/:id', [
+    // validateJWT, 
+    check('id', 'El id es obligatorio y debe ser un ID de MongoDB válido').notEmpty().isMongoId(),
+    validateFields
+], registerController.updateregisterbyid);
+
 
 //obtener registros por fecha de inicio    
- registerRoute.get('/listregisterbystartdate', [
+registerRoute.get('/listregisterbystartdate', [
     // validateJWT, // Habilitar validación si es necesario
     check('startDate', 'El campo startDate es obligatorio y debe ser una fecha válida').notEmpty().isDate(),
     check('endDate', 'El campo endDate es obligatorio y debe ser una fecha válida').optional().isDate(),
@@ -104,14 +104,14 @@ registerRoute.put('/disableregister/:id', [
     check('id', 'El id es obligatorio y debe ser un ID de MongoDB válido').notEmpty().isMongoId(),
     validateFields], registerController.putdisableregister)
 
-    registerRoute.put('/addassignment', [
-        // validateJWT,
-check('apprentice', 'El aprendiz es obligatio Y tiene que ser un id').notEmpty().isMongoId(),
-        check('followInstructor', 'El followInstructor debe ser un ID de MongoDB válido').optional().isMongoId(),
-        check('technicalInstructor', 'El technicalInstructor debe ser un ID de MongoDB válido').optional().isMongoId(),
-        check('proyectInstructor', 'El proyectInstructor debe ser un ID de MongoDB válido').optional().isMongoId(),
-        // validateAtLeastOneInstructor(),
-        validateFields
-    ], registerController.addAssignment);
+registerRoute.put('/addassignment', [
+    // validateJWT,
+    check('apprentice', 'El aprendiz es obligatio Y tiene que ser un id').notEmpty().isMongoId(),
+    check('followInstructor', 'El followInstructor debe ser un ID de MongoDB válido').optional().isMongoId(),
+    check('technicalInstructor', 'El technicalInstructor debe ser un ID de MongoDB válido').optional().isMongoId(),
+    check('proyectInstructor', 'El proyectInstructor debe ser un ID de MongoDB válido').optional().isMongoId(),
+    // validateAtLeastOneInstructor(),
+    validateFields
+], registerController.addAssignment);
 
 module.exports = registerRoute;
