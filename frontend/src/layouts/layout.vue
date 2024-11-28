@@ -44,7 +44,9 @@ const menuItems = [
   { label: 'Fichas', path: '/fiches', icon: ['fas', 'chart-line'], rol: ["ADMIN" ] },
   { label: 'Registro de Horas', path: '/reports', icon: ['fas', 'user-graduate'], rol: ["INSTRUCTOR" ] },
   { label: 'Certificaciones', path: '/Certification', icon: ['fas', 'user-graduate'], rol: ["ADMIN","INSTRUCTOR" ] },
-  { label: 'Informe Horas Instructor EP', path: '/HoursInstructor', icon: ['fas', 'user-graduate'], rol: ["ADMIN","INSTRUCTOR" ] }
+  { label: 'Informe Horas Instructor EP', path: '/HoursInstructor', icon: ['fas', 'user-graduate'], rol: ["ADMIN","INSTRUCTOR" ] },
+  { label: 'History', path: '/History', icon: ['fas', 'chart-line'], rol: ["CONSULTOR" ] },
+
 ];
 
 

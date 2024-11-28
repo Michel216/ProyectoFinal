@@ -9,6 +9,7 @@ import ForgotPassword from "./../views/ForgotPassword.vue";
 import Apprentice from "./../views/Apprentice.vue";
 import FollowUp from "./../views/FollowUp.vue";
 import Fiche  from './../views/Fiche.vue';
+import History from './../views/History.vue';
 import HoursInstructor from "../views/HoursInstructor.vue";
 import { createRouter, createWebHashHistory } from "vue-router";
 import Register from "../views/Register.vue";
@@ -52,6 +53,7 @@ const routes = [
             { path: "/fiches", component: Fiche, beforeEnter: auth, meta: { rol: ["ADMIN"] } },
             { path: "/Certification", component: Certification, beforeEnter: auth, meta: { rol: ["ADMIN", "INSTRUCTOR"] } },
             { path: "/HoursInstructor", component: HoursInstructor, beforeEnter: auth, meta: { rol:["ADMIN"]}},
+            { path: "/History", component: History, beforeEnter: auth, meta: { rol:["ADMIN", "CONSULTOR"]}},
         ]
     }
 ];

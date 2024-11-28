@@ -108,11 +108,10 @@
             </div>
         </div>
         <Btn 
-  :label="'HISTORIAL'" 
-  :onClickFunction="uploadFile" 
-  :loading="loading" 
-  icon="history" 
-  style="  margin-left: 90%;" 
+        :label="' Historial'" 
+      :icon="'history'" 
+      :onClickFunction="goToHistory" 
+      style="  margin-left: 90%;" 
 />
     </div>
     
@@ -120,6 +119,7 @@
 
 <script setup>
 import { ref } from "vue";
+import { useRouter } from 'vue-router';
 import Btn from "../components/buttons/Button.vue";
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
@@ -155,6 +155,12 @@ const certificacion = ref({
     estado: "",
     link: "",
 });
+
+const router = useRouter();
+
+const goToHistory = () => {
+  router.push({ path: '/History' }); 
+};
 </script>
 
 
@@ -164,7 +170,7 @@ const certificacion = ref({
     flex-wrap: wrap;
     gap: 1rem;
     justify-content: space-between;
-    padding: 1rem;
+    padding: 2rem;
 }
 
 .card {
