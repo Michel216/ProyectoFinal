@@ -31,12 +31,12 @@
             <div class="info">
                 <p><strong>MODALIDAD:</strong></p>
                 <p> {{ etapaProductiva.modalidad || 'j ' }}</p>
-                <div class="dates">
+              
                     <p><strong>FECHA INICIO:</strong> </p>
                     <p>{{ etapaProductiva.fechaInicio || ' j' }}</p>
                     <p><strong>FECHA FIN:</strong> </p>
                     <p>{{ etapaProductiva.fechaFin || ' j' }}</p>
-                </div>
+                
                 <p><strong>INSTRUCTOR DE SEGUIMIENTO:</strong> </p>
                 <p>{{ etapaProductiva.instructor || ' j' }}</p>
                 <p><strong>ESTADO ETAPA PRODUCTIVA:</strong> </p>
@@ -62,7 +62,7 @@
                             </div>
                             <div class="info">
                                 <p><strong>VER BITÁCORAS:</strong>
-                                    <button class="folder-button">
+                                    <button  class="folder-button" @click="goToBitacoras">
                                         <i class="fas fa-folder-open"></i>
                                     </button>
                                 </p>
@@ -75,7 +75,7 @@
                             </div>
                             <div class="info">
                                 <p><strong>VER SEGUIMIENTOS:</strong>
-                                    <button class="folder-button">
+                                    <button class="folder-button" @click="goToSeguimientos" >
                                         <i class="fas fa-folder-open"></i>
                                     </button>
                                 </p>
@@ -98,7 +98,7 @@
                             <p>{{ certificacion.estado || 'h ' }}</p>
                             <p>
                                 <strong>VER CERTIFICACIÓN:</strong>
-                                <button class="folder-button">
+                                <button class="folder-button" @click="goToCertificaciones">
                                     <i class="fas fa-folder-open"></i>
                                 </button>
                             </p>
@@ -161,6 +161,17 @@ const router = useRouter();
 const goToHistory = () => {
   router.push({ path: '/History' }); 
 };
+// const goToBitacoras = () => {
+//   router.push({ path: '/Binnacles' }); 
+// };
+
+// const goToSeguimientos = () => {
+//   router.push({ path: '/FollowUp' }); 
+// };
+// const goToCertificaciones = () => {
+//   router.push({ path: '/certification' }); 
+// };
+
 </script>
 
 
@@ -170,7 +181,7 @@ const goToHistory = () => {
     flex-wrap: wrap;
     gap: 1rem;
     justify-content: space-between;
-    padding: 2rem;
+    padding: 4rem;
 }
 
 .card {

@@ -33,13 +33,13 @@ const route = useRoute();
 
 const menuItems = [
   { label: 'Home', path: '/home', icon: ['fas', 'home'], rol: ["ADMIN", "INSTRUCTOR", "ETAPA PRODUCTIVA"] },
-  { label: 'Bitácora', path: '/Binnacles', icon: ['fas', 'book'], rol: ["ADMIN", "ETAPA PRODUCTIVA", "INSTRUCTOR"] },
+  { label: 'Bitácora', path: '/Binnacles', icon: ['fas', 'book'], rol: ["ADMIN", "ETAPA PRODUCTIVA", "INSTRUCTOR", "CONSULTOR"] },
   // { label: 'Modalidades', path: '/Modality', icon: ['fas', 'tasks'], rol: [ "ETAPA PRODUCTIVA"] },
   { label: 'Asignaciones', path: '/Assignment', icon: ['fas', 'file-alt'], rol: ["ADMIN", "ETAPA PRODUCTIVA","INSTRUCTOR"] },
  { label: 'Modalidad EP', path: '/Modality', icon: ['fas', 'tasks'], rol: ["ADMIN", "ETAPA PRODUCTIVA",] },
   { label: 'Registros', path: '/Register', icon: ['fas', 'user'], rol: ["ADMIN", "ETAPA PRODUCTIVA"] },
   { label: 'Aprendices', path: '/Apprentice', icon: ['fas', 'user-graduate'], rol: ["ADMIN", "ETAPA PRODUCTIVA"] },
-  { label: 'Seguimientos', path: '/FollowUp', icon: ['fas', 'chart-line'], rol: ["ADMIN", "ETAPA PRODUCTIVA", "INSTRUCTOR"] },
+  { label: 'Seguimientos', path: '/FollowUp', icon: ['fas', 'chart-line'], rol: ["ADMIN", "ETAPA PRODUCTIVA", "INSTRUCTOR","CONSULTOR"] },
   // { label: 'Informes', path: '/reports', icon: ['fas', 'user-graduate'], rol: ["ADMIN", "ETAPA PRODUCTIVA"] },
   { label: 'Fichas', path: '/fiches', icon: ['fas', 'chart-line'], rol: ["ADMIN" ] },
   { label: 'Registro de Horas', path: '/reports', icon: ['fas', 'user-graduate'], rol: ["INSTRUCTOR" ] },
