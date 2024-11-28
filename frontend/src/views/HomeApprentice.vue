@@ -249,7 +249,7 @@ h3 {
 .card-title {
     font-size: 1.5em;
     font-weight: bold;
-
+margin: 0;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -310,7 +310,7 @@ h3 {
     font-size: 1.5em;
     font-weight: bold;
     color: green;
-
+    margin: 0;
     gap: 8px;
 
 }
