@@ -9,6 +9,7 @@ import ForgotPassword from "./../views/ForgotPassword.vue";
 import Apprentice from "./../views/Apprentice.vue";
 import FollowUp from "./../views/FollowUp.vue";
 import Fiche  from './../views/Fiche.vue';
+import History from './../views/History.vue';
 import HoursInstructor from "../views/HoursInstructor.vue";
 import { createRouter, createWebHashHistory } from "vue-router";
 import Register from "../views/Register.vue";
@@ -41,17 +42,18 @@ const routes = [
         children: [
             { path: "/Home", component: Home, beforeEnter: auth, meta: { rol: ["ADMIN", "INSTRUCTOR"] } },
             { path: "/HomeApprentice", component: HomeApprentice, beforeEnter: auth, meta: { rol: ["CONSULTOR"] } },
-            { path: "/Binnacles", component: Binnacles, beforeEnter: auth, meta: { rol: ["ADMIN", "INSTRUCTOR"] } },
+            { path: "/Binnacles", component: Binnacles, beforeEnter: auth, meta: { rol: ["ADMIN", "INSTRUCTOR","CONSULTOR"] } },
             { path: "/Instructors", component: Instructors, beforeEnter: auth, meta: { rol: ["ADMIN"] } },
             { path: "/Modality", component: Modality, beforeEnter: auth, meta: { rol: ["ADMIN"] } },
             { path: "/Assignment", component: Assignment, beforeEnter: auth, meta: { rol: ["ADMIN","INSTRUCTOR"] } },
             { path: "/Register", component: Register, beforeEnter: auth, meta: { rol: ["ADMIN"] } },
             { path: "/ForgotPassword", component: ForgotPassword, beforeEnter: auth, meta: { rol: ["ADMIN"] } },
             { path: "/Apprentice/:ficheId?", component: Apprentice, beforeEnter: auth, meta: { rol: ["ADMIN"] } },
-            { path: "/FollowUp", component: FollowUp, beforeEnter: auth, meta: { rol: ["ADMIN", "INSTRUCTOR"] } },
+            { path: "/FollowUp", component: FollowUp, beforeEnter: auth, meta: { rol: ["ADMIN", "INSTRUCTOR","CONSULTOR"] } },
             { path: "/fiches", component: Fiche, beforeEnter: auth, meta: { rol: ["ADMIN"] } },
-            { path: "/Certification", component: Certification, beforeEnter: auth, meta: { rol: ["ADMIN", "INSTRUCTOR"] } },
+            { path: "/Certification", component: Certification, beforeEnter: auth, meta: { rol: ["ADMIN", "INSTRUCTOR","CONSULTOR"] } },
             { path: "/HoursInstructor", component: HoursInstructor, beforeEnter: auth, meta: { rol:["ADMIN"]}},
+            { path: "/History", component: History, beforeEnter: auth, meta: { rol:["ADMIN", "CONSULTOR"]}},
         ]
     }
 ];

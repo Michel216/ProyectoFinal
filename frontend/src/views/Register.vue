@@ -1,6 +1,7 @@
 <template>
   <div class="q-pa-md q-gutter-md">
-
+    <Header title="Registros EP" />
+    
     <Btn :label="btnLabel" :onClickFunction='bringIdAndOpenModal' :loading="loading" />
     <RegisterTable :title="title" :columns="columns" :rows="rows" :onToggleActivate="handleToggleActivate"
       :loading="loading" :onClickEdit="bringIdAndOpenModal" />
@@ -163,7 +164,7 @@ import { notifyErrorRequest, notifySuccessRequest, notifyWarningRequest } from "
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faUserGraduate, faPersonChalkboard, faCalendarDay, faBuilding, faPhone, faMapPin, faEnvelopeCircleCheck, faUserTie, faFileInvoice, faClock, faBusinessTime } from '@fortawesome/free-solid-svg-icons';
-
+import Header from '../components/header/Header.vue';
 library.add(faUserGraduate, faPersonChalkboard, faCalendarDay, faBuilding, faPhone, faMapPin, faEnvelopeCircleCheck, faUserTie, faFileInvoice, faClock, faBusinessTime)
 
 let loading = ref(false)
