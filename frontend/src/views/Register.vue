@@ -2,7 +2,7 @@
   <div class="q-pa-md q-gutter-md">
     <Header title="Registros EP" />
     
-    <Btn :label="btnLabel" :onClickFunction='bringIdAndOpenModal' :loading="loading" />
+    <Btn :icon="icons" :label="btnLabel" :onClickFunction='bringIdAndOpenModal' :loading="loading" />
     <RegisterTable :title="title" :columns="columns" :rows="rows" :onToggleActivate="handleToggleActivate"
       :loading="loading" :onClickEdit="bringIdAndOpenModal" />
     <Modal :onClickFunction="onReset" :isVisible="showModal" @update:isVisible="showModal = $event" :label="btnLabel">
@@ -171,6 +171,7 @@ let loading = ref(false)
 const isLoading = ref(false);
 let title = 'Registros'
 let btnLabel = 'Crear registro'
+let icons="control_point"
 let apprentice = ref()
 let modality = ref()
 let startDate = ref()

@@ -12,7 +12,7 @@
         <q-spinner/>
       </template>
         <slot name="prepend"></slot>
-        <i v-if="icon" :class="`material-icons`">{{ icon }}</i>
+        <!-- <i v-if="icon" :class="`material-icons`">{{ icon }}</i> -->
   
       </q-btn>
     </div>
@@ -38,7 +38,7 @@ const props = defineProps({
     },
     onClickFunction:{
         type:Function,
-        required: false
+        required: false 
     },
 
 })

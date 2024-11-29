@@ -88,7 +88,7 @@ const cards = [
   },
   {
     title: "Registro de Horas",
-    buttonLink: "/reports",
+    buttonLink: "/hoursInstructor",
     buttonText: "Ver",
     imageSrc: "https://img.freepik.com/vector-gratis/tabla-conversacion-concepto-gestion-tiempo_23-2148831728.jpg?t=st=1731616413~exp=1731620013~hmac=bde5de7cabc1e62980faded2e4aada181107a77a1b24cb17fe53556009b7b45b&w=740",
     rol: [, "INSTRUCTOR"],
