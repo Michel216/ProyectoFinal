@@ -71,13 +71,11 @@ const columns = ref([
     field: 'index'
   },
   { name: "name", label: "NOMBRE DEL APRENDIZ", align: "center", field: "name" },
-  { name: "fiche", label: "PROGRAMA", align: "center", field: "fiche" },
-  { name: "code", label: "CODIGO", align: "center", field: "code" },
-  // { name: "status", label: "ESTADO", align: "center", field: "status" },
+  { name: "fiche", label: "FICHA", align: "center", field: "fiche" },
+  { name: "code", label: "COD. FICHA", align: "center", field: "code" },
   { name: "statusApprentice", label: "ESTADO", align: "center", field: "statusApprentice" },
   { name: "certificationDoc", label: "DOCUMENTO DE CERTIFICACIÓN", align: "center", field: "certificationDoc" },
-  { name: "judymentPhoto", label: "DOCUMENTO DE CERTIFICACIÓN", align: "center", field: "judymentPhoto" },
-  // { name: "apprentice", label: "DOCUMENTO DE JUICIO", align: "center", field: "apprentice" },
+  { name: "judymentPhoto", label: "DOCUMENTO DE JUICIO", align: "center", field: "judymentPhoto" }
 ]);
 
 onBeforeMount(() => {

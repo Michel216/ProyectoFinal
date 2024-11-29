@@ -8,7 +8,7 @@
       </div>
     </Modal>
     <div
-    style="display: flex; flex-direction: row; align-items: flex-start; justify-content: space-between; margin:  -30px 0">
+    style="display: flex; flex-direction: row; align-items: flex-start; justify-content: space-between; margin: -30px 0">
     <div class="btn" style="display: flex; flex-direction: row;  gap: 10px; margin-left: 10%">
       <Btn :icon="icons" :label="btnLabel" :onClickFunction="bringIdAndOpenModal" :loading="loading" />
       <Btn :icon="archive" :label="btnLabelFile" :onClickFunction="openModalFile" :loading="loading" />
@@ -137,8 +137,6 @@
             :disable="isLoading" />
           <q-btn label="Cerrar" type="reset" icon="close" class="full-width" v-close-popup
             style="background-color: white; color: black; box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);" />
-
-
         </q-form>
       </div>
     </Modal>
@@ -168,7 +166,7 @@ const options = ref([]);
 let loading = ref(false);
 const isLoading = ref(false);
 let title = "Aprendices";
-let icons="history"
+let icons="control_point"
 let archive="control_point"
 let btnLabel = "Crear";
 let searchTerm = ref("");

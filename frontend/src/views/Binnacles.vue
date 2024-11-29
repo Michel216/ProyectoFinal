@@ -26,7 +26,7 @@
         </div>
       </div>
     </div>
-    <Btn icon="control_point" :label="btnLabel" :onClickFunction="openModalCreate" :loading="loading" v-if="role === 'INSTRUCTOR'" />
+    <Btn :icon="icons" :label="btnLabel" :onClickFunction="openModalCreate" :loading="loading" v-if="role === 'INSTRUCTOR'" />
     <binnacleTable :title="title" :columns="columns" :rows="filteredRows" :options="options"
       :onUpdateStatus="handleUpdateStatus" :loading="loading" :val="true" :onClickFunction="openModalObservations" />
     <Modal :onClickFunction="onReset" :isVisible="showModalCreate" @update:isVisible="showModalCreate = $event"
@@ -196,6 +196,7 @@ const role = computed(() => authStore.getRole());
 const user = computed(() => authStore.getEmail());
 let loading = ref(false);
 let change = ref()
+let icons="control_point"
 let title = "Bitácoras";
 let btnLabel = "Crear ";
 let assignment = ref("");

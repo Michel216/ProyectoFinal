@@ -3,7 +3,7 @@
     <Header title="Modalidad EP"></Header>
     <div style="display: flex; align-items: center; justify-content: space-between;  margin: -30px 0">
       <div class="btn" style="display: flex; flex-direction: row;  gap: 10px; margin-left: 10%">
-        <Btn :label="btnLabel" :onClickFunction="bringId" :loading="loading" />
+        <Btn :icon="icons" :label="btnLabel" :onClickFunction="bringId" :loading="loading" />
       </div>
       <!-- Formulario de radio centrado -->
       <div class="q-pa-md q-gutter-sm" style="display: flex; flex-direction: column; align-items: flex-start;">
@@ -102,7 +102,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faClock, faPersonChalkboard } from '@fortawesome/free-solid-svg-icons';
 
 library.add(faClock, faPersonChalkboard)
-
+let icons="control_point"
 let title = "Modalidades";
 let loading = ref(false);
 const isLoading = ref(false);
