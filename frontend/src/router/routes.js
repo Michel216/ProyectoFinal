@@ -52,7 +52,7 @@ const routes = [
             { path: "/FollowUp", component: FollowUp, beforeEnter: auth, meta: { rol: ["ADMIN", "INSTRUCTOR","CONSULTOR"] } },
             { path: "/fiches", component: Fiche, beforeEnter: auth, meta: { rol: ["ADMIN"] } },
             { path: "/Certification", component: Certification, beforeEnter: auth, meta: { rol: ["ADMIN", "INSTRUCTOR","CONSULTOR"] } },
-            { path: "/HoursInstructor", component: HoursInstructor, beforeEnter: auth, meta: { rol:["ADMIN"]}},
+            { path: "/HoursInstructor", component: HoursInstructor, beforeEnter: auth, meta: { rol:["ADMIN", "INSTRUCTOR"]}},
             { path: "/History", component: History, beforeEnter: auth, meta: { rol:["ADMIN", "CONSULTOR"]}},
         ]
     }

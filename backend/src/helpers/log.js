@@ -1,31 +1,12 @@
-// function validateCreateLog(data) {
-//     const { createdAt, updatedAt } = data;
+const Log = require("../models/log.js")
 
-//     if (!createdAt || !updatedAt) {
-//         return {
-//             valid: false,
-//             message: 'Los campos createdAt y updatedAt son obligatorios.'
-//         };
-//     }
+const logHelper = {
+    validateId: async (id) => {
+        const existLog = await Log.findById(id)
+        if (!existLog) {
+            throw new Error("El log no existe en la base de datos")
+        } return true
+    }
+}
 
-//     return { valid: true };
-// }
-
-// function validateUpdateLog(data) {
-//     const { updatedAt } = data;
-
-//     if (!updatedAt) {
-//         return {
-//             valid: false,
-//             message: 'El campo updatedAt es obligatorio al actualizar.'
-//         };
-//     }
-
-//     return { valid: true };
-// }
-
-// module.exports = {
-//     validateCreateLog,
-//     validateUpdateLog
-
-// };
+module.exports = logHelper

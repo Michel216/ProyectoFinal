@@ -33,7 +33,7 @@ export async function postLogin(url, data) {
         const response = await apiClient.post(url, data);
         const { token, role } = response.data; // Desestructuramos el token y el rol de la respuesta
         const email = ref(localStorage.getItem('email') || null);
-        console.log("email post", email.value);
+        console.log("email post", data);
         
         const infoLog = await apiClient.post("/logs/addlog", {name:data.institutionalEmail, data:`POST`, information: data, action: data.data})
 

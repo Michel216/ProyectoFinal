@@ -1,20 +1,20 @@
 const express = require('express');
 const { check } = require('express-validator');
 const registerHelper = require('../helpers/register.js');
-const { validateJWT } = require('./../middlewares/validateJWT.js');
+const { validateRepforaJWT } = require('./../middlewares/validateJWTRepfora.js');
 const { validateFields } = require('./../middlewares/validate-fields.js');
 
 const assignmentRoute = express.Router();
 
 // Obtener todas las asignaciones
 assignmentRoute.get('/listallassignment', [
-    validateJWT,
+    validateRepforaJWT,
     validateFields
 ], assignmentController.getListAssignment);
 
 // Obtener asignación por ID
 assignmentRoute.get('/listassignmentbyid/:id', [
-    validateJWT,
+    validateRepforaJWT,
     check('id', 'El id no es válido').isMongoId(),
     check('id').custom(assigmentHelper.assignmentIdExists),
     validateFields
@@ -22,7 +22,7 @@ assignmentRoute.get('/listassignmentbyid/:id', [
 
 // Obtener asignaciones por ID de registro
 assignmentRoute.get('/listassignmentbyregister/:idregister', [
-    // validateJWT,
+    validateRepforaJWT,
     check('idregister', 'El idregister no es válido').isMongoId(),
     check('idregister').custom(registerHelper.registerExists),
     validateFields
@@ -30,28 +30,28 @@ assignmentRoute.get('/listassignmentbyregister/:idregister', [
 
 // Obtener seguimiento de instructor por ID
 assignmentRoute.get('/listfollowupinstructor/:idinstructor', [
-    // validateJWT,
+    validateRepforaJWT,
     check('idinstructor', 'El idinstructor no es válido').isMongoId(),
     validateFields
 ], assignmentController.getListFollowUpInstructorById);
 
 // Obtener instructor técnico por ID
 assignmentRoute.get('/listtechnicalinstructor/:idinstructor', [
-    // validateJWT,
+    validateRepforaJWT,
     check('idinstructor', 'El idinstructor no es válido').isMongoId(),
     validateFields
 ], assignmentController.getListTechnicalInstructorById);
 
 // Obtener instructor de proyecto por ID
 assignmentRoute.get('/listprojectinstructor/:idinstructor', [
-    // validateJWT,
+    validateRepforaJWT,
     check('idinstructor', 'El idinstructor no es válido').isMongoId(),
     validateFields
 ], assignmentController.getListProjectInstructorById);
 
 // Agregar una nueva asignación
 assignmentRoute.post('/addassignment', [
-    validateJWT,
+    validateRepforaJWT,
     check('register', 'El idregister no es válido').isMongoId(),
     check('register').custom(registerHelper.registerExists),
     check('certificationdoc', 'El certificationdoc es obligatorio').not().isEmpty(),
@@ -65,27 +65,27 @@ assignmentRoute.post('/addassignment', [
 ], assignmentController.postAddAssignment);
 
 assignmentRoute.post('/sendEmail', [
-    validateJWT,
+    validateRepforaJWT,
     validateFields
 ], assignmentController.postSendEmail)
 
 // Actualizar asignación por ID
 assignmentRoute.put('/updateassignmentbyid/:id', [
-    validateJWT,
+    validateRepforaJWT,
     check('id', 'El id es obligatorio y debe ser un ID de MongoDB válido').isMongoId(),
     validateFields
 ], assignmentController.putUpdateAssignment);
 
 // Habilitar asignación por ID
 assignmentRoute.put('/enableassignmentbyid/:id', [
-    validateJWT,
+    validateRepforaJWT,
     check('id', 'El id no es válido').isMongoId(),
     validateFields
 ], assignmentController.putEnableAssignment);
 
 // Deshabilitar asignación por ID
 assignmentRoute.put('/disableassignmentbyid/:id', [
-    validateJWT,
+    validateRepforaJWT,
     check('id', 'El id es obligatorio y debe ser un ID de MongoDB válido').isMongoId(),
     validateFields
 ], assignmentController.putDisableAssignment);
