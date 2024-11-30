@@ -14,6 +14,7 @@ const registerSchema = new mongoose.Schema({
    hour: { type: String, required: true },
    businessProyectHour: { type: String, required: true },
    productiveProyectHour: {type: String},
+   status: {type: Number, default: 1},
    assignment: [
       {
          followUpInstructor: { type: Object },
