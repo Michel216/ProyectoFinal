@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const modalitySchema = new mongoose.Schema({
-    name: { type: String, required: true },
+    name: { type: String, required: true, unique: true },
     hourInstructorFollow: { type: Number, default: 0 },
     hourInstructorTechnical: { type: Number, default: 0 },
     hourInstructorProject: { type: Number, default: 0 },

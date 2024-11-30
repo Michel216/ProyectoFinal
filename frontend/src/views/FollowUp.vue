@@ -2,24 +2,34 @@
   <div class="q-pa-md q-gutter-md">
     <Header title="Seguimientos"></Header>
     <!-- <Btn :label="btnLabel" :onClickFunction="openModalCreate" :loading="loading" /> -->
-    <div
-      style="display: flex; flex-direction: row; align-items: flex-start; justify-content: flex-end; margin: -20px 0; margin-top: -60px;">
-      <div class="q-pa-md q-gutter-sm" style="display: flex; flex-direction: column; align-items: flex-start;">
-
+    <div style="
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: flex-end;
+        margin: -20px 0;
+        margin-top: -60px;
+      ">
+      <div class="q-pa-md q-gutter-sm" style="display: flex; flex-direction: column; align-items: flex-start">
         <!-- Contenedor de los radio buttons y el input, alineados en una fila -->
-        <div style="display: flex; flex-direction: row; align-items: center; justify-content: flex-start; width: 100%;">
-
+        <div style="
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: flex-start;
+            width: 100%;
+          ">
           <!-- Input de búsqueda alineado a la izquierda -->
-          <div class="q-pa-md" style="flex-grow: 1; display: flex; justify-content: flex-start;">
-            <div class="rounded-input" style=" width: 370px;">
+          <div class="q-pa-md" style="flex-grow: 1; display: flex; justify-content: flex-start">
+            <div class="rounded-input" style="width: 370px">
               <q-input class="q-ml-md" v-model="searchTerm" :label="searchLabel" @input="handleFilter" outlined />
             </div>
           </div>
-
         </div>
       </div>
     </div>
-    <Btn :label="btnLabel" :onClickFunction="openModalCreate" :loading="loading" v-if="role === 'INSTRUCTOR'" />
+    <Btn :icon="icons" :label="btnLabel" :onClickFunction="openModalCreate" :loading="loading"
+      v-if="role === 'INSTRUCTOR'" />
     <FollowupTable :title="title" :columns="columns" :rows="filteredRows" :options="options"
       :onUpdateStatus="handleUpdateStatus" :onClickFunction="openModalObservations" />
 
@@ -107,8 +117,11 @@
           <div class="q" style="display: flex; justify-content: center; align-items: center">
             <q-btn label="Guardar" class="full-width" type="submit" icon="save" color="primary" :loading="loading" />
 
-            <q-btn label="Cerrar" type="reset" icon="close" class="full-width" v-close-popup
-              style="background-color: white; color: black; box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);" />
+            <q-btn label="Cerrar" type="reset" icon="close" class="full-width" v-close-popup style="
+                background-color: white;
+                color: black;
+                box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
+              " />
           </div>
         </q-form>
       </div>
@@ -121,54 +134,55 @@
             max-width: 100%;
             width: 100vw;
             margin: auto;
-           
+
             gap: 20px;
             border-radius: 50px;
           ">
-          <q-input outlined type="textarea" v-model="observation" label="Observación" lazy-rules
-            :rules="[(val) => (val && val.length > 0) || 'Por favor, ingrese una observación']" />
-
-
+          <q-input outlined type="textarea" v-model="observation" label="Observación" lazy-rules :rules="[
+            (val) =>
+              (val && val.length > 0) || 'Por favor, ingrese una observación',
+          ]" />
 
           <q-btn label="Guardar" class="full-width" type="submit" icon="save" color="primary" :loading="loading" />
 
-          <q-btn label="Cerrar" type="reset" icon="close" class="full-width" v-close-popup
-            style="background-color: white; color: black; box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);" />
-
+          <q-btn label="Cerrar" type="reset" icon="close" class="full-width" v-close-popup style="
+              background-color: white;
+              color: black;
+              box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
+            " />
         </q-form>
         <q-form v-else @submit="onSubmitObservation" @reset="onReset" style="
             max-height: none;
             max-width: 100%;
             width: 100vw;
             margin: auto;
-           
+
             gap: 20px;
             border-radius: 50px;
           ">
           <div v-for="(item, index) in listObservations" :key="index">
             <div v-if="listObservations.length > 0">
               <q-chat-message v-if="item.user === user" sent>
-                <p style="padding: 5px;">
-                  <span class="text-h7 text-primary"><strong> {{ item.user
-                      }}</strong></span> <br>
-                  <span class=" text-dark">{{ item.observation
-                    }}</span> <br><br>
-                  <span class="text-h7 text-primary" style="float: right;"><strong> {{ formatDate(item.observationDate
-                  ) }}</strong></span>
+                <p style="padding: 5px">
+                  <span class="text-h7 text-primary"><strong> {{ item.user }}</strong></span>
+                  <br />
+                  <span class="text-dark">{{ item.observation }}</span>
+                  <br /><br />
+                  <span class="text-h7 text-primary" style="float: right"><strong>
+                      {{ formatDate(item.observationDate) }}</strong></span>
                 </p>
               </q-chat-message>
               <q-chat-message v-else bg-color="green-3">
-                <p style="padding: 5px;">
-                  <span class="text-h7 text-dark"><strong> {{ item.user
-                      }}</strong></span> <br>
-                  <span class=" text-dark">{{ item.observation
-                    }}</span> <br><br>
-                  <span class="text-h7 text-dark" style="float: right;"><strong> {{ formatDate(item.observationDate)
-                      }}</strong></span>
+                <p style="padding: 5px">
+                  <span class="text-h7 text-dark"><strong> {{ item.user }}</strong></span>
+                  <br />
+                  <span class="text-dark">{{ item.observation }}</span>
+                  <br /><br />
+                  <span class="text-h7 text-dark" style="float: right"><strong>
+                      {{ formatDate(item.observationDate) }}</strong></span>
                 </p>
               </q-chat-message>
             </div>
-
           </div>
           <div v-if="listObservations.length <= 0">
             <q-card bordered class="bg-grey-4 my-card">
@@ -178,17 +192,13 @@
             </q-card>
           </div>
 
-
-
-          <br>
-          <div class="q" style="display: flex; justify-content: center; align-items: center;">
-
-
+          <br />
+          <div class="q" style="display: flex; justify-content: center; align-items: center">
             <q-btn label="Cerrar" type="reset" icon="close" flat class="q-ml-sm" v-close-popup style="
-background-color: white;
-color: black;
-box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
-" />
+                background-color: white;
+                color: black;
+                box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
+              " />
           </div>
         </q-form>
       </div>
@@ -209,19 +219,24 @@ import {
 import { formatMonth } from "../utils/formatMonth.js";
 import moment from "moment-timezone";
 import { formatDate } from "../utils/formatDate.js";
-import { useAuthStore } from './../store/useAuth.js'
-import Header from '../components/header/Header.vue';
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faCalendarDay, faChalkboardUser, faHandPointer } from '@fortawesome/free-solid-svg-icons';
+import { useAuthStore } from "./../store/useAuth.js";
+import Header from "../components/header/Header.vue";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import {
+  faCalendarDay,
+  faChalkboardUser,
+  faHandPointer,
+} from "@fortawesome/free-solid-svg-icons";
 
-library.add(faCalendarDay, faChalkboardUser, faHandPointer)
+library.add(faCalendarDay, faChalkboardUser, faHandPointer);
 
 const title = "Seguimientos";
 const authStore = useAuthStore();
 const role = computed(() => authStore.getRole());
 const rows = ref([]);
 let loading = ref(false);
+let icons = "control_point";
 let change = ref();
 let btnLabel = "Crear";
 let assignment = ref("");
@@ -230,7 +245,9 @@ let numFollowUp = ref("");
 let document = ref("");
 let month = ref("");
 let observation = ref("");
-const observationDate = moment().tz('America/Bogota').format('YYYY-MM-DD HH:mm:ss'); // ISO 8601
+const observationDate = moment()
+  .tz("America/Bogota")
+  .format("YYYY-MM-DD HH:mm:ss"); // ISO 8601
 const user = computed(() => authStore.getEmail());
 
 let showModalCreate = ref(false);
@@ -240,17 +257,27 @@ let idFollowUp = ref("");
 let optionsAssignment = ref();
 let optionsInstructor = ref();
 let searchTerm = ref("");
-let searchLabel = ref('Ingrese el nombre del aprendiz')
-const selectedValue = ref('');
+let searchLabel = ref("Ingrese el nombre do número de documento ");
+const selectedValue = ref("");
 const columns = ref([
-  { name: "index", label: "#", align: "center", field: "index" },
+  {
+    name: "index",
+    label: "N°",
+    align: "center",
+    field: "index"
+  },
   {
     name: "register",
     label: "Etapa Productiva Asignada",
     align: "center",
     field: "register",
   },
-  { name: "number", label: "N° Seguimiento", align: "center", field: "number" },
+  {
+    name: "number",
+    label: "N° Seguimiento",
+    align: "center",
+    field: "number"
+  },
   {
     name: "options",
     label: "Estado",
@@ -263,7 +290,12 @@ const columns = ref([
     align: "center",
     field: "observations",
   },
-  { name: "month", label: "Mes", align: "center", field: "month" },
+  {
+    name: "month",
+    label: "Mes",
+    align: "center",
+    field: "month"
+  },
 ]);
 
 // valida que el tipo de la bitácora sea de 1 a 4. Programado: 1, Ejecutado: 2, Pendiente: 3, Verificado: 4// valida que el tipo de la bitácora sea de 1 a 4. Programado: 1, Ejecutado: 2, Pendiente: 3, Verificado: 4, Verificado técnico: 5, Verificado proyecto: 6
@@ -283,7 +315,7 @@ let options = ref([
   {
     label: "Verificado",
     value: 4,
-  }
+  },
 ]);
 
 onBeforeMount(() => {
@@ -310,16 +342,21 @@ async function bring() {
 }
 
 const filteredRows = computed(() => {
-  if (!searchTerm.value) return rows.value;  // Si no hay término de búsqueda, devolver todos los registros
-  return rows.value.filter(row => {
-
-    return row.register.toLowerCase().startsWith(searchTerm.value.toLowerCase())
+  if (!searchTerm.value) return rows.value; // Si no hay término de búsqueda, devolver todos los registros
+  return rows.value.filter((row) => {
+    return row.register
+      .toLowerCase()
+      .startsWith(searchTerm.value.toLowerCase());
   });
 });
 
 async function handleUpdateStatus(status, id) {
   try {
-    await putData(`/followup/updatestatus/${id}/${status}`, { data: "Cambió estado seguimiento", status: status, idBinnacle: id});
+    await putData(`/followup/updatestatus/${id}/${status}`, {
+      data: "Cambió estado seguimiento",
+      status: status,
+      idBinnacle: id,
+    });
     bring();
   } catch (error) {
     console.log(error);
@@ -335,7 +372,7 @@ async function onSubmit() {
       number: numFollowUp.value,
       document: document.value,
       month: month.value,
-      data: "Creó seguimiento"
+      data: "Creó seguimiento",
     };
     await postData(`/followup/addfollowup`, data);
     notifySuccessRequest("Seguimiento creado exitosamente");
@@ -360,14 +397,13 @@ async function onSubmitObservation() {
         {
           observation: observation.value,
           observationDate: observationDate,
-          user: user.value
-        }
+          user: user.value,
+        },
       ],
       data: "Creó observación seguimiento",
-      idFollowUp: idFollowUp.value
+      idFollowUp: idFollowUp.value,
     };
     console.log(observationDate);
-
 
     let url = await putData(
       `/followup/addobservation/${idFollowUp.value}`,

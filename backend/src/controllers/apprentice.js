@@ -5,7 +5,6 @@ const apprenticeHelper= require('../helpers/apprentice.js')
 const fs = require('fs');  // Asegúrate de incluir esto al principio del archivo
 const iconv = require('iconv-lite'); // Importar iconv-lite
 const chardet = require('chardet');
- 
 const {generateJWT} = require('./../middlewares/validateJWT.js');
 
 
@@ -20,6 +19,7 @@ const apprenticeController = {
             res.status(400).json({ error });
         }
     },
+    // filtro de aprendices
     getFilterApprentices: async (req, res) => {
         try {
             const searchTerm = req.query.term;
@@ -32,7 +32,6 @@ const apprenticeController = {
                 ],
             });
             res.status(200).json({ results });
-
         } catch (error) {
             res.status(400).json({ error });
         }
@@ -67,7 +66,7 @@ const apprenticeController = {
             res.status(400).json({ error });
         }
     },
-
+    // listar aprendices con estado "por certificar" y "Certificado"
     getListCertificatedApprentice: async (req, res) => {
         try {
             const listCertificatedApprentice = await Apprentice.find({ status: { $in: [3, 4] } });
@@ -76,18 +75,16 @@ const apprenticeController = {
             res.status(400).json({ error });
         }
     },
-
+    // carga masiva de aprendices
     postUploadFile: async (req, res) => {
         const filePath = req.file?.path;
-    
         if (!filePath) {
             return res.status(400).json({ message: 'No se encontró el archivo en la solicitud' });
         }
-    
         try {
             const aprendices = [];
             const errores = [];
-    
+
             // Leer y procesar el archivo CSV
             const readStream = fs.createReadStream(filePath)
                 .pipe(iconv.decodeStream('utf-8'))
@@ -216,8 +213,8 @@ const apprenticeController = {
                 modality,
                 status
             });
-            let apprenticeCreated = await newApprentice.save();
-            res.status(200).json({ apprenticeCreated });
+            await newApprentice.save();
+            res.status(200).json({ newApprentice });
         } catch (error) {
             res.status(400).json({ error });
         }
@@ -227,10 +224,6 @@ const apprenticeController = {
         try {
             const { numDocument, institutionalEmail } = req.body;
             const apprentice = await Apprentice.findOne({ numDocument, institutionalEmail });
-            
-            if (!apprentice) {
-                return res.status(404).json({ error: 'Aprendiz no encontrado' });
-            }
     
             const token = await generateJWT(apprentice._id);
             res.status(200).json({ token, apprentice });

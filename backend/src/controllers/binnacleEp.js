@@ -29,8 +29,8 @@ const binnacleController = {
     // listar bitácoras por asignación 
     getListBinnaclesByAssignment: async (req, res) => {
         try {
-            const idAssignment = req.params.idAssignment
-            const listBinnaclesByAssignment = await Binnacle.find({ assignment: idAssignment })
+            const idRegister = req.params.idRegister
+            const listBinnaclesByAssignment = await Binnacle.find({ assignment: idRegister })
             res.status(200).json({ listBinnaclesByAssignment })
         } catch (error) {
             res.status(400).json({ error })

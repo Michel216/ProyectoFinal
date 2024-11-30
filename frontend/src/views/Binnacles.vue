@@ -26,7 +26,7 @@
         </div>
       </div>
     </div>
-    <Btn :label="btnLabel" :onClickFunction="openModalCreate" :loading="loading" v-if="role === 'INSTRUCTOR'" />
+    <Btn :icon="icons" :label="btnLabel" :onClickFunction="openModalCreate" :loading="loading" v-if="role === 'INSTRUCTOR'" />
     <binnacleTable :title="title" :columns="columns" :rows="filteredRows" :options="options"
       :onUpdateStatus="handleUpdateStatus" :loading="loading" :val="true" :onClickFunction="openModalObservations" />
     <Modal :onClickFunction="onReset" :isVisible="showModalCreate" @update:isVisible="showModalCreate = $event"
@@ -196,6 +196,7 @@ const role = computed(() => authStore.getRole());
 const user = computed(() => authStore.getEmail());
 let loading = ref(false);
 let change = ref()
+let icons="control_point"
 let title = "Bitácoras";
 let btnLabel = "Crear ";
 let assignment = ref("");
@@ -360,7 +361,10 @@ async function bring() {
       rows.value = await Promise.all(data.ListAllBinnacles.map(async (item, idx) => {
         // Obtener los datos del instructor desde su ID
         const instructorId = item.instructor;  // Accedemos al 'instructor' de cada 'item'
-        const instructorData = await getDataRepfora(`/instructors/${instructorId}`)
+        let instructorData;
+        if (role.value === "ADMIN") {
+          instructorData = await getDataRepfora(`/instructors/${instructorId}`)
+        }
 
         // Verificar que 'assignment' y 'apprentice' existen antes de acceder a ellos
         const assignmentApprentice = item.assignment && item.assignment.apprentice
@@ -504,28 +508,28 @@ async function filterAssignment(val, update) {
   });
 }
 
-async function filterInstructor(val, update) {
-  let instructor = await getData('http://89.116.49.65:4500/api/instructors');
-  console.log(instructor);
-  if (val === "") {
-    update(() => {
-      optionsInstructor.value = instructor.map((instructor) => ({
-        label: instructor.name,
-        value: instructor._id,
-      }));
-    });
-    return;
-  }
+// async function filterInstructor(val, update) {
+//   let instructor = await getData('http://89.116.49.65:4500/api/instructors');
+//   console.log(instructor);
+//   if (val === "") {
+//     update(() => {
+//       optionsInstructor.value = instructor.map((instructor) => ({
+//         label: instructor.name,
+//         value: instructor._id,
+//       }));
+//     });
+//     return;
+//   }
 
-  update(() => {
-    const needle = val.toLowerCase();
-    optionsInstructor.value = instructor.map((instructor) => ({
-      label: instructor.name,
-      value: instructor._id,
-    }))
-      .filter((option) => option.label.toLowerCase().includes(needle));
-  });
-}
+//   update(() => {
+//     const needle = val.toLowerCase();
+//     optionsInstructor.value = instructor.map((instructor) => ({
+//       label: instructor.name,
+//       value: instructor._id,
+//     }))
+//       .filter((option) => option.label.toLowerCase().includes(needle));
+//   });
+// }
 </script>
 
 <style scoped>

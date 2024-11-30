@@ -1,11 +1,11 @@
 <template>
   <div class="q-pa-md q-gutter-md">
-    <Header title="Asignaciones"></Header>
+    <Header title="Mis Asignaciones"></Header>
 
     <!-- Contenedor de botón, formulario de radio y campo de entrada -->
     <div style="display: flex; align-items: center; justify-content: space-between;  margin: -30px 0">
       <div class="btn" style="display: flex; flex-direction: row;  gap: 10px; margin-left: 10%">
-        <Btn :label="btnLabel" :onClickFunction="bringIdAndOpenModal" :loading="loading" v-if="role === 'ADMIN'" />
+        <Btn :icon="icons" :label="btnLabel" :onClickFunction="bringIdAndOpenModal" :loading="loading" v-if="role === 'ADMIN'" />
       </div>
       <!-- Formulario de radio centrado -->
       <div class="q-pa-md q-gutter-sm" style="display: flex; flex-direction: column; align-items: flex-start;">
@@ -15,14 +15,16 @@
           <!-- Radio buttons -->
           <div style="display: flex; flex-direction: row; align-items: flex-start;">
             <q-radio v-model="selectedValue" val="apprentice" label="Aprendiz" dense color="primary"
-              @update:model-value="handleFilter" style="margin-right: 10px;" />
+              @update:model-value="handleFilter"  style="margin-right: 10px;" />
             <q-radio v-model="selectedValue" val="followUpInstructor" label="Ins. Seguimiento" dense color="primary"
-              @update:model-value="handleFilter" style="margin-right: 10px;" />
+              @update:model-value="handleFilter" v-if="role === 'ADMIN'" style="margin-right: 10px;" />
             <q-radio v-model="selectedValue" val="technicalInstructor" label="Ins. Técnico" dense color="primary"
-              @update:model-value="handleFilter" style="margin-right: 10px;" />
+              @update:model-value="handleFilter" v-if="role === 'ADMIN'" style="margin-right: 10px;" />
             <q-radio v-model="selectedValue" val="projectInstructor" label="Ins. Proyecto" dense color="primary"
-              @update:model-value="handleFilter" style="margin-right: 10px;" />
-          </div>
+              @update:model-value="handleFilter" v-if="role === 'ADMIN'" style="margin-right: 10px;" />
+              <q-radio v-model="selectedValue" val="tipeInstructor" label="Tipo Instructor" dense color="primary"
+              @update:model-value="handleFilter" v-if="role === 'INSTRUCTOR'" style="margin-right: 10px;"  />          
+            </div>
 
           <div class="q-pa-md">
             <div class="rounded-input" style="width: 350px; ">
@@ -124,6 +126,7 @@ const authStore = useAuthStore();
 const role = computed(() => authStore.getRole());
 let loading = ref(false);
 let btnLabel = "Crear Asignación";
+let icons="control_point";
 const isLoading = ref(false);
 const rows = ref([]);
 const showModal = ref(false);
@@ -162,7 +165,7 @@ const columns = computed(() => {
   let baseColumns = [
     {
       name: "index",
-      label: "#",
+      label: "N°",
       align: "center",
       field: 'index'
     },

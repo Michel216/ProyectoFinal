@@ -2,7 +2,6 @@ const Log = require("../models/log.js")
 const bcryptjs = require("bcryptjs");
 
 const logController = {
-
     //listar logs
     getlistlogs: async (req, res) => {
 

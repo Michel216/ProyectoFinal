@@ -1,8 +1,50 @@
 const { check } = require('express-validator');
 const Register = require("../models/register.js")
+const Apprentice = require("../models/apprentice.js");
+const Modality = require("./../models/modality.js")
 const { body } = require('express-validator');
 
-const validateDateRange = () => {
+const registerHelper = {
+    validateId: async (id) => {
+        const exist = await Register.findById(id);
+        if (!exist) {
+            throw new Error(`El ID no está registrado`);
+        } return true;
+    },
+    validateModality: async (idmodality) => {
+        const existModality = await Modality.findById(idmodality)
+        if (!existModality) {
+            throw new Error(`La modalidad no está en a base de datos`);
+        } return true
+    },
+    validateApprentice: async (idapprentice) => {
+        const existApprentice = await Apprentice.findById(idapprentice)
+        if (!existApprentice) {
+            throw new Error(`El aprendiz no está en a base de datos`);
+        } return true
+    },
+    verifyDocAlternative: async () => {
+        try {
+            const url = docAlternative;
+    
+            const isOneDriveLink = (url) => {
+                const regex = /^https?:\/\/(www\.)?(onedrive\.live\.com|1drv\.ms)(\/.*)?$/;
+                return regex.test(url);
+            };
+    
+            if (!isOneDriveLink(url)) {
+                throw new Error("El enlace proporcionado no es válido. Debe ser un enlace de OneDrive.");
+            }
+    
+            console.log("El contenido es un enlace válido de OneDrive.");
+            return true;
+        } catch (error) {
+            throw new Error(error.message || "Error al verificar el enlace de OneDrive.");
+        }
+    }
+}
+
+async function validateDateRange() {
     return [
         check('startDate', 'El campo startDate es obligatorio y debe ser una fecha válida').isDate(),
         check('endDate', 'El campo endDate es obligatorio y debe ser una fecha válida').isDate(),
@@ -42,40 +84,7 @@ const validateDateRange = () => {
 //     return { valid: true };
 // }
 
-const registerExists = async (id) => {
-    try {
-        const exist = await Register.findById(id);
-
-        if (!exist) {
-            throw new Error(`El ID: ${id} no está registrado`);
-        }
-
-        return exist;
-    } catch (error) {
-        throw new Error(`Error al verificar el ID: ${error.message}`);
-    }
-};
-const verifyDocAlternative= async (docAlternative) => {
-    try {
-        const url = docAlternative;
-
-        const isOneDriveLink = (url) => {
-            const regex = /^https?:\/\/(www\.)?(onedrive\.live\.com|1drv\.ms)(\/.*)?$/;
-            return regex.test(url);
-        };
-
-        if (!isOneDriveLink(url)) {
-            throw new Error("El enlace proporcionado no es válido. Debe ser un enlace de OneDrive.");
-        }
-
-        console.log("El contenido es un enlace válido de OneDrive.");
-        return true;
-    } catch (error) {
-        throw new Error(error.message || "Error al verificar el enlace de OneDrive.");
-    }
-}
-
-const validateAtLeastOneInstructor = () => {
+function validateAtLeastOneInstructor() {
     return body().custom((value, { req }) => {
         const { followInstructor, technicalInstructor, proyectInstructor } = req.body;
         if (!followInstructor && !technicalInstructor && !proyectInstructor) {
@@ -84,11 +93,4 @@ const validateAtLeastOneInstructor = () => {
         return true;
     });
 }
-module.exports = {
-    validateDateRange,
-    // validateCreateRegister,
-    // validateUpdateRegister,
-    verifyDocAlternative,
-    registerExists,
-    validateAtLeastOneInstructor
-};
+module.exports = {registerHelper, validateDateRange, validateAtLeastOneInstructor};

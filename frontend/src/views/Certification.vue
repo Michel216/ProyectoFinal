@@ -1,8 +1,9 @@
 <template>
   <div class="q-pa-md q-gutter-md">
     <Header title="Certificaciones"></Header>
-  
-    <div style="display: flex; flex-direction: row; align-items: flex-start; justify-content: flex-end; margin: -30px 0px">
+
+    <div
+      style="display: flex; flex-direction: row; align-items: flex-start; justify-content: flex-end; margin: -30px 0px">
 
       <div class="q-pa-md q-gutter-sm" style="display: flex; flex-direction: column; align-items: flex-start;">
         <div class="text-primary" style="margin-bottom: -30px;">Realizar filtro por</div>
@@ -28,7 +29,7 @@
         </div>
       </div>
     </div>
-        <Btn icon="control_point" :label="btnLabel" :onClickFunction="openModalCreate" :loading="loading" />
+    <Btn icon="control_point" :label="btnLabel" :onClickFunction="openModalCreate" :loading="loading" />
     <ficheTable :title="title" :columns="columns" :rows="rows" :options="options"
       :toggleSeeApprentice="handleViewApprentices">
     </ficheTable>
@@ -49,10 +50,10 @@ import { icon } from '@fortawesome/fontawesome-svg-core';
 const router = useRouter();
 const rows = ref([]); // Almacena la respuesta completa
 const rowsForTable = ref([]); // Solo los datos de `program` para mostrar en la tabla
-let btnLabel = "Crear ";
+let btnLabel = "Crear";
 let searchTerm = ref("");
 let searchLabel = ref('Ingrese el nombre o número de documento')
-const selectedValue = ref('');function radiobtn(evt) {
+const selectedValue = ref(''); function radiobtn(evt) {
   const formData = new FormData(evt.target)
   const data = []
 
@@ -70,13 +71,11 @@ const columns = ref([
     field: 'index'
   },
   { name: "name", label: "NOMBRE DEL APRENDIZ", align: "center", field: "name" },
-  { name: "fiche", label: "PROGRAMA", align: "center", field: "fiche" },
-  { name: "code", label: "CODIGO", align: "center", field: "code" },
-  // { name: "status", label: "ESTADO", align: "center", field: "status" },
+  { name: "fiche", label: "FICHA", align: "center", field: "fiche" },
+  { name: "code", label: "COD. FICHA", align: "center", field: "code" },
   { name: "statusApprentice", label: "ESTADO", align: "center", field: "statusApprentice" },
   { name: "certificationDoc", label: "DOCUMENTO DE CERTIFICACIÓN", align: "center", field: "certificationDoc" },
-  { name: "judymentPhoto", label: "DOCUMENTO DE CERTIFICACIÓN", align: "center", field: "judymentPhoto" },
-  // { name: "apprentice", label: "DOCUMENTO DE JUICIO", align: "center", field: "apprentice" },
+  { name: "judymentPhoto", label: "DOCUMENTO DE JUICIO", align: "center", field: "judymentPhoto" }
 ]);
 
 onBeforeMount(() => {

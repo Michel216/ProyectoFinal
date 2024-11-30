@@ -1,11 +1,12 @@
 const Followup = require("../models/followup.js")
+const Register = require("../models/register.js")
 // const Instructor = require("../models/instructor.js")
 const followUpHelper = {
     validateId: async (id) => {
         let existsId = await Followup.findById(id)
         if (!existsId) {
             throw new Error("El seguimiento no existe en la base de datos")
-        }
+        } return true
     },
 
     // validateAssignment: async (idAssignment) => {
@@ -39,6 +40,18 @@ const followUpHelper = {
             return true
         }
     },
+    validateRegister: async (idRegister) => {
+        const existRegister = await Register.findById(idRegister)
+        if (!existRegister) {
+            throw new Error("El registro no existe en la base de datos")
+        } return true
+    },
+    validateAssignment: async (idRegister) => {
+        const existRegister = await Register.findById(idRegister)
+        if (existRegister.assignment.length < 0) {
+            throw new Error("El registro no tiene asignación")
+        } return true
+    }
 }
 
 module.exports = followUpHelper;
