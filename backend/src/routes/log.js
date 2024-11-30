@@ -16,6 +16,7 @@ logRoute.get('/listlogs', [
 logRoute.get('/listlogs/:id', [
     validateRepforaJWT,
     check('id', 'El id es obligatorio y debe ser un ID de MongoDB válido').notEmpty().isMongoId(),
+    check('id', 'El id es obligatorio y debe ser un ID de MongoDB válido').notEmpty().isMongoId(),
     check('id').custom(logHelper.validateId),
     validateFields
 ], logController.getlistlogsbyid);
@@ -34,6 +35,7 @@ logRoute.post('/addlog', [
 logRoute.put('/enablelogsbyid/:id', [
     validateRepforaJWT,
     check('id', 'El id es obligatorio y debe ser un ID de MongoDB válido').notEmpty().isMongoId(),
+    check('id', 'El id es obligatorio y debe ser un ID de MongoDB válido').notEmpty().isMongoId(),
     check('id').custom(logHelper.validateId),
     validateFields
 ], logController.putenablelogsbyid);
@@ -41,6 +43,7 @@ logRoute.put('/enablelogsbyid/:id', [
 //deshabilitar registros por id
 logRoute.put('/disablelogsbyid/:id', [
     validateRepforaJWT,
+    check('id', 'El id es obligatorio y debe ser un ID de MongoDB válido').notEmpty().isMongoId(),
     check('id', 'El id es obligatorio y debe ser un ID de MongoDB válido').notEmpty().isMongoId(),
     check('id').custom(logHelper.validateId),
     validateFields
