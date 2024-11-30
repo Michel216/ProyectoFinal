@@ -16,7 +16,7 @@ modalityRoutes.get("/listallmodality", [
 // listar modalidades por ID
 modalityRoutes.get("/listmodalitybyid/:id", [
     validateRepforaJWT,
-    check('id', 'El id es obligatorio y debe ser un ID de MongoDB válido').notEmpty().isMongoId().trim(),
+    check('id', 'El id es obligatorio y debe ser un ID de MongoDB válido').notEmpty().isMongoId(),
     check('id').custom(modalityHelper.validateId),
     validateFields
 ], modalityController.getListModalityById)
@@ -24,10 +24,10 @@ modalityRoutes.get("/listmodalitybyid/:id", [
 // crear modalidades
 modalityRoutes.post("/addmodality", [
     validateRepforaJWT,
-    check('name', 'El nombre es obligatorio').notEmpty().trim(),
-    check('hourInstructorFollow', 'Las horas del instructor de seguimiento son obligatorias').optional().isNumeric().trim(),
-    check('hourInstructorTechnical', 'Las horas del instructor técnico son obligatorias').optional().isNumeric().trim(),
-    check('hourInstructorProject', 'Las horas del instructor de proyecto son obligatorias').optional().isNumeric().trim(),
+    check('name', 'El nombre es obligatorio').notEmpty(),
+    check('hourInstructorFollow', 'Las horas del instructor de seguimiento son obligatorias').optional().isNumeric(),
+    check('hourInstructorTechnical', 'Las horas del instructor técnico son obligatorias').optional().isNumeric(),
+    check('hourInstructorProject', 'Las horas del instructor de proyecto son obligatorias').optional().isNumeric(),
     modalityHelper.validateAtLeastOneInstructorHour(), // valida al menos la hora de un instructor
     validateFields
 ], modalityController.postAddModality)
@@ -35,12 +35,12 @@ modalityRoutes.post("/addmodality", [
 // modificar modalidades
 modalityRoutes.put("/updatemodalitybyid/:id", [
     validateRepforaJWT,
-    check('id', 'El id es obligatorio y debe ser un ID de MongoDB válido').notEmpty().isMongoId().trim(),
+    check('id', 'El id es obligatorio y debe ser un ID de MongoDB válido').notEmpty().isMongoId(),
     check('id').custom(modalityHelper.validateId),
-    check('name', 'El nombre es obligatorio').notEmpty().trim(),
-    check('hourInstructorFollow', 'Las horas del instructor de seguimiento son obligatorias').optional().isNumeric().trim(),
-    check('hourInstructorTechnical', 'Las horas del instructor técnico son obligatorias').optional().isNumeric().trim(),
-    check('hourInstructorProject', 'Las horas del instructor de proyecto son obligatorias').optional().isNumeric().trim(),
+    check('name', 'El nombre es obligatorio').notEmpty(),
+    check('hourInstructorFollow', 'Las horas del instructor de seguimiento son obligatorias').optional().isNumeric(),
+    check('hourInstructorTechnical', 'Las horas del instructor técnico son obligatorias').optional().isNumeric(),
+    check('hourInstructorProject', 'Las horas del instructor de proyecto son obligatorias').optional().isNumeric(),
     modalityHelper.validateAtLeastOneInstructorHour(),
     validateFields
 ], modalityController.putUpdateModality)
@@ -48,7 +48,7 @@ modalityRoutes.put("/updatemodalitybyid/:id", [
 // activar modalidades
 modalityRoutes.put("/enablemodalitybyid/:id", [
     validateRepforaJWT,
-    check('id', 'El id es obligatorio y debe ser un ID de MongoDB válido').notEmpty().isMongoId().trim(),
+    check('id', 'El id es obligatorio y debe ser un ID de MongoDB válido').notEmpty().isMongoId(),
     check('id').custom(modalityHelper.validateId),
     validateFields
 ], modalityController.putEnableModality)
@@ -56,7 +56,7 @@ modalityRoutes.put("/enablemodalitybyid/:id", [
 // desactivar modalidades
 modalityRoutes.put("/disablemodalitybyid/:id", [
     validateRepforaJWT,
-    check('id', 'El id es obligatorio y debe ser un ID de MongoDB válido').notEmpty().isMongoId().trim(),
+    check('id', 'El id es obligatorio y debe ser un ID de MongoDB válido').notEmpty().isMongoId(),
     check('id').custom(modalityHelper.validateId),
     validateFields
 ], modalityController.putDisableModality)
