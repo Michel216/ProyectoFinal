@@ -9,14 +9,14 @@
       <div class="q-pa-md q-gutter-sm" style="display: flex; flex-direction: column; align-items: flex-start;">
         <div class="q-pa-md">
           <div class="rounded-input" style="width: 350px; ">
-            <q-input class="q-ml-md" v-model="searchTerm" :label="searchLabel" @input="handleFilter" outlined />
+            <q-input class="q-ml-md" v-model="searchTerm" :label="searchLabel" outlined />
           </div>
         </div>
       </div>
     </div>
   
   <modalityTable :title="title" :columns="columns" :rows="filteredRows" :onToggleActivate="handleToggleActivate"
-    :onClickEdit="bringId" />
+    :onClickEdit="bringId" @update:loading="(val) => (loading = val)" :loading="loading"/>
     <Modal :onClickFunction="onReset"
       :isVisible="showModal"
       @update:isVisible="showModal = $event"
@@ -160,6 +160,7 @@ onBeforeMount(() => {
 });
 
 async function bring() {
+  loading.value = true
   try {
     let data = await getData("/modality/listallmodality");
     console.log(data);
@@ -169,6 +170,8 @@ async function bring() {
   }));
   } catch (error) {
     console.log(error);
+  } finally {
+    loading.value = false
   }
 }
 

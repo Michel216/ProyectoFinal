@@ -22,7 +22,7 @@
           <!-- Input de búsqueda alineado a la izquierda -->
           <div class="q-pa-md" style="flex-grow: 1; display: flex; justify-content: flex-start">
             <div class="rounded-input" style="width: 370px">
-              <q-input class="q-ml-md" v-model="searchTerm" :label="searchLabel" @input="handleFilter" outlined />
+              <q-input class="q-ml-md" v-model="searchTerm" :label="searchLabel" outlined />
             </div>
           </div>
         </div>
@@ -31,7 +31,7 @@
     <Btn :icon="icons" :label="btnLabel" :onClickFunction="openModalCreate" :loading="loading"
       v-if="role === 'INSTRUCTOR'" />
     <FollowupTable :title="title" :columns="columns" :rows="filteredRows" :options="options"
-      :onUpdateStatus="handleUpdateStatus" :onClickFunction="openModalObservations" />
+      :onUpdateStatus="handleUpdateStatus" :onClickFunction="openModalObservations" @update:loading="(val) => (loading = val)" :loading="loading"/>
 
     <Modal :onClickFunction="onReset" :isVisible="showModalCreate" @update:isVisible="showModalCreate = $event"
       :label="'DILIGENCIA LA INFORMACION'">
@@ -323,6 +323,7 @@ onBeforeMount(() => {
 });
 
 async function bring() {
+  loading.value = true
   try {
     const data = await getData("/followup/listallfollowup");
     console.log(data);
@@ -338,7 +339,9 @@ async function bring() {
     }));
   } catch (error) {
     console.log(error);
-  }
+  } finally {
+    loading.value = false
+    }
 }
 
 const filteredRows = computed(() => {

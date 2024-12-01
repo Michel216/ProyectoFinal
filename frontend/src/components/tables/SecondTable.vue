@@ -1,6 +1,6 @@
 <template>
   <div>
-    <q-table :title="title" :rows="rows" :columns="columns">
+    <q-table :title="title" :rows="rows" :columns="columns" :loading="localLoading">
       <template v-slot:body-cell-options="scope">
         <q-td :props="scope">
           <div class="q-pa-md" align="center" v-if="role === 'ADMIN'">
@@ -79,12 +79,6 @@
         </q-td>
       </template>
 
-      <template v-slot:body-cell-validateHour="props">
-        <q-td :props="props" align="center">
-          <q-checkbox />
-        </q-td>
-      </template>
-
       <template v-slot:body-cell-statusApprentice="scope">
         <q-td :props="scope">
           <q-btn
@@ -116,7 +110,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { useRouter } from "vue-router";
@@ -133,34 +127,35 @@ const authStore = useAuthStore();
 const role = computed(() => authStore.getRole());
 library.add(faMagnifyingGlass, faEye, faFolder);
 const router = useRouter();
-let loading = ref(false);
 const props = defineProps({
+  title: {
+    type: String
+  },
   rows: {
     type: Array,
-    required: true,
   },
   columns: {
     type: Array,
-    required: true,
   },
   options: {
     type: Array,
-    required: true,
   },
   onUpdateStatus: {
     type: Function,
-    required: true,
   },
   val: {
-    type: String,
+    type: Boolean,
   },
   onClickFunction: {
     type: Function,
   },
   toggleSeeApprentice: {
-    type: Function,
-    required: true,
+    type: Function
   },
+  loading: {
+    type: Boolean,
+    default: false
+  }
 });
 function toggleState(row) {
   row.status = !row.status;
@@ -168,6 +163,25 @@ function toggleState(row) {
   updateStatus(row.status, row._id);
 }
 
+let title = ref(props.title);
+
+const emits = defineEmits(['update:loading']);
+let localLoading = ref(props.loading);
+console.log(localLoading.value);
+
+
+// Sincronizar `loading` local con prop externa
+watch(
+  () => props.loading,
+  (newVal) => {
+    localLoading.value = newVal;
+  }
+);
+
+function updateLoadingState(isLoading) {
+  localLoading.value = isLoading;
+  emits('update:loading', isLoading);
+}
 
 // Combinar las columnas pasadas con las columnas de acciones "editar" y "activar"
 // const combinedColumns = computed(() => [

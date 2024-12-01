@@ -3,8 +3,7 @@
     <Header title="Registros EP" />
     
     <Btn :icon="icons" :label="btnLabel" :onClickFunction='bringIdAndOpenModal' :loading="loading" />
-    <RegisterTable :title="title" :columns="columns" :rows="rows" :onToggleActivate="handleToggleActivate"
-      :loading="loading" :onClickEdit="bringIdAndOpenModal" />
+    <RegisterTable :title="title" :columns="columns" :rows="rows" :onToggleActivate="handleToggleActivate" :onClickEdit="bringIdAndOpenModal" @update:loading="(val) => (loading = val)" :loading="loading"/>
     <Modal :onClickFunction="onReset" :isVisible="showModal" @update:isVisible="showModal = $event" :label="btnLabel">
       <div class="q-pa-md" style="max-width: 400px">
         <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
@@ -216,6 +215,7 @@ onBeforeMount(() => {
 })
 
 async function bring() {
+  loading.value = true
   try {
     // Obtener los datos de los registros
     let data = await getData('/register/listallregister');
@@ -239,6 +239,8 @@ async function bring() {
 
   } catch (error) {
     console.log(error);
+  } finally {
+    loading.value = false
   }
 }
 

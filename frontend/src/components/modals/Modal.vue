@@ -36,7 +36,7 @@ const emits = defineEmits(['update:isVisible']);
 
 function onSubmit() {
     console.log('Formulario enviado');
-    emits('update:isVisible', false);
+    // emits('update:isVisible', false);
 }
 
 function toggleReset  ()  {

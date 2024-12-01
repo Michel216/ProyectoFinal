@@ -17,7 +17,7 @@
     </q-page-container>
     
     <!-- Componente Footer -->
-    <Footer />
+    <TheFooter />
   </q-layout>
 </template>
 
@@ -25,7 +25,7 @@
 import { ref } from 'vue';
 import Header from '../components/layouts/header.vue';
 import Menu from '../components/layouts/menu.vue';
-// import Footer from '../components/layouts/Footer.vue';
+import TheFooter from '../components/layouts/footer.vue';
 import { useRoute } from 'vue-router';
 
 const leftDrawerOpen = ref(false);
@@ -42,7 +42,7 @@ const menuItems = [
   { label: 'Seguimientos', path: '/FollowUp', icon: ['fas', 'chart-line'], rol: ["ADMIN", "ETAPA PRODUCTIVA", "INSTRUCTOR","CONSULTOR"] },
   // { label: 'Informes', path: '/reports', icon: ['fas', 'user-graduate'], rol: ["ADMIN", "ETAPA PRODUCTIVA"] },
   { label: 'Fichas', path: '/fiches', icon: ['fas', 'chart-line'], rol: ["ADMIN" ] },
-  { label: 'Registro de Horas', path: '/reports', icon: ['fas', 'user-graduate'], rol: ["INSTRUCTOR" ] },
+  { label: 'Registro de Horas', path: '/home', icon: ['fas', 'user-graduate'], rol: ["INSTRUCTOR" ] },
   { label: 'Certificaciones', path: '/Certification', icon: ['fas', 'user-graduate'], rol: ["ADMIN","INSTRUCTOR" ] },
   { label: 'Informe Horas Instructor EP', path: '/HoursInstructor', icon: ['fas', 'user-graduate'], rol: ["ADMIN","INSTRUCTOR" ] },
   { label: 'History', path: '/History', icon: ['fas', 'chart-line'], rol: ["CONSULTOR" ] },

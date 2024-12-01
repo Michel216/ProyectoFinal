@@ -28,7 +28,7 @@
     </div>
     <Btn :icon="icons" :label="btnLabel" :onClickFunction="openModalCreate" :loading="loading" v-if="role === 'INSTRUCTOR'" />
     <binnacleTable :title="title" :columns="columns" :rows="filteredRows" :options="options"
-      :onUpdateStatus="handleUpdateStatus" :loading="loading" :val="true" :onClickFunction="openModalObservations" />
+      :onUpdateStatus="handleUpdateStatus" :val="true" :onClickFunction="openModalObservations"  @update:loading="(val) => (loading = val)" :loading="loading"/>
     <Modal :onClickFunction="onReset" :isVisible="showModalCreate" @update:isVisible="showModalCreate = $event"
       :label="'DILIGENCIA LA INFORMACION'">
       <div class="q-pa-md" style="max-width: 600px">
@@ -261,16 +261,6 @@ const columns = computed(() => {
     },
   ];
 
-  // Agregar la columna 'validateHour' solo si el rol es 'INSTRUCTOR'
-  if (role.value === 'INSTRUCTOR') {
-    baseColumns.push({
-      name: "validateHour",
-      label: "Validar horas",
-      align: "center",
-      field: "validateHour",
-    });
-  }
-
   if (role.value === 'ADMIN') {
     baseColumns.splice(2, 0,
       {
@@ -344,6 +334,7 @@ const filteredRows = computed(() => {
 
 
 async function bring() {
+  loading.value = true
   try {
     let data = await getData("/binnacles/listallbinnacles");
     console.log(data);
@@ -374,7 +365,7 @@ async function bring() {
         return {
           ...item,
           assignment: `${assignmentApprentice.firstName} ${assignmentApprentice.lastName}`,  // Concatenar nombres
-          instructor: instructorData.data.name,  // Nombre del instructor
+          instructor: role.value==="ADMIN"?instructorData.data.name:'',  // Nombre del instructor
           index: idx + 1,  // Índice de la fila
         };
       }));
@@ -386,6 +377,8 @@ async function bring() {
     }
   } catch (error) {
     console.log(error);
+  } finally {
+    loading.value = false
   }
 }
 

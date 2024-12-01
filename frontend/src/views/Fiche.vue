@@ -15,7 +15,7 @@
     </div>
     <div class="table-container">
       <ficheTable :title="title" :columns="columns" :rows="rowsForTable" :options="options"
-        :toggleSeeApprentice="handleViewApprentices" />
+        :toggleSeeApprentice="handleViewApprentices" @update:loading="(val) => (loading = val)" :loading="loading" />
     </div>
   </div>
 </template>
@@ -35,6 +35,8 @@ import Header from '../components/header/Header.vue';
 import ficheTable from '../components/tables/SecondTable.vue';
 import { getDataRepfora } from '../services/apiRepfora.js';
 
+let loading = ref(false)
+let title = ref('Fichas')
 const router = useRouter();
 const model = ref(null);
 const rows = ref([]);
@@ -67,6 +69,7 @@ const columns = [
 ];
 
 onBeforeMount(async () => {
+  loading.value = true
   try {
     const response = await getDataRepfora("/fiches");
     rows.value = response.data;
@@ -78,6 +81,8 @@ onBeforeMount(async () => {
     }));
   } catch (error) {
     console.error("Error al traer los datos:", error);
+  } finally {
+    loading.value = false
   }
 });
 
@@ -94,4 +99,3 @@ function handleViewApprentices(row) {
 }
 
 </script>
-

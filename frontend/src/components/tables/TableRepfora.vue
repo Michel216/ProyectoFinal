@@ -18,16 +18,13 @@ let loading = ref(false)
 const props = defineProps({
     title: {
         type: String,
-        required: true,
         default: 'My Table'
     },
     rows: {
         type: Array,
-        required: true
     },
     columns: {
         type: Array,
-        required: true
     },
     loading: {
         type: Boolean

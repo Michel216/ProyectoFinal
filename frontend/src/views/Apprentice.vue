@@ -40,7 +40,7 @@
     </div>
     <!-- Botón de crear y tabla de aprendices -->
     <apprenticeTable :title="title" :rows="filteredRows" :columns="columns" :onToggleActivate="handleToggleActivate"
-      :loading="loading" :onClickEdit="bringIdAndOpenModal" />
+      :onClickEdit="bringIdAndOpenModal" @update:loading="(val) => (loading = val)" :loading="loading"/> 
 
     <!-- Modal para crear aprendiz -->
     <Modal :isVisible="showModal" @update:isVisible="showModal = $event" :label="'CREAR APRENDIZ SENA'" :onClickFunction="onReset">
@@ -222,6 +222,12 @@ const columns = ref([
     align: "center",
     field: "personalEmail",
   },
+  {
+    name: "institutionalEmail",
+    label: "Email institucional",
+    align: "center",
+    field: "institutionalEmail",
+  },
 
   {
     name: "phone",
@@ -264,7 +270,9 @@ const handleFilter = () => {
 };
 
 const filteredRows = computed(() => {
-  if (!searchTerm.value) return rows.value;  // Si no hay término de búsqueda, devolver todos los registros
+  loading.value = true
+  try {
+    if (!searchTerm.value) return rows.value;  // Si no hay término de búsqueda, devolver todos los registros
 
   return rows.value.filter(row => {
     if (selectedValue.value === "fiche") {
@@ -284,6 +292,13 @@ const filteredRows = computed(() => {
     }
     return false;  // Si no hay filtro seleccionado
   });
+  } catch (error) {
+    console.log(error);
+    
+  } finally {
+    loading.value = false
+  }
+  
 });
 
 
@@ -324,9 +339,9 @@ onMounted(async () => {
     loading.value = false;
   }
 });
-// onBeforeMount(() => {
-//   bring();
-// });
+onBeforeMount(() => {
+  bring();
+});
 
 async function bring() {
   loading.value = true;

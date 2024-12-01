@@ -13,15 +13,15 @@
           <!-- Radio buttons -->
           <div style="display: flex; flex-direction: row; align-items: flex-start; margin-right: 10px;">
             <q-radio v-model="selectedValue" val="fiche" label="Ficha" dense color="primary"
-              @update:model-value="handleFilter" style="margin-right: 10px;" />
+              style="margin-right: 10px;" />
             <q-radio v-model="selectedValue" val="apprentice" label="Aprendiz" dense color="primary"
-              @update:model-value="handleFilter" style="margin-right: -10px;" />
+              style="margin-right: -10px;" />
           </div>
 
           <!-- Input de búsqueda alineado a la izquierda -->
           <div class="q-pa-md" style="flex-grow: 1; display: flex; justify-content: flex-start;">
             <div class="rounded-input" style=" width: 370px;">
-              <q-input class="q-ml-md" v-model="searchTerm" :label="searchLabel" @input="handleFilter" outlined
+              <q-input class="q-ml-md" v-model="searchTerm" :label="searchLabel" outlined
                 :disable="!selectedValue" />
             </div>
           </div>
@@ -29,9 +29,9 @@
         </div>
       </div>
     </div>
-    <Btn icon="control_point" :label="btnLabel" :onClickFunction="openModalCreate" :loading="loading" />
-    <ficheTable :title="title" :columns="columns" :rows="rows" :options="options"
-      :toggleSeeApprentice="handleViewApprentices">
+    <!-- <Btn icon="control_point" :label="btnLabel" :onClickFunction="openModalCreate" :loading="loading" /> -->
+    <ficheTable :title="title" :columns="columns" :rows="rows"
+      @update:loading="(val) => (loading = val)" :loading="loading">
     </ficheTable>
 
   </div>
@@ -47,10 +47,12 @@ import { getData, postData, putData } from '../services/apiClient';
 import Btn from "../components/buttons/Button.vue"
 import { icon } from '@fortawesome/fontawesome-svg-core';
 
+let loading = ref(false)
 const router = useRouter();
 const rows = ref([]); // Almacena la respuesta completa
 const rowsForTable = ref([]); // Solo los datos de `program` para mostrar en la tabla
 let btnLabel = "Crear";
+let title = ref("Fichas");
 let searchTerm = ref("");
 let searchLabel = ref('Ingrese el nombre o número de documento')
 const selectedValue = ref(''); function radiobtn(evt) {
@@ -83,6 +85,7 @@ onBeforeMount(() => {
 });
 
 async function bring() {
+  loading.value = true
   try {
     let url = await getData(`/apprentice/listcertificatedapprentice`)
     console.log(url);
@@ -108,9 +111,10 @@ async function bring() {
     );
   } catch (error) {
     console.log(error);
-  }
+  } finally {
+    loading.value = false
+    }
 }
-
 
 
 </script>

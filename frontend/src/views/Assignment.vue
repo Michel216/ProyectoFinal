@@ -46,7 +46,7 @@
         </q-card-section>
       </q-card> -->
     <ApprenticeTable :title="title" :rows="filteredRows" :columns="columns" :onToggleActivate="handleToggleActivate"
-      :loading="loading" :onClickEdit="bringIdAndOpenModal" />
+      :loading="loading" :onClickEdit="bringIdAndOpenModal" @update:loading="(val) => (loading = val)"/>
     <Modal :isVisible="showModal" @update:isVisible="showModal = $event" :label="btnLabel" :onClickFunction="onReset">
       <div class="q-pa-md" style="max-width: 400px">
         <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
@@ -127,6 +127,7 @@ const role = computed(() => authStore.getRole());
 let loading = ref(false);
 let btnLabel = "Crear Asignación";
 let icons="control_point";
+let title = "Asignaciones"
 const isLoading = ref(false);
 const rows = ref([]);
 const showModal = ref(false);
@@ -288,6 +289,7 @@ const filteredRows = computed(() => {
 });
 
 async function bring() {
+  loading.value = true
   try {
     // Obtén los datos de registros
     let data = await getData("/register/listallregister");
@@ -347,7 +349,9 @@ async function bring() {
     }));
   } catch (error) {
     console.error("Error al cargar los registros:", error);
-  }
+  } finally {
+    loading.value = false
+    }
 }
 
 async function handleToggleActivate(id, status) {

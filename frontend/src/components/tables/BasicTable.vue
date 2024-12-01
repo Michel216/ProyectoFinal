@@ -3,7 +3,7 @@
     <q-btn  class="btn-fixed-width" color="green-9" label="Crear" icon="add_circle_outline " />
   </div> -->
   <div>
-    <q-table :title="title" :rows="rows" :columns="combinedColumns" :loading="loading">
+    <q-table :title="title" :rows="rows" :columns="combinedColumns" :loading="localLoading">
       <!-- Slot para la celda de editar -->
       <!-- <template v-slot:body-cell-editar="scope">
         <q-td :props="scope" class="q-pa-sm">
@@ -24,10 +24,10 @@
       </template>
       <template v-slot:body-cell-status="scope">
         <q-td :props="scope">
-          <h7 style="font-size: 110%; color: white; background-color: green; padding:8% 25%; border-radius:5px"
-            v-if="scope.row.status === 1">Activo</h7>
-          <h7 style="font-size: 110%; color: white; background-color: red; padding:8% 25%; border-radius:5px" v-else>
-            Inactivo</h7>
+          <span style="font-size: 110%; color: white; background-color: green; padding:8% 25%; border-radius:5px"
+            v-if="scope.row.status === 1">Activo</span>
+          <span style="font-size: 110%; color: white; background-color: red; padding:8% 25%; border-radius:5px" v-else>
+            Inactivo</span>
         </q-td>
       </template>
     </q-table>
@@ -35,20 +35,17 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 
-let loading = ref(false)
 const props = defineProps({
   title: {
     type: String
   },
   rows: {
     type: Array,
-    required: true
   },
   columns: {
     type: Array,
-    required: true
   },
   onClickEdit: {
     type: Function
@@ -61,9 +58,27 @@ const props = defineProps({
   },
   loading: {
     type: Boolean,
-    default: true
+    default: false
   }
 });
+
+const emits = defineEmits(['update:loading']);
+let localLoading = ref(props.loading);
+console.log(localLoading.value);
+
+
+// Sincronizar `loading` local con prop externa
+watch(
+  () => props.loading,
+  (newVal) => {
+    localLoading.value = newVal;
+  }
+);
+
+function updateLoadingState(isLoading) {
+  localLoading.value = isLoading;
+  emits('update:loading', isLoading);
+}
 
 // Combinar las columnas pasadas con las columnas de acciones "editar" y "activar"
 const combinedColumns = computed(() => [
@@ -74,7 +89,7 @@ const combinedColumns = computed(() => [
 ]);
 
 // // Manejador para la acción de activar/desactivar
-const toggleActivate = (row, status) => {
+async function toggleActivate(row, status) {
   props.loading
   try {
     props.onToggleActivate(row, status);
@@ -84,7 +99,7 @@ const toggleActivate = (row, status) => {
     props.loading
   }
 }
-const toggleUpdate = (row) => {
+async function toggleUpdate(row) {
   props.loading
   try {
     props.onClickEdit(row);

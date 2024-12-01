@@ -23,7 +23,7 @@ logRoute.get('/listlogs/:id', [
 
 //añadir registros
 logRoute.post('/addlog', [
-    validateRepforaJWT,
+    // validateRepforaJWT,
     check('name', 'El campo name es obligatorio y debe ser una cadena de texto con al menos 10 caracteres y solo letras').notEmpty().isString(),
     check('data', 'El campo data es obligatorio y debe ser una cadena de texto con al menos 5 caracteres').notEmpty().isString(),
     check('action', 'El campo action es obligatorio, debe ser una cadena de texto con un máximo de 5 caracteres y solo letras').notEmpty().isString(),

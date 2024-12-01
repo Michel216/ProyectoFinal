@@ -20,7 +20,7 @@
               <font-awesome-icon icon="fa-solid fa-envelope" />
             </template>
           </q-input>
-          
+
           <!-- N° Documento solo visible para CONSULTOR -->
           <q-input outlined v-if="rol === 'CONSULTOR'" v-model="document" label="N° Documento" lazy-rules
             :rules="[val => val && val.length > 0 || 'Por favor, ingrese un número de documento']">
@@ -28,7 +28,7 @@
               <font-awesome-icon icon="fa-solid fa-id-card" />
             </template>
           </q-input>
-          
+
           <!-- Contraseña solo visible para ADMIN e INSTRUCTOR -->
           <q-input outlined v-if="rol === 'INSTRUCTOR' || rol === 'ADMIN'" v-model="password"
             :type="isPwd ? 'password' : 'text'" label="Contraseña" lazy-rules
@@ -40,9 +40,10 @@
               <font-awesome-icon icon="fa-solid fa-lock" />
             </template>
           </q-input>
-          
+
           <div align="center">
-            <q-btn class="full-width" label="Iniciar sesión" type="submit" color="primary" :loading="isLoading" :disable="isLoading" />
+            <q-btn class="full-width" label="Iniciar sesión" type="submit" color="primary" :loading="isLoading"
+              :disable="isLoading" />
           </div>
         </q-form>
       </div>
@@ -56,13 +57,14 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { Notify } from "quasar";
+// import { Notify } from "quasar";
 import { postDataLogin } from "../services/apiRepfora.js";
 import { postLogin } from "../services/apiClient.js";
 import { useAuthStore } from "../store/useAuth.js";
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faUsers, faEnvelope, faIdCard, faLock } from '@fortawesome/free-solid-svg-icons';
+import { notifyErrorRequest, notifySuccessRequest, notifyWarningRequest } from "../composables/Notify.js";
 
 // Añadiendo iconos de FontAwesome
 library.add(faUsers, faEnvelope, faIdCard, faLock);
@@ -95,18 +97,12 @@ const optionsLogin = [
 
 const handleSubmit = async () => {
   if (!email.value.trim() || (rol.value !== 'CONSULTOR' && !password.value.trim())) {
-    Notify.create({
-      type: 'negative',
-      message: 'Por favor ingresa todos los campos.',
-    });
+    notifyWarningRequest('Por favor ingresa todos los campos.')
     return;
   }
 
   if (!rol.value) {
-    Notify.create({
-      type: 'negative',
-      message: 'Por favor selecciona un rol.',
-    });
+    notifyErrorRequest('Por favor selecciona un rol.')
     return;
   }
 
@@ -141,10 +137,7 @@ const handleSubmit = async () => {
     }
 
     if (!data) {
-      Notify.create({
-        type: 'negative',
-        message: 'No se recibió respuesta válida del servidor.',
-      });
+      notifyErrorRequest('No se recibió respuesta válida del servidor.')
       return;
     }
 
@@ -153,22 +146,20 @@ const handleSubmit = async () => {
 
     // Redirigir a la página de inicio
     router.replace("/Home");
-    
-    if(rol.value=== "CONSULTOR"){
+
+    if (rol.value === "CONSULTOR") {
       router.replace("/HomeApprentice");
     }
-
-    Notify.create({
-      type: 'positive',
-      message: 'Inicio de sesión exitoso.',
-    });
+    notifySuccessRequest('Inicio de sesión exitoso.')
   } catch (error) {
     console.error("Error durante el inicio de sesión:", error);
     isLoading.value = false;
-    Notify.create({
-      type: 'negative',
-      message: 'Hubo un error al intentar iniciar sesión.',
-    });
+    if (rol.value === "ADMIN" || rol.value === "INSTRUCTOR") {
+      notifyErrorRequest(error?.response?.data?.msg || "Error desconocido");
+    } else {
+      notifyErrorRequest(error?.response?.data?.errors?.[0]?.msg || "Error desconocido");
+
+    }
   }
 };
 
