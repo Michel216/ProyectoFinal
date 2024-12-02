@@ -49,7 +49,7 @@
             emit-value map-options clearable use-input input-debounce="0" behavior="menu" @filter="filterAssignment"
             lazy-rules :rules="[
               (val) =>
-                (val && val.length > 0) ||
+                (val.trim() && val.length > 0) ||
                 'Por favor, seleccione una asignación',
             ]">
             <template v-slot:no-option>
@@ -66,7 +66,7 @@
             emit-value map-options clearable use-input input-debounce="0" behavior="menu" @filter="filterInstructor"
             lazy-rules :rules="[
               (val) =>
-                (val && val.length > 0) ||
+                (val.trim() && val.length > 0) ||
                 'Por favor, seleccione un instructor',
             ]">
             <template v-slot:no-option>
@@ -81,7 +81,7 @@
 
           <q-input outlined v-model="month" label="Fecha inicial" mask="date" :rules="[
             (val) =>
-              (val && val.length > 0) || 'Por favor, dígite la fecha inicio',
+              (val.trim() && val.length > 0) || 'Por favor, dígite la fecha inicio',
           ]">
             <template v-slot:prepend>
               <font-awesome-icon icon="calendar-day" class="cursor-pointer" />
@@ -97,7 +97,7 @@
 
           <q-input outlined type="number" v-model="numFollowUp" label="N° seguimiento" lazy-rules :rules="[
             (val) =>
-              (val && val.length > 0) ||
+              (val.trim() && val.length > 0) ||
               'Por favor, dígite el número de la bitácora',
           ]">
             <template v-slot:prepend>
@@ -107,7 +107,7 @@
 
           <q-input outlined v-model="document" label="Documento" lazy-rules :rules="[
             (val) =>
-              (val && val.length > 0) || 'Por favor, ingrese un documento',
+              (val.trim() && val.length > 0) || 'Por favor, ingrese un documento',
           ]">
             <template v-slot:prepend>
               <q-icon name="description" />
@@ -140,7 +140,7 @@
           ">
           <q-input outlined type="textarea" v-model="observation" label="Observación" lazy-rules :rules="[
             (val) =>
-              (val && val.length > 0) || 'Por favor, ingrese una observación',
+              (val.trim() && val.length > 0) || 'Por favor, ingrese una observación',
           ]" />
 
           <q-btn label="Guardar" class="full-width" type="submit" icon="save" color="primary" :loading="loading" />
@@ -370,11 +370,11 @@ async function onSubmit() {
   loading.value = true;
   try {
     const data = {
-      assignment: assignment.value,
-      instructor: instructor.value,
-      number: numFollowUp.value,
-      document: document.value,
-      month: month.value,
+      assignment: assignment.value.trim(),
+      instructor: instructor.value.trim(),
+      number: numFollowUp.value.trim(),
+      document: document.value.trim(),
+      month: month.value.trim(),
       data: "Creó seguimiento",
     };
     await postData(`/followup/addfollowup`, data);
@@ -398,7 +398,7 @@ async function onSubmitObservation() {
     let data = {
       observations: [
         {
-          observation: observation.value,
+          observation: observation.value.trim(),
           observationDate: observationDate,
           user: user.value,
         },

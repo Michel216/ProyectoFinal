@@ -36,12 +36,25 @@ export const useAuthStore = defineStore('auth', () => {
         return email.value;
     }
 
+    function deleteToken() {
+        token.value = ''
+        role.value = ''
+        name.value = ''
+        email.value = ''
+
+        localStorage.setItem('token', null);
+        localStorage.setItem('role', null);
+        localStorage.setItem('name', null); // Guardar nombre en localStorage
+        localStorage.setItem('email', null); // Guardar email en localStorage
+    }
+
     return {
         setToken,
         getToken,
         getRole,
         getName,
         getEmail,
+        deleteToken,
         token,
         role,
         name,

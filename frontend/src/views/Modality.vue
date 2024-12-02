@@ -31,7 +31,7 @@
             lazy-rules
             :rules="[
               (val) =>
-                (val && val.length > 0) ||
+                (val.trim() && val.length > 0) ||
                 'Por favor, dígite el nombre de la modalidad',
             ]"
           >
@@ -200,14 +200,14 @@ async function onSubmit() {
   loading.value = true;
   isLoading.value = true; 
   let data = {
-    name: name.value,
+    name: name.value.trim(),
   };
   if (hourInstructorFollow.value != "")
-    data.hourInstructorFollow = hourInstructorFollow.value;
+    data.hourInstructorFollow = hourInstructorFollow.value.trim();
   if (hourInstructorTechnical.value != "")
-    data.hourInstructorTechnical = hourInstructorTechnical.value;
+    data.hourInstructorTechnical = hourInstructorTechnical.value.trim();
   if (hourInstructorProject.value != "")
-    data.hourInstructorProject = hourInstructorProject.value;
+    data.hourInstructorProject = hourInstructorProject.value.trim();
   try {
     let url = ref();
 

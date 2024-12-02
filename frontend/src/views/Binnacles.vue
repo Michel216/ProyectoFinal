@@ -43,7 +43,7 @@
           ">
           <q-select outlined v-model="assignment" label="Seleccione una asignación" :options="optionsAssignment"
             emit-value map-options clearable use-input input-debounce="0" behavior="menu" @filter="filterAssignment"
-            lazy-rules :rules="[(val) => (val && val.length > 0) || 'Por favor, seleccione una asignación']">
+            lazy-rules :rules="[(val) => (val.trim() && val.length > 0) || 'Por favor, seleccione una asignación']">
             <template v-slot:no-option>
               <q-item>
                 <q-item-section class="text-grey"> No results </q-item-section>
@@ -52,7 +52,7 @@
           </q-select>
           <q-select outlined v-model="instructor" label="Seleccione un instructor" :options="optionsInstructor"
             emit-value map-options clearable lazy-rules
-            :rules="[(val) => (val && val.length > 0) || 'Por favor, seleccione un instructor']">
+            :rules="[(val) => (val.trim() && val.length > 0) || 'Por favor, seleccione un instructor']">
 
             <template v-slot:no-option>
               <q-item>
@@ -64,21 +64,21 @@
           </q-select>
 
           <q-input outlined type="number" v-model="numBinnacle" label="N° Bitacora" lazy-rules
-            :rules="[(val) => (val && val.length > 0) || 'Por favor, dígite el número de la bitácora']">
+            :rules="[(val) => (val.trim() && val.length > 0) || 'Por favor, dígite el número de la bitácora']">
             <template v-slot:prepend>
               <q-icon name="123" />
             </template>
           </q-input>
 
           <q-input outlined v-model="document" label="Documento" lazy-rules
-            :rules="[(val) => (val && val.length > 0) || 'Por favor, ingrese un documento']">
+            :rules="[(val) => (val.trim() && val.length > 0) || 'Por favor, ingrese un documento']">
             <template v-slot:prepend>
               <q-icon name="description" />
             </template>
           </q-input>
           <!-- <q-select outlined v-model="assignment" label="Seleccione un estado" :options="options" emit-value map-options
             clearable use-input input-debounce="0" behavior="menu" lazy-rules
-            :rules="[(val) => (val && val.length > 0) || 'Por favor, seleccione un estado']">
+            :rules="[(val) => (val.trim() && val.length > 0) || 'Por favor, seleccione un estado']">
 
             <template v-slot:no-option>
               <q-item>
@@ -109,7 +109,7 @@
             border-radius: 50px;
           ">
           <q-input outlined type="textarea" v-model="observation" label="Observación" lazy-rules
-            :rules="[(val) => (val && val.length > 0) || 'Por favor, ingrese una observación']" />
+            :rules="[(val) => (val.trim() && val.length > 0) || 'Por favor, ingrese una observación']" />
 
 
           <div class="q" style="display: flex; justify-content: center; align-items: center;">
@@ -398,10 +398,10 @@ async function onSubmit() {
   loading.value = true;
   try {
     let data = {
-      assignment: assignment.value,
-      instructor: instructor.value,
-      number: numBinnacle.value,
-      document: document.value,
+      assignment: assignment.value.trim(),
+      instructor: instructor.value.trim(),
+      number: numBinnacle.value.trim(),
+      document: document.value.trim(),
       data: "Creó bitácora"
     };
     let url = await postData(`/binnacles/addbinnacles`, data);
@@ -437,7 +437,7 @@ async function onSubmitObservation() {
     let data = {
       observations: [
         {
-          observation: observation.value,
+          observation: observation.value.trim(),
           observationDate: observationDate,
           user: user.value
         }

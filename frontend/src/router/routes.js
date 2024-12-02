@@ -99,7 +99,7 @@ router.beforeEach((to, from, next) => {
     // } 
     // Verificar si el rol no coincide con el rol requerido por la ruta
     else if (to.meta.rol && !to.meta.rol.includes(role)) {
-        next({ path: '/login' }); // Redirigir si el rol no coincide
+        next({ path: '/' }); // Redirigir si el rol no coincide
     } else {
         next(); // Continuar a la ruta solicitada
     }

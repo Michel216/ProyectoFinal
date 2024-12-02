@@ -56,7 +56,7 @@
             margin: auto">
           <q-select outlined v-model="fiche" label="Ficha" :options="options" emit-value map-options clearable use-input
             input-debounce="0" behavior="menu" @filter="filterFiche" lazy-rules
-            :rules="[(val) => (val && val.length > 0) || 'Por favor, seleccione una ficha']">
+            :rules="[(val) => (val.trim() && val.length > 0) || 'Por favor, seleccione una ficha']">
             <template v-slot:no-option>
               <q-item>
                 <q-item-section class="text-grey"> No results </q-item-section>
@@ -69,35 +69,35 @@
 
 
           <q-input outlined v-model="firstName" label="Nombres Aprendiz" lazy-rules :rules="[
-            (val) => (val && val.length > 0) || 'Por favor, dígite el nombre del aprendiz'
+            (val) => (val.trim() && val.length > 0) || 'Por favor, dígite el nombre del aprendiz'
           ]">
             <template v-slot:prepend>
               <font-awesome-icon icon="fa-solid fa-user-graduate" />
             </template>
           </q-input>
           <q-input outlined v-model="lastName" label="Apellidos Aprendiz" lazy-rules :rules="[
-            (val) => (val && val.length > 0) || 'Por favor, dígite el apellido del aprendiz'
+            (val) => (val.trim() && val.length > 0) || 'Por favor, dígite el apellido del aprendiz'
           ]">
             <template v-slot:prepend>
               <font-awesome-icon icon="fa-solid fa-user-graduate" />
             </template>
           </q-input>
-          <q-input outlined v-model="institutionalEmail" label="Email institucional" lazy-rules :rules="[
-            (val) => (val && val.length > 0) || 'Por favor, dígite el correo personal del aprendiz'
+          <q-input outlined type="email" v-model="institutionalEmail" label="Email institucional" lazy-rules :rules="[
+            (val) => (val.trim() && val.length > 0) || 'Por favor, dígite el correo personal del aprendiz'
           ]">
             <template v-slot:prepend>
               <font-awesome-icon icon="fa-solid fa-envelope-circle-check" />
             </template>
           </q-input>
-          <q-input outlined v-model="personalEmail" label="Email personal" lazy-rules :rules="[
-            (val) => (val && val.length > 0) || 'Por favor, dígite el correo personal del aprendiz'
+          <q-input outlined type="email" v-model="personalEmail" label="Email personal" lazy-rules :rules="[
+            (val) => (val.trim() && val.length > 0) || 'Por favor, dígite el correo personal del aprendiz'
           ]">
             <template v-slot:prepend>
               <font-awesome-icon icon="fa-solid fa-envelope" />
             </template>
           </q-input>
           <q-input outlined type="number" v-model="phone" label="Teléfono" lazy-rules :rules="[
-            (val) => (val && val.length > 0) || 'Por favor, dígite el teléfono del aprendiz'
+            (val) => (val.trim() && val.length > 0) || 'Por favor, dígite el teléfono del aprendiz'
           ]">
             <template v-slot:prepend>
               <font-awesome-icon icon="fa-solid fa-phone" />
@@ -105,14 +105,14 @@
           </q-input>
           <q-select outlined v-model="tpDoc" label="Tipo de documento" :options="optionsTpDoc" emit-value map-options
             lazy-rules :rules="[
-              (val) => (val && val.length > 0) || 'Por favor, dígite el tipo de documento'
+              (val) => (val.trim() && val.length > 0) || 'Por favor, dígite el tipo de documento'
             ]">
             <template v-slot:prepend>
               <font-awesome-icon icon="fa-solid fa-credit-card" />
             </template>
           </q-select>
           <q-input outlined type="number" v-model="numDoc" label="Número de documento" lazy-rules :rules="[
-            (val) => (val && val.length > 0) || 'Por favor, dígite el número de documento'
+            (val) => (val.trim() && val.length > 0) || 'Por favor, dígite el número de documento'
           ]">
             <template v-slot:prepend>
               <font-awesome-icon icon="fa-solid fa-id-card" />
@@ -121,7 +121,7 @@
           <q-select outlined v-model="modality" label="Modalidad Etapa Productiva" :options="optionsModality" emit-value
             map-options clearable use-input input-debounce="0" behavior="menu" @filter="filterModality" lazy-rules
             :rules="[
-              (val) => (val && val.length > 0) || 'Por favor, dígite la modalidad'
+              (val) => (val.trim() && val.length > 0) || 'Por favor, dígite la modalidad'
             ]">
             <template v-slot:no-option>
               <q-item>
@@ -390,15 +390,15 @@ async function onSubmit() {
   try {
     let url = ref();
     let data = {
-      tpdocument: tpDoc.value,
-      numDocument: numDoc.value,
-      firstName: firstName.value,
-      lastName: lastName.value,
-      phone: phone.value,
-      institutionalEmail: institutionalEmail.value,
-      personalEmail: personalEmail.value,
-      fiche: fiche.value,
-      modality: modality.value,
+      tpdocument: tpDoc.value.trim(),
+      numDocument: numDoc.value.trim(),
+      firstName: firstName.value.trim(),
+      lastName: lastName.value.trim(),
+      phone: phone.value.trim(),
+      institutionalEmail: institutionalEmail.value.trim(),
+      personalEmail: personalEmail.value.trim(),
+      fiche: fiche.value.trim(),
+      modality: modality.value.trim(),
     };
     if (change.value === true) {
       console.log("creo");

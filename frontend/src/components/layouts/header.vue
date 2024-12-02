@@ -68,6 +68,7 @@ function toggleLeftDrawer() {
         to="/" 
         class="iconExit" 
         style="display: flex; text-decoration: none; color: white; margin-left: auto;"
+        @click="authStore.deleteToken"
       >
         <q-btn dense flat round icon="logout" />
       </router-link>

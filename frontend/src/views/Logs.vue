@@ -9,13 +9,13 @@
       <div class="q-pa-md">
         <q-form @submit="handleSubmit" class="q-gutter-md">
           <q-select outlined v-model="rol" :options="optionsLogin" emit-value map-options label="Rol" lazy-rules
-            :rules="[val => val && val.length > 0 || 'Por favor, ingrese un rol']">
+            :rules="[val => val.trim() && val.length > 0 || 'Por favor, ingrese un rol']">
             <template v-slot:prepend>
               <font-awesome-icon icon="fa-solid fa-users" />
             </template>
           </q-select>
           <q-input outlined v-model="email" type="email" label="Correo electrónico" lazy-rules
-            :rules="[val => val && val.length > 0 || 'Por favor, ingrese un correo electrónico']">
+            :rules="[val => val.trim() && val.length > 0 || 'Por favor, ingrese un correo electrónico']">
             <template v-slot:prepend>
               <font-awesome-icon icon="fa-solid fa-envelope" />
             </template>
@@ -23,7 +23,7 @@
 
           <!-- N° Documento solo visible para CONSULTOR -->
           <q-input outlined v-if="rol === 'CONSULTOR'" v-model="document" label="N° Documento" lazy-rules
-            :rules="[val => val && val.length > 0 || 'Por favor, ingrese un número de documento']">
+            :rules="[val => val.trim() && val.length > 0 || 'Por favor, ingrese un número de documento']">
             <template v-slot:prepend>
               <font-awesome-icon icon="fa-solid fa-id-card" />
             </template>
@@ -32,7 +32,7 @@
           <!-- Contraseña solo visible para ADMIN e INSTRUCTOR -->
           <q-input outlined v-if="rol === 'INSTRUCTOR' || rol === 'ADMIN'" v-model="password"
             :type="isPwd ? 'password' : 'text'" label="Contraseña" lazy-rules
-            :rules="[val => val && val.length > 0 || 'Por favor, ingrese la contraseña']">
+            :rules="[val => val.trim() && val.length > 0 || 'Por favor, ingrese la contraseña']">
             <template v-slot:append>
               <q-icon :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer" @click="isPwd = !isPwd" />
             </template>
@@ -114,24 +114,24 @@ const handleSubmit = async () => {
 
     if (rol.value === "ADMIN") {
       data = await postDataLogin("/users/login", {
-        role: rol.value,
-        email: email.value,
-        password: password.value,
+        role: rol.value.trim(),
+        email: email.value.trim(),
+        password: password.value.trim(),
         data: "Log in de administrador"
       });
     } else if (rol.value === "INSTRUCTOR") {
       data = await postDataLogin("/instructors/login", {
-        role: rol.value,
-        email: email.value,
-        password: password.value,
+        role: rol.value.trim(),
+        email: email.value.trim(),
+        password: password.value.trim(),
         data: "Log in de instructor"
       });
     }
     // Manejo de inicio de sesión para CONSULTOR
     else if (rol.value === "CONSULTOR") {
       data = await postLogin("/apprentice/loginapprentice", {
-        institutionalEmail: email.value,
-        numDocument: document.value,
+        institutionalEmail: email.value.trim(),
+        numDocument: document.value.trim(),
         data: "Log in de aprendiz"
       });
     }

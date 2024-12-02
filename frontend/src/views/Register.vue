@@ -9,7 +9,7 @@
         <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
           <q-select outlined v-model="apprentice" label="Aprendiz" :options="optionsApprentice" emit-value map-options
             clearable use-input input-debounce="0" behavior="menu" @filter="filterApprentice" lazy-rules :rules="[
-              val => val && val.length > 0 ||
+              val => val.trim() && val.length > 0 ||
                 'Por favor, dígite la cédula del aprendiz'
             ]">
             <template v-slot:no-option>
@@ -25,7 +25,7 @@
           </q-select>
           <q-select outlined v-model="modality" label="Modalidad" :options="optionsModality" emit-value map-options
             clearable use-input input-debounce="0" behavior="menu" @filter="filterModality" lazy-rules :rules="[
-              val => (val && val.length > 0) ||
+              val => (val.trim() && val.length > 0) ||
                 'Por favor, dígite la modalidad'
             ]">
             <template v-slot:no-option>
@@ -40,7 +40,7 @@
             </template>
           </q-select>
           <q-input outlined v-model="startDate" label="Fecha inicial" mask="date"
-            :rules="[val => val && val.length > 0 || 'Por favor, dígite la fecha inicio']">
+            :rules="[val => val.trim() && val.length > 0 || 'Por favor, dígite la fecha inicio']">
             <template v-slot:prepend>
               <font-awesome-icon icon="calendar-day" class="cursor-pointer" />
               <q-popup-proxy cover transition-show="scale" transition-hide="scale">
@@ -53,55 +53,55 @@
             </template>
           </q-input>
           <q-input outlined v-model="company" label="Compañía" lazy-rules
-            :rules="[val => val && val.length > 0 || 'Por favor, dígite el nombre de la compañía']">
+            :rules="[val => val.trim() && val.length > 0 || 'Por favor, dígite el nombre de la compañía']">
             <template v-slot:prepend>
               <font-awesome-icon icon="fa-solid fa-building" />
             </template>
           </q-input>
           <q-input outlined type="number" v-model="phoneCompany" label="Teléfono compañía" lazy-rules
-            :rules="[val => val && val.length > 0 || 'Por favor, dígite el teléfono de la compañía']">
+            :rules="[val => val.trim() && val.length > 0 || 'Por favor, dígite el teléfono de la compañía']">
             <template v-slot:prepend>
               <font-awesome-icon icon="fa-solid fa-phone" />
             </template>
           </q-input>
           <q-input outlined v-model="addressCompany" label="Dirreción compañía" lazy-rules
-            :rules="[val => val && val.length > 0 || 'Por favor, dígite la dirección de la compañía']">
+            :rules="[val => val.trim() && val.length > 0 || 'Por favor, dígite la dirección de la compañía']">
             <template v-slot:prepend>
               <font-awesome-icon icon="fa-solid fa-map-pin" />
             </template>
           </q-input>
           <q-input outlined v-model="emailCompany" label="Correo de la compañía" lazy-rules
-            :rules="[val => val && val.length > 0 || 'Por favor, dígite el correo de la compañía']">
+            :rules="[val => val.trim() && val.length > 0 || 'Por favor, dígite el correo de la compañía']">
             <template v-slot:prepend>
               <font-awesome-icon icon="fa-solid fa-envelope-circle-check" />
             </template>
           </q-input>
           <q-input outlined v-model="owner" label="Dueño compañía" lazy-rules
-            :rules="[val => val && val.length > 0 || 'Por favor, dígite el nombre del dueño de la compañía']">
+            :rules="[val => val.trim() && val.length > 0 || 'Por favor, dígite el nombre del dueño de la compañía']">
             <template v-slot:prepend>
               <font-awesome-icon icon="fa-solid fa-user-tie" />
             </template>
           </q-input>
           <q-input outlined v-model="docAlternative" label="Documento alternativo" lazy-rules
-            :rules="[val => val && val.length > 0 || 'Por favor, dígite el documento alternativo']">
+            :rules="[val => val.trim() && val.length > 0 || 'Por favor, dígite el documento alternativo']">
             <template v-slot:prepend>
               <font-awesome-icon icon="fa-solid fa-file-invoice" />
             </template>
           </q-input>
           <q-input outlined v-model="certificationDoc" label="Documento de certificación" lazy-rules
-            :rules="[val => val && val.length > 0 || 'Por favor, dígite el documento de certificación']">
+            :rules="[val => val.trim() && val.length > 0 || 'Por favor, dígite el documento de certificación']">
             <template v-slot:prepend>
               <font-awesome-icon icon="fa-solid fa-file-invoice" />
             </template>
           </q-input>
           <q-input outlined v-model="judymentPhoto" label="Foto judicial" lazy-rules
-            :rules="[val => val && val.length > 0 || 'Por favor, dígite la foto judicial']">
+            :rules="[val => val.trim() && val.length > 0 || 'Por favor, dígite la foto judicial']">
             <template v-slot:prepend>
               <font-awesome-icon icon="fa-solid fa-file-invoice" />
             </template>
           </q-input>
           <q-input outlined v-model="hour" label="Hora" lazy-rules
-            :rules="[val => val && val.length > 0 || 'Por favor, dígite la hora']">
+            :rules="[val => val.trim() && val.length > 0 || 'Por favor, dígite la hora']">
             <template v-slot:prepend>
               <font-awesome-icon icon="clock" class="cursor-pointer" />
               <q-popup-proxy cover transition-show="scale" transition-hide="scale">
@@ -114,7 +114,7 @@
             </template>
           </q-input>
           <q-input outlined v-model="businessProyectHour" label="Hora proyecto" lazy-rules
-            :rules="[val => val && val.length > 0 || 'Por favor, dígite la hora del proyecto']">
+            :rules="[val => val.trim() && val.length > 0 || 'Por favor, dígite la hora del proyecto']">
             <template v-slot:prepend>
               <font-awesome-icon icon="business-time" class="cursor-pointer" />
               <q-popup-proxy cover transition-show="scale" transition-hide="scale">
@@ -127,7 +127,7 @@
             </template>
           </q-input>
           <q-input outlined v-model="productiveProyectHour" label="Hora proyecto" lazy-rules
-            :rules="[val => val && val.length > 0 || 'Por favor, dígite la hora productiva del proyecto']">
+            :rules="[val => val.trim() && val.length > 0 || 'Por favor, dígite la hora productiva del proyecto']">
             <template v-slot:prepend>
               <font-awesome-icon icon="business-time" class="cursor-pointer" />
               <q-popup-proxy cover transition-show="scale" transition-hide="scale">
@@ -267,20 +267,20 @@ async function onSubmit() {
     let url = ref()
 
     let data = {
-      "apprentice": apprentice.value,
-      "modality": modality.value,
-      "startDate": startDate.value,
-      "company": company.value,
-      "phonecompany": phoneCompany.value,
-      "addresscompany": addressCompany.value,
-      "emailCompany": emailCompany.value,
-      "businessProyectHour": businessProyectHour.value,
-      "owner": owner.value,
-      "docAlternative": docAlternative.value,
-      "hour": hour.value,
-      "judymentPhoto": judymentPhoto.value,
-      "certificationDoc": certificationDoc.value,
-      "productiveProyectHour": productiveProyectHour.value
+      "apprentice": apprentice.value.trim(),
+      "modality": modality.value.trim(),
+      "startDate": startDate.value.trim(),
+      "company": company.value.trim(),
+      "phonecompany": phoneCompany.value.trim(),
+      "addresscompany": addressCompany.value.trim(),
+      "emailCompany": emailCompany.value.trim(),
+      "businessProyectHour": businessProyectHour.value.trim(),
+      "owner": owner.value.trim(),
+      "docAlternative": docAlternative.value.trim(),
+      "hour": hour.value.trim(),
+      "judymentPhoto": judymentPhoto.value.trim(),
+      "certificationDoc": certificationDoc.value.trim(),
+      "productiveProyectHour": productiveProyectHour.value.trim()
     }
     if (change.value === true) {
       data.data = "Creó registro"
