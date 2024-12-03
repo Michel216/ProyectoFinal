@@ -3,10 +3,8 @@ import  router  from './router/routes.js'
 import { Quasar, Notify  } from 'quasar'
 import { createPinia } from 'pinia'
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
-
 // Import icon libraries
 import '@quasar/extras/material-icons/material-icons.css'
-
 // Import Quasar css
 import 'quasar/src/css/index.sass'
 
