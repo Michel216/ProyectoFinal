@@ -52,7 +52,7 @@ const router = useRouter();
 const rows = ref([]); // Almacena la respuesta completa
 const rowsForTable = ref([]); // Solo los datos de `program` para mostrar en la tabla
 let btnLabel = "Crear";
-let title = ref("Fichas");
+let title = ref("Certificaciones");
 let searchTerm = ref("");
 let searchLabel = ref('Ingrese el nombre o número de documento')
 const selectedValue = ref(''); function radiobtn(evt) {
@@ -94,9 +94,13 @@ async function bring() {
       const ficheData = await getDataRepfora(`/fiches/${apprentice.fiche}`);
       let register = await getData(`/register/listregisterbyapprentice/${apprentice._id}`)
 
-      const certificationDocs = register?.listRegisterByapprentice?.map((reg) => reg.certificationDoc) || [];
+      console.log(register);
+      
 
-      const judymenthPhotos = register?.listRegisterByapprentice?.map((reg) => reg.judymentPhoto) || [];
+      const certificationDocs = register?.data?.map((reg) => reg.register.certificationDoc) || [];
+
+      const judymenthPhotos = register?.data?.map((reg) => reg.register.judymentPhoto) || [];
+      
 
       return {
         ...apprentice,

@@ -31,16 +31,8 @@
       :onUpdateStatus="handleUpdateStatus" :val="true" :onClickFunction="openModalObservations"  @update:loading="(val) => (loading = val)" :loading="loading"/>
     <Modal :onClickFunction="onReset" :isVisible="showModalCreate" @update:isVisible="showModalCreate = $event"
       :label="'DILIGENCIA LA INFORMACION'">
-      <div class="q-pa-md" style="max-width: 600px">
-        <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md" style="
-            max-height: none;
-            max-width: 100%;
-            width: 100vw;
-            margin: auto;
-           
-            gap: 20px;
-            border-radius: 50px;
-          ">
+      <div class="q-pa-md" style="max-width: 400px">
+        <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
           <q-select outlined v-model="assignment" label="Seleccione una asignación" :options="optionsAssignment"
             emit-value map-options clearable use-input input-debounce="0" behavior="menu" @filter="filterAssignment"
             lazy-rules :rules="[(val) => (val.trim() && val.length > 0) || 'Por favor, seleccione una asignación']">
@@ -88,46 +80,29 @@
 
 
           </q-select> -->
-          <div class="q" style="display: flex; justify-content: center; align-items: center;">
+          <div align="center">
             <q-btn label="Guardar" type="submit" icon="save" color="primary" :loading="loading" />
 
-            <q-btn label="Cerrar" type="reset" icon="close" class="full-width" v-close-popup
-              style="background-color: white; color: black; box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);" />
+            <q-btn label="Cerrar" type="reset" icon="close" v-close-popup class="q-ml-sm"/>
           </div>
         </q-form>
       </div>
     </Modal>
     <Modal :onClickFunction="onReset" :isVisible="showModalObservations"
       @update:isVisible="showModalObservations = $event" :label="'OBSERVACIONES'">
-      <div class="q-pa-md" style="max-width: 600px">
-        <q-form v-if="!change" @submit="onSubmitObservation" @reset="onReset" class="q-gutter-md" style="
-            max-height: none;
-            max-width: 100%;
-            width: 100vw;
-            margin: auto;
-            gap: 20px;
-            border-radius: 50px;
-          ">
+      <div class="q-pa-md" style="max-width: 400px">
+        <q-form v-if="!change" @submit="onSubmitObservation" @reset="onReset" class="q-gutter-md" >
           <q-input outlined type="textarea" v-model="observation" label="Observación" lazy-rules
             :rules="[(val) => (val.trim() && val.length > 0) || 'Por favor, ingrese una observación']" />
 
 
-          <div class="q" style="display: flex; justify-content: center; align-items: center;">
-            <q-btn label="Guardar" class="full-width" type="submit" icon="save" color="primary" :loading="loading" />
+          <div align="center">
+            <q-btn label="Guardar" type="submit" icon="save" color="primary" :loading="loading"/>
 
-            <q-btn label="Cerrar" type="reset" icon="close" class="full-width" v-close-popup
-              style="background-color: white; color: black; box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);" />
+            <q-btn label="Cerrar" type="reset" icon="close" class="q-ml-sm" v-close-popup />
           </div>
         </q-form>
-        <q-form v-else @submit="onSubmitObservation" @reset="onReset" style="
-            max-height: none;
-            max-width: 100%;
-            width: 100vw;
-            margin: auto;
-           
-            gap: 20px;
-            border-radius: 50px;
-          ">
+        <q-form v-else @submit="onSubmitObservation" @reset="onReset" >
           <div v-for="(item, index) in listObservations" :key="index">
             <div v-if="listObservations.length > 0">
               <q-chat-message v-if="item.user === user" sent>
@@ -163,10 +138,9 @@
 
 
           <br>
-          <div class="full-width" style="display: flex; justify-content: center; align-items: center;">
+          <div align="center">
 
-            <q-btn label="Cerrar" type="reset" icon="close" class="full-width" v-close-popup
-              style="background-color: white; color: black; box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);" />
+            <q-btn label="Cerrar" type="reset" icon="close" class="q-ml-sm full-width" v-close-popup />
           </div>
         </q-form>
       </div>

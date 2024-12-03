@@ -140,9 +140,8 @@
             </template>
           </q-input>
           <div>
-            <q-btn label="guardar" type="submit" color="primary" :loading="isLoading"  :disable="isLoading" class="full-width" />
-            <q-btn label="Cerrar" type="reset" icon="close" class="full-width" v-close-popup
-              style="background-color: white; color: black; box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);" />
+            <q-btn label="guardar" type="submit" color="primary" :loading="isLoading" icon="save"  :disable="isLoading" />
+            <q-btn label="Cerrar" type="reset" icon="close" class="q-ml-sm" v-close-popup />
           </div>
         </q-form>
       </div>

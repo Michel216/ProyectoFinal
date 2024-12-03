@@ -31,20 +31,13 @@
     <Btn :icon="icons" :label="btnLabel" :onClickFunction="openModalCreate" :loading="loading"
       v-if="role === 'INSTRUCTOR'" />
     <FollowupTable :title="title" :columns="columns" :rows="filteredRows" :options="options"
-      :onUpdateStatus="handleUpdateStatus" :onClickFunction="openModalObservations" @update:loading="(val) => (loading = val)" :loading="loading"/>
+      :onUpdateStatus="handleUpdateStatus" :onClickFunction="openModalObservations"
+      @update:loading="(val) => (loading = val)" :loading="loading" />
 
     <Modal :onClickFunction="onReset" :isVisible="showModalCreate" @update:isVisible="showModalCreate = $event"
       :label="'DILIGENCIA LA INFORMACION'">
-      <div class="q-pa-md" style="max-width: 600px">
-        <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md" style="
-            max-height: none;
-            max-width: 100%;
-            width: 100vw;
-            margin: auto;
-
-            gap: 20px;
-            border-radius: 50px;
-          ">
+      <div class="q-pa-md" style="max-width: 400px">
+        <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
           <q-select outlined v-model="assignment" label="Seleccione una asignación" :options="optionsAssignment"
             emit-value map-options clearable use-input input-debounce="0" behavior="menu" @filter="filterAssignment"
             lazy-rules :rules="[
@@ -114,14 +107,10 @@
             </template>
           </q-input>
 
-          <div class="q" style="display: flex; justify-content: center; align-items: center">
-            <q-btn label="Guardar" class="full-width" type="submit" icon="save" color="primary" :loading="loading" />
+          <div align="center">
+            <q-btn label="Guardar" type="submit" icon="save" color="primary" :loading="loading" />
 
-            <q-btn label="Cerrar" type="reset" icon="close" class="full-width" v-close-popup style="
-                background-color: white;
-                color: black;
-                box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
-              " />
+            <q-btn label="Cerrar" type="reset" icon="close" class="q-ml-sm" v-close-popup />
           </div>
         </q-form>
       </div>
@@ -129,39 +118,22 @@
     <Modal :onClickFunction="onReset" :isVisible="showModalObservations"
       @update:isVisible="showModalObservations = $event" :label="'OBSERVACIONES'">
       <div class="q-pa-md" style="max-width: 600px">
-        <q-form v-if="!change" @submit="onSubmitObservation" @reset="onReset" class="q-gutter-md" style="
-            max-height: none;
-            max-width: 100%;
-            width: 100vw;
-            margin: auto;
-
-            gap: 20px;
-            border-radius: 50px;
-          ">
+        <q-form v-if="!change" @submit="onSubmitObservation" @reset="onReset" class="q-gutter-md">
           <q-input outlined type="textarea" v-model="observation" label="Observación" lazy-rules :rules="[
             (val) =>
               (val.trim() && val.length > 0) || 'Por favor, ingrese una observación',
           ]" />
 
-          <q-btn label="Guardar" class="full-width" type="submit" icon="save" color="primary" :loading="loading" />
+          <div align="center">
+            <q-btn label="Guardar" type="submit" icon="save" color="primary" :loading="loading" />
 
-          <q-btn label="Cerrar" type="reset" icon="close" class="full-width" v-close-popup style="
-              background-color: white;
-              color: black;
-              box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
-            " />
+            <q-btn label="Cerrar" type="reset" icon="close" class="q-ml-sm" v-close-popup  />
+          </div>
+
         </q-form>
-        <q-form v-else @submit="onSubmitObservation" @reset="onReset" style="
-            max-height: none;
-            max-width: 100%;
-            width: 100vw;
-            margin: auto;
-
-            gap: 20px;
-            border-radius: 50px;
-          ">
-          <div v-for="(item, index) in listObservations" :key="index">
-            <div v-if="listObservations.length > 0">
+        <q-form v-else @submit="onSubmitObservation" @reset="onReset" class="q-gutter-md">
+          <div v-for="(item, index) in listObservations" :key="index" :loading="loadingObs">
+            <div v-if="listObservations.length > 0" :loading="loadingObs">
               <q-chat-message v-if="item.user === user" sent>
                 <p style="padding: 5px">
                   <span class="text-h7 text-primary"><strong> {{ item.user }}</strong></span>
@@ -184,7 +156,7 @@
               </q-chat-message>
             </div>
           </div>
-          <div v-if="listObservations.length <= 0">
+          <div v-if="listObservations.length <= 0" :loading="loadingObs">
             <q-card bordered class="bg-grey-4 my-card">
               <q-card-section align="center" class="text-h5 text-bold text-grey-8">
                 No hay observaciones
@@ -193,12 +165,8 @@
           </div>
 
           <br />
-          <div class="q" style="display: flex; justify-content: center; align-items: center">
-            <q-btn label="Cerrar" type="reset" icon="close" flat class="q-ml-sm" v-close-popup style="
-                background-color: white;
-                color: black;
-                box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
-              " />
+          <div align="center">
+            <q-btn label="Cerrar" type="reset" icon="close" class="q-ml-sm" v-close-popup />
           </div>
         </q-form>
       </div>
@@ -242,6 +210,7 @@ let btnLabel = "Crear";
 let assignment = ref("");
 let instructor = ref("");
 let numFollowUp = ref("");
+let loadingObs = ref(false)
 let document = ref("");
 let month = ref("");
 let observation = ref("");
@@ -341,7 +310,7 @@ async function bring() {
     console.log(error);
   } finally {
     loading.value = false
-    }
+  }
 }
 
 const filteredRows = computed(() => {
@@ -433,7 +402,6 @@ function onReset() {
   document.value = "";
   month.value = "";
   observation.value = "";
-  user.value = "";
   idFollowUp.value = "";
 }
 
@@ -445,6 +413,7 @@ async function openModalObservations(id, changes) {
   showModalObservations.value = true;
   idFollowUp.value = id;
   change.value = changes;
+  loadingObs.value = true
 
   try {
     let data = await getData(`/followup/listfollowupbyid/${id}`);
@@ -453,6 +422,8 @@ async function openModalObservations(id, changes) {
     console.log(listObservations.value);
   } catch (error) {
     console.log(error);
+  } finally {
+    loadingObs.value = false
   }
 }
 

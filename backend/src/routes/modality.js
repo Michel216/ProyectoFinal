@@ -23,8 +23,9 @@ modalityRoutes.get("/listmodalitybyid/:id", [
 
 // crear modalidades
 modalityRoutes.post("/addmodality", [
-    validateRepforaJWT,
+    // validateRepforaJWT,
     check('name', 'El nombre es obligatorio').notEmpty(),
+    check('name').custom(modalityHelper.validateName),
     check('hourInstructorFollow', 'Las horas del instructor de seguimiento son obligatorias').optional().isNumeric(),
     check('hourInstructorTechnical', 'Las horas del instructor técnico son obligatorias').optional().isNumeric(),
     check('hourInstructorProject', 'Las horas del instructor de proyecto son obligatorias').optional().isNumeric(),

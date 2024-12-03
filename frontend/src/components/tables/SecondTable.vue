@@ -94,15 +94,13 @@
       <template v-slot:body-cell-certificationDoc="scope">
         <q-td :props="scope">
           <a :href="scope.row.certificationDoc" target="_blank"
-            ><font-awesome-icon icon="fa-solid fa-folder"
-          /></a>
+            ><i class="fas fa-folder-open"></i></a>
         </q-td>
       </template>
       <template v-slot:body-cell-judymentPhoto="scope">
         <q-td :props="scope">
           <a :href="scope.row.judymentPhoto" target="_blank"
-            ><font-awesome-icon icon="fa-solid fa-folder"
-          /></a>
+            ><i class="fas fa-folder-open"></i></a>
         </q-td>
       </template>
     </q-table>

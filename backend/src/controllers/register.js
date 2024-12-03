@@ -36,11 +36,11 @@ const register = {
             const { idApprentice } = req.params;
     
             // Obtener registros asociados al aprendiz
-            const listRegisterByApprentice = await Register.find({ apprentice: idApprentice }).populate("modality");
+            const listRegisterByApprentice = await Register.find({ apprentice: idApprentice }).populate("modality").populate({path:"apprentice"});
     
-            if (!listRegisterByApprentice || listRegisterByApprentice.length === 0) {
-                return res.status(404).json({ message: "No se encontraron registros para el aprendiz proporcionado." });
-            }
+            // if (!listRegisterByApprentice || listRegisterByApprentice.length === 0) {
+            //     return res.status(404).json({ message: "No se encontraron registros para el aprendiz proporcionado." });
+            // }
 
             // Modalidades y asignaciones válidas
             const validModalities = {
@@ -50,7 +50,7 @@ const register = {
                 "CONTRATO DE APRENDIZAJE": ["followupInstructor"],
                 "PROYECTO EMPRESARIAL": ["followupInstructor", "technicalInstructor", "projectInstructor"],
                 "PROYECTO PRODUCTIVO": ["followupInstructor", "technicalInstructor"],
-                "PROYECTO PRODUCTIVO  I+D": ["followupInstructor", "technicalInstructor", "projectInstructor"],
+                "PROYECTO PRODUCTIVO I+D": ["followupInstructor", "technicalInstructor", "projectInstructor"],
                 "PROYECTO SOCIAL": ["followupInstructor", "technicalInstructor"]
             };
 
@@ -60,6 +60,8 @@ const register = {
                 const allowedAssignments = validModalities[modalityName] || [];
                 return {
                     registerId: register._id,
+                    apprentice: register.apprentice,
+                    register,
                     modality: modalityName || "Sin modalidad",
                     allowedAssignments
                 };

@@ -22,6 +22,13 @@ const modalityHelper = {
                 return true
             }
         });
+    },
+    // validar el nombre de la modalidad
+    validateName: async (name) => {
+        const existsName = await Modality.findOne({ name})
+        if (existsName) {
+            throw new Error( `La modalidad ${name} ya existe en la base de datos` )
+        } return true
     }
 }
 

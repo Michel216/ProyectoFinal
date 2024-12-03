@@ -68,7 +68,7 @@ function toggleLeftDrawer() {
         to="/" 
         class="iconExit" 
         style="display: flex; text-decoration: none; color: white; margin-left: auto;"
-        @click="authStore.deleteToken"
+        @click="tokenDelete()"
       >
         <q-btn dense flat round icon="logout" />
       </router-link>
@@ -82,6 +82,10 @@ import { useAuthStore } from '../../store/useAuth'; // Ajusta la ruta según sea
 
 // Usar el store de autenticación
 const authStore = useAuthStore();
+
+function tokenDelete() {
+  authStore.deleteToken()
+}
 
 // Obtener el rol del usuario desde el store
 const role = computed(() => authStore.getRole());

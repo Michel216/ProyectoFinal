@@ -44,16 +44,8 @@
 
     <!-- Modal para crear aprendiz -->
     <Modal :isVisible="showModal" @update:isVisible="showModal = $event" :label="'CREAR APRENDIZ SENA'" :onClickFunction="onReset">
-      <div class="q-pa-md" style="max-width: 600px">
-        <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md" style="
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            row-gap: 2px;
-            column-gap: 20px;
-            border-radius: 50px;
-            max-width: 100%;
-            width: 100vw;
-            margin: auto">
+      <div class="q-pa-md" style="max-width: 400px">
+        <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
           <q-select outlined v-model="fiche" label="Ficha" :options="options" emit-value map-options clearable use-input
             input-debounce="0" behavior="menu" @filter="filterFiche" lazy-rules
             :rules="[(val) => (val.trim() && val.length > 0) || 'Por favor, seleccione una ficha']">
@@ -132,11 +124,12 @@
               <font-awesome-icon icon="fa-solid fa-person-chalkboard" />
             </template>
           </q-select>
-
-          <q-btn label="Guardar" type="submit" icon="save" color="primary" class="full-width" :loading="isLoading"
+          <div align="center">
+            <q-btn label="Guardar" type="submit" icon="save" color="primary"  :loading="isLoading"
             :disable="isLoading" />
-          <q-btn label="Cerrar" type="reset" icon="close" class="full-width" v-close-popup
-            style="background-color: white; color: black; box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);" />
+          <q-btn label="Cerrar" type="reset" icon="close" class="q-ml-sm" v-close-popup />
+          </div>
+          
         </q-form>
       </div>
     </Modal>

@@ -11,17 +11,17 @@
           <!-- Radio buttons -->
           <div style="display: flex; flex-direction: row; align-items: flex-start; margin-right: 10px;">
             <q-radio v-model="selectedValue" val="year" label="Año" dense color="primary"
-              @update:model-value="handleFilter" style="margin-right: 10px;" />
+              style="margin-right: 10px;" />
             <q-radio v-model="selectedValue" val="month" label="Mes" dense color="primary"
-              @update:model-value="handleFilter" style="margin-right: 10px;" />
+              style="margin-right: 10px;" />
             <q-radio v-model="selectedValue" val="instructor" label="Instructor" dense color="primary"
-              @update:model-value="handleFilter" style="margin-right: 10px;" />
+              style="margin-right: 10px;" />
           </div>
 
           <!-- Input de búsqueda alineado a la izquierda -->
           <div class="q-pa-md" style="flex-grow: 1; display: flex; justify-content: flex-start;">
             <div class="rounded-input" style=" width: 370px;">
-              <q-input class="q-ml-md" v-model="searchTerm" :label="searchLabel" @input="handleFilter" outlined
+              <q-input class="q-ml-md" v-model="searchTerm" :label="searchLabel" outlined
                 :disable="!selectedValue" />
             </div>
           </div>
@@ -34,7 +34,6 @@
         :title="title"
         :columns="columns"
         :rows="rowsForTable"
-        :options="options"
         :toggleSeeApprentice="handleViewApprentices"
         @update:loading="(val) => (loading = val)" 
         :loading="loading"
@@ -54,7 +53,10 @@
   const rows = ref([]);
   const rowsForTable = ref([]);
   const selectedValue = ref('');
+  let searchTerm = ref('')
+  const title = 'Horas de instructor'
   const text = ref(''); // Para el input de búsqueda
+  const searchLabel = 'Buscar'
   
   const columns = [
     { name: "index", label: "N°", align: "center", field: 'index' },

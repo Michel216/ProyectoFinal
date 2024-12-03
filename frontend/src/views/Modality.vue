@@ -14,71 +14,44 @@
         </div>
       </div>
     </div>
-  
-  <modalityTable :title="title" :columns="columns" :rows="filteredRows" :onToggleActivate="handleToggleActivate"
-    :onClickEdit="bringId" @update:loading="(val) => (loading = val)" :loading="loading"/>
-    <Modal :onClickFunction="onReset"
-      :isVisible="showModal"
-      @update:isVisible="showModal = $event"
-      :label="btnLabel"
-    >
+
+    <modalityTable :title="title" :columns="columns" :rows="filteredRows" :onToggleActivate="handleToggleActivate"
+      :onClickEdit="bringId" @update:loading="(val) => (loading = val)" :loading="loading" />
+    <Modal :onClickFunction="onReset" :isVisible="showModal" @update:isVisible="showModal = $event" :label="btnLabel">
       <div class="q-pa-md" style="max-width: 400px">
         <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
-          <q-input
-            outlined
-            v-model="name"
-            label="Nombre de la modalidad"
-            lazy-rules
-            :rules="[
+          <q-input outlined v-model="name" label="Nombre de la modalidad" lazy-rules :rules="[
               (val) =>
                 (val.trim() && val.length > 0) ||
                 'Por favor, dígite el nombre de la modalidad',
-            ]"
-          >
+            ]">
             <template v-slot:prepend>
               <font-awesome-icon icon="fa-solid fa-person-chalkboard" />
             </template>
           </q-input>
-          <q-input
-            outlined
-            type="number"
-            v-model="hourInstructorFollow"
-            label="Hora instructor de seguimiento"
-          >
+
+          <q-input outlined type="number" v-model="hourInstructorFollow" label="Hora instructor de seguimiento">
             <template v-slot:prepend>
               <font-awesome-icon icon="fa-solid fa-clock" />
             </template>
           </q-input>
-          <q-input
-            outlined
-            type="number"
-            v-model="hourInstructorProject"
-            label="Hora instructor de projecto"
-          >
+          <br>
+          <q-input outlined type="number" v-model="hourInstructorProject" label="Hora instructor de projecto">
             <template v-slot:prepend>
               <font-awesome-icon icon="fa-solid fa-clock" />
             </template>
           </q-input>
-          <q-input
-            outlined
-            type="number"
-            v-model="hourInstructorTechnical"
-            label="Hora instructor técnico"
-          >
+          <br>
+          <q-input outlined type="number" v-model="hourInstructorTechnical" label="Hora instructor técnico">
             <template v-slot:prepend>
               <font-awesome-icon icon="fa-solid fa-clock" />
             </template>
           </q-input>
-          <div>
-            <q-btn
-              label="guardar"
-              type="submit"
-              color="primary"
-              :loading="isLoading"  :disable="isLoading" 
-              class="full-width"
-            />
-            <q-btn label="Cerrar"  type="reset" icon="close"  class="full-width"  v-close-popup
-            style="background-color: white; color: black; box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);" />
+          <br>
+          <div align="center">
+            <q-btn label="guardar" type="submit" color="primary" icon="save" :loading="isLoading"
+              :disable="isLoading" />
+            <q-btn label="Cerrar" type="reset" icon="close" class="q-ml-sm" v-close-popup />
           </div>
         </q-form>
       </div>
@@ -102,7 +75,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faClock, faPersonChalkboard } from '@fortawesome/free-solid-svg-icons';
 
 library.add(faClock, faPersonChalkboard)
-let icons="control_point"
+let icons = "control_point"
 let title = "Modalidades";
 let loading = ref(false);
 const isLoading = ref(false);
@@ -166,8 +139,8 @@ async function bring() {
     console.log(data);
     rows.value = data.listAllModalities.map((item, idx) => ({
       ...item,
-    index: idx + 1
-  }));
+      index: idx + 1
+    }));
   } catch (error) {
     console.log(error);
   } finally {
@@ -176,12 +149,12 @@ async function bring() {
 }
 
 const filteredRows = computed(() => {
-    if (!searchTerm.value) return rows.value;  // Si no hay término de búsqueda, devolver todos los registros
-    return rows.value.filter(row => {
+  if (!searchTerm.value) return rows.value;  // Si no hay término de búsqueda, devolver todos los registros
+  return rows.value.filter(row => {
 
-        return row.name.toLowerCase().startsWith(searchTerm.value.toLowerCase())
-    });
+    return row.name.toLowerCase().startsWith(searchTerm.value.toLowerCase())
   });
+});
 
 async function handleToggleActivate(id, status) {
   try {
@@ -189,7 +162,7 @@ async function handleToggleActivate(id, status) {
       status === 0
         ? `/modality/enablemodalitybyid/${id}`
         : `/modality/disablemodalitybyid/${id}`;
-    let data = await putData(url, {data: "Cambió estado modalidad", status: status===0?1:0, idModality: id});
+    let data = await putData(url, { data: "Cambió estado modalidad", status: status === 0 ? 1 : 0, idModality: id });
     bring();
   } catch (error) {
     console.log(error);
@@ -198,16 +171,16 @@ async function handleToggleActivate(id, status) {
 
 async function onSubmit() {
   loading.value = true;
-  isLoading.value = true; 
+  isLoading.value = true;
   let data = {
-    name: name.value.trim(),
+    name: name.value.trim().toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""),
   };
   if (hourInstructorFollow.value != "")
-    data.hourInstructorFollow = hourInstructorFollow.value.trim();
+    data.hourInstructorFollow = hourInstructorFollow.value;
   if (hourInstructorTechnical.value != "")
-    data.hourInstructorTechnical = hourInstructorTechnical.value.trim();
+    data.hourInstructorTechnical = hourInstructorTechnical.value;
   if (hourInstructorProject.value != "")
-    data.hourInstructorProject = hourInstructorProject.value.trim();
+    data.hourInstructorProject = hourInstructorProject.value;
   try {
     let url = ref();
 
@@ -237,7 +210,7 @@ async function onSubmit() {
     );
   } finally {
     loading.value = false;
-    isLoading.value = false; 
+    isLoading.value = false;
   }
 }
 
