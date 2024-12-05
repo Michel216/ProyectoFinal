@@ -134,7 +134,7 @@
         <q-form v-else @submit="onSubmitObservation" @reset="onReset" class="q-gutter-md">
           <div v-for="(item, index) in listObservations" :key="index" :loading="loadingObs">
             <div v-if="listObservations.length > 0" :loading="loadingObs">
-              <q-chat-message v-if="item.user === user" sent>
+              <q-chat-message v-if="item.user === user" sent style="margin-left: 50px;">
                 <p style="padding: 5px">
                   <span class="text-h7 text-primary"><strong> {{ item.user }}</strong></span>
                   <br />
@@ -144,7 +144,7 @@
                       {{ formatDate(item.observationDate) }}</strong></span>
                 </p>
               </q-chat-message>
-              <q-chat-message v-else bg-color="green-3">
+              <q-chat-message v-else bg-color="green-3" style="margin-right: 50px;">
                 <p style="padding: 5px">
                   <span class="text-h7 text-dark"><strong> {{ item.user }}</strong></span>
                   <br />
@@ -295,7 +295,6 @@ async function bring() {
   loading.value = true
   try {
     const data = await getData("/followup/listallfollowup");
-    console.log(data);
 
     rows.value = data.listallFollowup.map((followup, idx) => ({
       ...followup,
@@ -375,7 +374,6 @@ async function onSubmitObservation() {
       data: "Creó observación seguimiento",
       idFollowUp: idFollowUp.value,
     };
-    console.log(observationDate);
 
     let url = await putData(
       `/followup/addobservation/${idFollowUp.value}`,
@@ -417,9 +415,7 @@ async function openModalObservations(id, changes) {
 
   try {
     let data = await getData(`/followup/listfollowupbyid/${id}`);
-    console.log(data);
     listObservations.value = data.listFollowupById.observations;
-    console.log(listObservations.value);
   } catch (error) {
     console.log(error);
   } finally {
@@ -429,7 +425,6 @@ async function openModalObservations(id, changes) {
 
 async function filterAssignment(val, update) {
   let assignment = await getData("/register/listallregister");
-  console.log(assignment);
 
   let theAssignment = assignment.register;
   if (val === "") {
@@ -455,7 +450,6 @@ async function filterAssignment(val, update) {
 
 async function filterInstructor(val, update) {
   let instructor = await getData("http://89.116.49.65:4500/api/instructors");
-  console.log(instructor);
   if (val === "") {
     update(() => {
       optionsInstructor.value = instructor.map((instructor) => ({

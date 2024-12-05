@@ -21,8 +21,7 @@ import Layout from "./../layouts/layout.vue";
 const auth = (to, from, next) => {
     const authStore = useAuthStore();
     const token = authStore.getToken();
-    const role = authStore.getRole();
-console.log(role);
+    const role = authStore.getRole()
 
     // Verificar si la ruta requiere autenticación
     if (to.meta.rol && !to.meta.rol.includes(role)) {

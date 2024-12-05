@@ -218,7 +218,6 @@ async function bring() {
   try {
     // Obtener los datos de los registros
     let data = await getData('/register/listallregister');
-    console.log(data);
 
     // Iterar sobre los registros y obtener los datos de 'fiche'
     rows.value = await Promise.all(data.register.map(async (register, idx) => {

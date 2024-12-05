@@ -61,7 +61,6 @@ const props = defineProps({
 });
 
 const rol= role.value
-console.log(rol)
 
 const filteredMenuItems = computed(() =>
   props.menuItems.filter(item => item.rol.includes(role.value))

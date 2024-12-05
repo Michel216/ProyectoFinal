@@ -17,7 +17,6 @@ export async function postData(url, data) {
     try {
         const response = await apiClient.post(url, data);
         const email = ref(localStorage.getItem('email') || null);
-        console.log("email post", email.value);
         
         const infoLog = await apiClient.post("/logs/addlog", {name:email.value, data:`POST`, information: data, action: data.data})
         return response.data;  // Devuelve los datos de la respuesta
@@ -33,7 +32,6 @@ export async function postLogin(url, data) {
         const response = await apiClient.post(url, data);
         const { token, role } = response.data; // Desestructuramos el token y el rol de la respuesta
         const email = ref(localStorage.getItem('email') || null);
-        console.log("email post", data);
         
         const infoLog = await apiClient.post("/logs/addlog", {name:data.institutionalEmail, data:`POST`, information: data, action: data.data})
 
@@ -52,7 +50,6 @@ export async function putData(url, data) {
     try {
         const response = await apiClient.put(url, data);
         const email = ref(localStorage.getItem('email') || null);
-        console.log("email post", email.value);
         
         const infoLog = await apiClient.post("/logs/addlog", {name:email.value, data:`PUT`, information: data, action: data.data})
         return response.data;  // Devuelve los datos de la respuesta

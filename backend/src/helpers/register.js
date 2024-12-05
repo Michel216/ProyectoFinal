@@ -35,8 +35,7 @@ const registerHelper = {
             if (!isOneDriveLink(url)) {
                 throw new Error("El enlace proporcionado no es válido. Debe ser un enlace de OneDrive.");
             }
-    
-            console.log("El contenido es un enlace válido de OneDrive.");
+            
             return true;
         } catch (error) {
             throw new Error(error.message || "Error al verificar el enlace de OneDrive.");
