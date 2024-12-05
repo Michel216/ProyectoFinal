@@ -29,8 +29,8 @@ const followupController = {
     // Listar seguimientos por asignación
     getListFollowUpByAssignment: async (req, res) => {
         try {
-            const idAssignment = req.params.idAssignment;
-            const listFollowupByAssignment = await Followup.findOne({ assignment: idAssignment });
+            const idRegister = req.params.idRegister;
+            const listFollowupByAssignment = await Followup.findOne({ assignment: idRegister });
             res.status(200).json({ listFollowupByAssignment });
         } catch (error) {
             res.status(400).json({ error });
@@ -40,7 +40,13 @@ const followupController = {
     getListFollowupByInstructor: async (req, res) => {
         try {
             const idInstructor = req.params.idInstructor;
-            const listFollowupByInstructor = await Followup.findOne({ instructor: idInstructor });
+            const listFollowupByInstructor = await Followup.find({ instructor: idInstructor }).populate({
+                path: 'assignment',
+                populate: {
+                    path: 'apprentice',
+                    select: 'firstName lastName'
+                }
+            });
             res.status(200).json({ listFollowupByInstructor });
         } catch (error) {
             res.status(400).json({ error });
@@ -66,18 +72,7 @@ const followupController = {
             res.status(400).json({ error });
         }
     },
-    // Actualizar seguimiento
-    putUpdateFollowupById: async (req, res) => {
-        try {
-            const id = req.params.id;
-            const newData = req.body;
-            const updateFollowup = await Followup.findByIdAndUpdate(id, newData, { new: true });
-            res.status(200).json({ updateFollowup });
-        } catch (error) {
-            console.error(error);
-            res.status(400).json({ error });
-        }
-    },
+    // Crea una observación
     putAddObservation: async (req, res) => {
         try {
             const id = req.params.id;

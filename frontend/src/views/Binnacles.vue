@@ -399,7 +399,6 @@ const handleFilter = () => {
 
 function onReset() {
   assignment.value = "";
-  instructor.value = "";
   numBinnacle.value = "";
   document.value = "";
   observation.value = "";

@@ -21,12 +21,14 @@ const binnacleHelper = {
             throw new Error("El número de la bitácora debe ser de 1 a 6")
         } return true
     },
+    // valida que el registro exista en la base de datos
     validateRegister: async (idRegister) => {
         const existRegister = await Register.findById(idRegister)
         if (!existRegister) {
             throw new Error("El registro no existe en la base de datos")
         } return true
     },
+    // valida que el registro tenga una asignación
     validateAssignment: async (idRegister) => {
         const existRegister = await Register.findById(idRegister)
         if (existRegister.assignment.length < 0) {

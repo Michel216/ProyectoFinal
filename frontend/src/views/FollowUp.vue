@@ -1,7 +1,8 @@
 <template>
   <div class="q-pa-md q-gutter-md">
-    <Header title="Seguimientos"></Header>
-    <!-- <Btn :label="btnLabel" :onClickFunction="openModalCreate" :loading="loading" /> -->
+    <!-- Encabezado -->
+    <Header title="Seguimientos" />
+    <!-- Filtro -->
     <div style="
         display: flex;
         flex-direction: row;
@@ -28,12 +29,14 @@
         </div>
       </div>
     </div>
+    <!-- Botón crear -->
     <Btn :icon="icons" :label="btnLabel" :onClickFunction="openModalCreate" :loading="loading"
       v-if="role === 'INSTRUCTOR'" />
+    <!-- Tabla -->
     <FollowupTable :title="title" :columns="columns" :rows="filteredRows" :options="options"
       :onUpdateStatus="handleUpdateStatus" :onClickFunction="openModalObservations"
       @update:loading="(val) => (loading = val)" :loading="loading" />
-
+    <!-- Modal "crear seguimiento" -->
     <Modal :onClickFunction="onReset" :isVisible="showModalCreate" @update:isVisible="showModalCreate = $event"
       :label="'DILIGENCIA LA INFORMACION'">
       <div class="q-pa-md" style="max-width: 400px">
@@ -52,23 +55,6 @@
             </template>
             <template v-slot:prepend>
               <font-awesome-icon icon="fa-solid fa-hand-pointer" />
-            </template>
-          </q-select>
-
-          <q-select outlined v-model="instructor" label="Seleccione un instructor" :options="optionsInstructor"
-            emit-value map-options clearable use-input input-debounce="0" behavior="menu" @filter="filterInstructor"
-            lazy-rules :rules="[
-              (val) =>
-                (val.trim() && val.length > 0) ||
-                'Por favor, seleccione un instructor',
-            ]">
-            <template v-slot:no-option>
-              <q-item>
-                <q-item-section class="text-grey"> No results </q-item-section>
-              </q-item>
-            </template>
-            <template v-slot:prepend>
-              <font-awesome-icon icon="fa-solid fa-chalkboard-user" />
             </template>
           </q-select>
 
@@ -109,15 +95,16 @@
 
           <div align="center">
             <q-btn label="Guardar" type="submit" icon="save" color="primary" :loading="loading" />
-
             <q-btn label="Cerrar" type="reset" icon="close" class="q-ml-sm" v-close-popup />
           </div>
         </q-form>
       </div>
     </Modal>
+    <!-- Modal "observaciones" -->
     <Modal :onClickFunction="onReset" :isVisible="showModalObservations"
       @update:isVisible="showModalObservations = $event" :label="'OBSERVACIONES'">
       <div class="q-pa-md" style="max-width: 600px">
+        <!-- Crear observación -->
         <q-form v-if="!change" @submit="onSubmitObservation" @reset="onReset" class="q-gutter-md">
           <q-input outlined type="textarea" v-model="observation" label="Observación" lazy-rules :rules="[
             (val) =>
@@ -127,10 +114,11 @@
           <div align="center">
             <q-btn label="Guardar" type="submit" icon="save" color="primary" :loading="loading" />
 
-            <q-btn label="Cerrar" type="reset" icon="close" class="q-ml-sm" v-close-popup  />
+            <q-btn label="Cerrar" type="reset" icon="close" class="q-ml-sm" v-close-popup />
           </div>
 
         </q-form>
+        <!-- Observaciones -->
         <q-form v-else @submit="onSubmitObservation" @reset="onReset" class="q-gutter-md">
           <div v-for="(item, index) in listObservations" :key="index" :loading="loadingObs">
             <div v-if="listObservations.length > 0" :loading="loadingObs">
@@ -180,10 +168,7 @@ import { getData, putData, postData } from "../services/apiClient.js";
 import FollowupTable from "../components/tables/SecondTable.vue";
 import Btn from "../components/buttons/Button.vue";
 import Modal from "../components/modals/Modal.vue";
-import {
-  notifyErrorRequest,
-  notifySuccessRequest,
-} from "../composables/Notify";
+import { notifyErrorRequest, notifySuccessRequest } from "../composables/Notify";
 import { formatMonth } from "../utils/formatMonth.js";
 import moment from "moment-timezone";
 import { formatDate } from "../utils/formatDate.js";
@@ -191,44 +176,36 @@ import { useAuthStore } from "./../store/useAuth.js";
 import Header from "../components/header/Header.vue";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import {
-  faCalendarDay,
-  faChalkboardUser,
-  faHandPointer,
-} from "@fortawesome/free-solid-svg-icons";
+import { faCalendarDay, faChalkboardUser, faHandPointer } from "@fortawesome/free-solid-svg-icons";
 
 library.add(faCalendarDay, faChalkboardUser, faHandPointer);
 
 const title = "Seguimientos";
 const authStore = useAuthStore();
 const role = computed(() => authStore.getRole());
-const rows = ref([]);
+const user = computed(() => authStore.getEmail());
+const icons = "control_point";
+const btnLabel = "Crear";
+const instructor = ref("67105c23bad722df0d908a25");
 let loading = ref(false);
-let icons = "control_point";
 let change = ref();
-let btnLabel = "Crear";
 let assignment = ref("");
-let instructor = ref("");
 let numFollowUp = ref("");
 let loadingObs = ref(false)
 let document = ref("");
 let month = ref("");
 let observation = ref("");
-const observationDate = moment()
-  .tz("America/Bogota")
-  .format("YYYY-MM-DD HH:mm:ss"); // ISO 8601
-const user = computed(() => authStore.getEmail());
-
+let rows = ref([]);
+let observationDate = moment().tz("America/Bogota").format("YYYY-MM-DD HH:mm:ss");
 let showModalCreate = ref(false);
 let showModalObservations = ref(false);
 let listObservations = ref([]);
 let idFollowUp = ref("");
 let optionsAssignment = ref();
-let optionsInstructor = ref();
 let searchTerm = ref("");
-let searchLabel = ref("Ingrese el nombre do número de documento ");
-const selectedValue = ref("");
-const columns = ref([
+let searchLabel = ref("Ingrese el nombre do número de documento");
+let selectedValue = ref("");
+let columns = ref([
   {
     name: "index",
     label: "N°",
@@ -267,7 +244,6 @@ const columns = ref([
   },
 ]);
 
-// valida que el tipo de la bitácora sea de 1 a 4. Programado: 1, Ejecutado: 2, Pendiente: 3, Verificado: 4// valida que el tipo de la bitácora sea de 1 a 4. Programado: 1, Ejecutado: 2, Pendiente: 3, Verificado: 4, Verificado técnico: 5, Verificado proyecto: 6
 let options = ref([
   {
     label: "Programado",
@@ -285,6 +261,14 @@ let options = ref([
     label: "Verificado",
     value: 4,
   },
+  {
+    label: "Verificado técnico",
+    value: 5,
+  },
+  {
+    label: "Verificado proyecto",
+    value: 6,
+  },
 ]);
 
 onBeforeMount(() => {
@@ -293,18 +277,28 @@ onBeforeMount(() => {
 
 async function bring() {
   loading.value = true
+  let data;
   try {
-    const data = await getData("/followup/listallfollowup");
+    if (role.value === "ADMIN") {
+      data = await getData("/followup/listallfollowup");
+      rows.value = data.listallFollowup.map((followup, idx) => ({
+        ...followup,
+        register: followup.assignment.apprentice.firstName + " " + followup.assignment.apprentice.lastName,
+        month: formatMonth(followup.month),
+        index: idx + 1,
+      }));
+    } else {
+      data = await getData(`/followup/listfollowupbyinstructor/${instructor.value}`);
 
-    rows.value = data.listallFollowup.map((followup, idx) => ({
-      ...followup,
-      register:
-        followup.assignment.apprentice.firstName +
-        " " +
-        followup.assignment.apprentice.lastName,
-      month: formatMonth(followup.month),
-      index: idx + 1,
-    }));
+      rows.value = data.listFollowupByInstructor.map((followup, idx) => {
+        return {
+          ...followup,
+          register: `${followup.assignment.apprentice.firstName} ${followup.assignment.apprentice.lastName}`,
+          month: formatMonth(followup.month),
+          index: idx + 1,
+        }
+      });
+    }
   } catch (error) {
     console.log(error);
   } finally {
@@ -312,34 +306,12 @@ async function bring() {
   }
 }
 
-const filteredRows = computed(() => {
-  if (!searchTerm.value) return rows.value; // Si no hay término de búsqueda, devolver todos los registros
-  return rows.value.filter((row) => {
-    return row.register
-      .toLowerCase()
-      .startsWith(searchTerm.value.toLowerCase());
-  });
-});
-
-async function handleUpdateStatus(status, id) {
-  try {
-    await putData(`/followup/updatestatus/${id}/${status}`, {
-      data: "Cambió estado seguimiento",
-      status: status,
-      idBinnacle: id,
-    });
-    bring();
-  } catch (error) {
-    console.log(error);
-  }
-}
-
 async function onSubmit() {
   loading.value = true;
   try {
     const data = {
-      assignment: assignment.value.trim(),
-      instructor: instructor.value.trim(),
+      assignment: assignment.value,
+      instructor: instructor.value,
       number: numFollowUp.value.trim(),
       document: document.value.trim(),
       month: month.value.trim(),
@@ -393,16 +365,6 @@ async function onSubmitObservation() {
   }
 }
 
-function onReset() {
-  assignment.value = "";
-  instructor.value = "";
-  numFollowUp.value = "";
-  document.value = "";
-  month.value = "";
-  observation.value = "";
-  idFollowUp.value = "";
-}
-
 function openModalCreate() {
   showModalCreate.value = true;
 }
@@ -423,6 +385,37 @@ async function openModalObservations(id, changes) {
   }
 }
 
+async function handleUpdateStatus(status, id) {
+  try {
+    await putData(`/followup/updatestatus/${id}/${status}`, {
+      data: "Cambió estado seguimiento",
+      status: status,
+      idBinnacle: id,
+    });
+    bring();
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+function onReset() {
+  assignment.value = "";
+  numFollowUp.value = "";
+  document.value = "";
+  month.value = "";
+  observation.value = "";
+  idFollowUp.value = "";
+}
+
+const filteredRows = computed(() => {
+  if (!searchTerm.value) return rows.value; // Si no hay término de búsqueda, devolver todos los registros
+  return rows.value.filter((row) => {
+    return row.register
+      .toLowerCase()
+      .startsWith(searchTerm.value.toLowerCase());
+  });
+});
+
 async function filterAssignment(val, update) {
   let assignment = await getData("/register/listallregister");
 
@@ -430,7 +423,7 @@ async function filterAssignment(val, update) {
   if (val === "") {
     update(() => {
       optionsAssignment.value = theAssignment.map((assignment) => ({
-        label: assignment.apprentice.numDocument,
+        label: `${assignment.apprentice.firstName} ${assignment.apprentice.lastName} - ${assignment.apprentice.numDocument}`,
         value: assignment._id,
       }));
     });
@@ -441,31 +434,8 @@ async function filterAssignment(val, update) {
     const needle = val.toLowerCase();
     optionsAssignment.value = theAssignment
       .map((assignment) => ({
-        label: assignment.apprentice.numDocument,
+        label: `${assignment.apprentice.firstName} ${assignment.apprentice.lastName} - ${assignment.apprentice.numDocument}`,
         value: assignment._id,
-      }))
-      .filter((option) => option.label.toLowerCase().includes(needle));
-  });
-}
-
-async function filterInstructor(val, update) {
-  let instructor = await getData("http://89.116.49.65:4500/api/instructors");
-  if (val === "") {
-    update(() => {
-      optionsInstructor.value = instructor.map((instructor) => ({
-        label: instructor.name,
-        value: instructor._id,
-      }));
-    });
-    return;
-  }
-
-  update(() => {
-    const needle = val.toLowerCase();
-    optionsInstructor.value = instructor
-      .map((instructor) => ({
-        label: instructor.name,
-        value: instructor._id,
       }))
       .filter((option) => option.label.toLowerCase().includes(needle));
   });
