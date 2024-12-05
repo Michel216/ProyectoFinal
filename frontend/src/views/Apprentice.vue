@@ -545,12 +545,12 @@ async function filterFiche(val, update) {
 
 async function filterModality(val, update) {
   let modality = await getData("/modality/listallmodality");
-  let theModality = modality.listAllModalities.filter(
+  let filteredModalities = modality.listAllModalities.filter(
     (modality) => modality.status === 1
   );
   if (val === "") {
     update(() => {
-      optionsModality.value = theModality.map((modality) => ({
+      optionsModality.value = filteredModalities.map((modality) => ({
         label: modality.name,
         value: modality._id,
       }));
@@ -560,7 +560,7 @@ async function filterModality(val, update) {
 
   update(() => {
     const needle = val.toLowerCase();
-    optionsModality.value = theModality
+    optionsModality.value = filteredModalities
       .map((modality) => ({
         label: modality.name,
         value: modality._id,

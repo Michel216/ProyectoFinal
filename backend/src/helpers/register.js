@@ -15,12 +15,16 @@ const registerHelper = {
         const existModality = await Modality.findById(idmodality)
         if (!existModality) {
             throw new Error(`La modalidad no está en a base de datos`);
+        } else if (existModality.status === 0) {
+            throw new Error(`La modalidad no está activa`)
         } return true
     },
     validateApprentice: async (idapprentice) => {
         const existApprentice = await Apprentice.findById(idapprentice)
         if (!existApprentice) {
             throw new Error(`El aprendiz no está en a base de datos`);
+        } else if (existApprentice.status === 0) {
+            throw new Error(`El aprendiz no está activo`)
         } return true
     },
     verifyDocAlternative: async () => {
@@ -40,6 +44,19 @@ const registerHelper = {
         } catch (error) {
             throw new Error(error.message || "Error al verificar el enlace de OneDrive.");
         }
+    },
+    validateStatusRegister: async (apprentice) => {
+        const existRegister = await Register.find({apprentice, status: 1})
+        if (existRegister.length > 0) {
+            throw new Error("El aprendiz ya tiene un registro activo");
+        } return true
+    },
+    validateStatusRegister2: async (id) => {
+        const theRegister = await Register.findById(id)
+        const existRegister = await Register.find({apprentice: theRegister.apprentice, status: 1})
+        if (existRegister.length > 0) {
+            throw new Error("El aprendiz ya tiene un registro activo");
+        } return true
     }
 }
 

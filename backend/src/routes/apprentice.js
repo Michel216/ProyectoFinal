@@ -89,7 +89,6 @@ apprenticeRoute.post('/addapprentice',[
     check('modality', 'La modalidad debe ser obligatoria').notEmpty(),
     check('modality', 'El Id de la modalidad debe ser válido').isMongoId(),
     check('modality').custom(apprenticeHelper.validateModality),
-    check('modality').custom(apprenticeHelper.validateModalityStatus),
     check('status', "El estado debe ser 0 a 4").optional().isInt({ min: 0, max: 4 }),
     validateFields
 ], apprenticeController.postAddAprentice);
@@ -140,7 +139,6 @@ apprenticeRoute.put('/updateapprenticebyid/:id', [
     check('modality', 'La modalidad debe ser obligatoria').notEmpty(),
     check('modality', 'El Id de la modalidad debe ser válido').isMongoId(),
     check('modality').custom(apprenticeHelper.validateModality),
-    check('modality').custom(apprenticeHelper.validateModalityStatus),
     check('status', "El estado debe ser 0 a 4").optional().isInt({ min: 0, max: 4 }),
     validateFields
 ], apprenticeController.putUpdateApprentice);

@@ -58,6 +58,7 @@ registerRoute.post('/addregister', [
     validateRepforaJWT,
     check('apprentice', 'El apprentice es obligatorio y debe ser un ID válido de MongoDB').isMongoId(),
     check('apprentice').custom(registerHelper.validateApprentice),
+    check('apprentice').custom(registerHelper.validateStatusRegister),
     check('modality', 'El modality es obligatorio y debe ser un ID válido de MongoDB').isMongoId(),
     check('modality').custom(registerHelper.validateModality),
     check('startDate', 'El campo startDate es obligatorio y debe ser una fecha válida').isDate(),
@@ -83,7 +84,7 @@ registerRoute.put('/updateregisterbyid/:id', [
     check('apprentice', 'El apprentice es obligatorio y debe ser un ID válido de MongoDB').isMongoId(),
     check('apprentice').custom(registerHelper.validateApprentice),
     check('modality', 'El modality es obligatorio y debe ser un ID válido de MongoDB').isMongoId(),
-    check('idModality').custom(registerHelper.validateModality),
+    check('modality').custom(registerHelper.validateModality),
     check('startDate', 'El campo startDate es obligatorio y debe ser una fecha válida').isDate(),
     check('company', 'El campo company es obligatorio y debe ser una cadena de texto').notEmpty(),
     check('emailCompany', 'El correo de la compañía es obligatorio y debe ser un correo válido').notEmpty().isEmail(),
@@ -113,6 +114,7 @@ registerRoute.put('/enableregister/:id', [
     validateRepforaJWT,
     check('id', 'El id es obligatorio y debe ser un ID de MongoDB válido').notEmpty().isMongoId(),
     check('id').custom(registerHelper.validateId),
+    check('id').custom(registerHelper.validateStatusRegister2),
     validateFields
 ], registerController.putenableregister);
 

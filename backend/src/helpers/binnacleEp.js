@@ -26,6 +26,8 @@ const binnacleHelper = {
         const existRegister = await Register.findById(idRegister)
         if (!existRegister) {
             throw new Error("El registro no existe en la base de datos")
+        } else if (existRegister.status === 0) {
+            throw new Error("El registro no está activo")
         } return true
     },
     // valida que el registro tenga una asignación

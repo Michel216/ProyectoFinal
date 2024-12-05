@@ -423,11 +423,12 @@ const filteredRows = computed(() => {
 
 async function filterAssignment(val, update) {
   let assignment = await getData('/register/listallregister');
-
-  let theAssignment = assignment.register;
+  let filteredRegisters = assignment.register.filter(
+    (regsiter) => regsiter.status === 1
+  );
   if (val === "") {
     update(() => {
-      optionsAssignment.value = theAssignment.map((assignment) => ({
+      optionsAssignment.value = filteredRegisters.map((assignment) => ({
         label: `${assignment.apprentice.firstName} ${assignment.apprentice.lastName} - ${assignment.apprentice.numDocument}`,
         value: assignment._id,
       }));
@@ -437,7 +438,7 @@ async function filterAssignment(val, update) {
 
   update(() => {
     const needle = val.toLowerCase();
-    optionsAssignment.value = theAssignment
+    optionsAssignment.value = filteredRegisters
       .map((assignment) => ({
         label: `${assignment.apprentice.firstName} ${assignment.apprentice.lastName} - ${assignment.apprentice.numDocument}`,
         value: assignment._id,
