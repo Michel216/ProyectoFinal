@@ -88,13 +88,11 @@ async function bring() {
   loading.value = true
   try {
     let url = await getData(`/apprentice/listcertificatedapprentice`)
-    console.log(url);
 
     rows.value = await Promise.all(url.listCertificatedApprentice.map(async (apprentice, idx) => {
       const ficheData = await getDataRepfora(`/fiches/${apprentice.fiche}`);
       let register = await getData(`/register/listregisterbyapprentice/${apprentice._id}`)
 
-      console.log(register);
       
 
       const certificationDocs = register?.data?.map((reg) => reg.register.certificationDoc) || [];

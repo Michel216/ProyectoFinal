@@ -9,7 +9,7 @@
         <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
           <q-select outlined v-model="apprentice" label="Aprendiz" :options="optionsApprentice" emit-value map-options
             clearable use-input input-debounce="0" behavior="menu" @filter="filterApprentice" lazy-rules :rules="[
-              val => val.trim() && val.length > 0 ||
+              val => val && val.length > 0 ||
                 'Por favor, dígite la cédula del aprendiz'
             ]">
             <template v-slot:no-option>
@@ -25,7 +25,7 @@
           </q-select>
           <q-select outlined v-model="modality" label="Modalidad" :options="optionsModality" emit-value map-options
             clearable use-input input-debounce="0" behavior="menu" @filter="filterModality" lazy-rules :rules="[
-              val => (val.trim() && val.length > 0) ||
+              val => (val && val.length > 0) ||
                 'Por favor, dígite la modalidad'
             ]">
             <template v-slot:no-option>
@@ -40,10 +40,10 @@
             </template>
           </q-select>
           <q-input outlined v-model="startDate" label="Fecha inicial" mask="date"
-            :rules="[val => val.trim() && val.length > 0 || 'Por favor, dígite la fecha inicio']">
+            :rules="[val => val && val.length > 0 || 'Por favor, dígite la fecha inicio']">
             <template v-slot:prepend>
               <font-awesome-icon icon="calendar-day" class="cursor-pointer" />
-              <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+              <q-popup-proxy cover transition-hide="scale">
                 <q-date v-model="startDate" today-btn>
                   <div class="row items-center justify-end">
                     <q-btn v-close-popup label="Close" color="primary" flat />
@@ -70,7 +70,7 @@
               <font-awesome-icon icon="fa-solid fa-map-pin" />
             </template>
           </q-input>
-          <q-input outlined v-model="emailCompany" label="Correo de la compañía" lazy-rules
+          <q-input outlined type="email" v-model="emailCompany" label="Correo de la compañía" lazy-rules
             :rules="[val => val.trim() && val.length > 0 || 'Por favor, dígite el correo de la compañía']">
             <template v-slot:prepend>
               <font-awesome-icon icon="fa-solid fa-envelope-circle-check" />
@@ -101,7 +101,7 @@
             </template>
           </q-input>
           <q-input outlined v-model="hour" label="Hora" lazy-rules
-            :rules="[val => val.trim() && val.length > 0 || 'Por favor, dígite la hora']">
+            :rules="[val => val && val.length > 0 || 'Por favor, dígite la hora']">
             <template v-slot:prepend>
               <font-awesome-icon icon="clock" class="cursor-pointer" />
               <q-popup-proxy cover transition-show="scale" transition-hide="scale">
@@ -114,7 +114,7 @@
             </template>
           </q-input>
           <q-input outlined v-model="businessProyectHour" label="Hora proyecto" lazy-rules
-            :rules="[val => val.trim() && val.length > 0 || 'Por favor, dígite la hora del proyecto']">
+            :rules="[val => val && val.length > 0 || 'Por favor, dígite la hora del proyecto']">
             <template v-slot:prepend>
               <font-awesome-icon icon="business-time" class="cursor-pointer" />
               <q-popup-proxy cover transition-show="scale" transition-hide="scale">
@@ -127,7 +127,7 @@
             </template>
           </q-input>
           <q-input outlined v-model="productiveProyectHour" label="Hora proyecto" lazy-rules
-            :rules="[val => val.trim() && val.length > 0 || 'Por favor, dígite la hora productiva del proyecto']">
+            :rules="[val => val && val.length > 0 || 'Por favor, dígite la hora productiva del proyecto']">
             <template v-slot:prepend>
               <font-awesome-icon icon="business-time" class="cursor-pointer" />
               <q-popup-proxy cover transition-show="scale" transition-hide="scale">
@@ -139,7 +139,7 @@
               </q-popup-proxy>
             </template>
           </q-input>
-          <div>
+          <div align="center">
             <q-btn label="guardar" type="submit" color="primary" :loading="isLoading" icon="save"  :disable="isLoading" />
             <q-btn label="Cerrar" type="reset" icon="close" class="q-ml-sm" v-close-popup />
           </div>
@@ -172,18 +172,18 @@ let btnLabel = 'Crear registro'
 let icons="control_point"
 let apprentice = ref()
 let modality = ref()
-let startDate = ref()
+let startDate = ref(null)
 let company = ref()
 let phoneCompany = ref()
 let certificationDoc = ref()
 let judymentPhoto = ref()
-let productiveProyectHour = ref()
+let productiveProyectHour = ref(null)
 let addressCompany = ref()
 let emailCompany = ref()
-let businessProyectHour = ref()
+let businessProyectHour = ref(null)
 let owner = ref()
 let docAlternative = ref()
-let hour = ref()
+let hour = ref(null)
 let idRegister = ref()
 let change = ref() // true: crear, false: modificar
 const showModal = ref(false);
@@ -218,7 +218,6 @@ async function bring() {
   try {
     // Obtener los datos de los registros
     let data = await getData('/register/listallregister');
-    console.log(data);
 
     // Iterar sobre los registros y obtener los datos de 'fiche'
     rows.value = await Promise.all(data.register.map(async (register, idx) => {
@@ -253,7 +252,7 @@ async function handleToggleActivate(id, status) {
 
   } catch (error) {
     console.log(error);
-
+    notifyErrorRequest(error?.response?.data?.errors?.[0]?.msg || "Error desconocido")
   }
 
 };
@@ -304,20 +303,20 @@ async function onSubmit() {
 }
 
 function onReset() {
-  apprentice.value = ''
-  modality.value = ''
+  apprentice.value = null
+  modality.value = null
   startDate.value = ''
   company.value = ''
   phoneCompany.value = ''
   addressCompany.value = ''
   emailCompany.value = ''
-  businessProyectHour.value = ''
+  businessProyectHour.value = null
   owner.value = ''
   docAlternative.value =
-  hour.value = ''
+  hour.value = null
   judymentPhoto.value = ''
   certificationDoc.value = ''
-  productiveProyectHour.value = ''
+  productiveProyectHour.value = null
 }
 
 async function bringIdAndOpenModal(id) {
@@ -332,7 +331,7 @@ async function bringIdAndOpenModal(id) {
     apprentice.value = apprentices.listApprenticesById._id
     modality.value = modalities.listModalityById._id
     optionsApprentice.value = [{
-      label: apprentices.listApprenticesById.numDocument,
+      label: `${apprentices.listApprenticesById.firstName} ${apprentices.listApprenticesById.lastName} - ${apprentices.listApprenticesById.numDocument}`,
       value: apprentices.listApprenticesById._id
     }];
     optionsModality.value = [{
@@ -348,7 +347,7 @@ async function bringIdAndOpenModal(id) {
     docAlternative.value = theRegister.docAlternative
     certificationDoc.value = theRegister.certificationDoc
     judymentPhoto.value = theRegister.judymentPhoto
-    productiveProyectHour.value = theRegister.productiveProyectHour
+    productiveProyectHour.value = theRegister?.productiveProyectHour || null
     businessProyectHour.value = theRegister.businessProyectHour
     hour.value = theRegister.hour
   } else {
@@ -359,11 +358,13 @@ async function bringIdAndOpenModal(id) {
 
 async function filterApprentice(val, update) {
   let apprentices = await getData('/apprentice/listallapprentice');
-  let theApprentice = apprentices.listApprentice
+  let filteredApprentices = apprentices.listApprentice.filter(
+    (apprentice) => apprentice.status === 1
+  );
   if (val === '') {
     update(() => {
-      optionsApprentice.value = theApprentice.map(apprentice => ({
-        label: apprentice.numDocument,
+      optionsApprentice.value = filteredApprentices.map(apprentice => ({
+        label: `${apprentice.firstName} ${apprentice.lastName} - ${apprentice.numDocument}`,
         value: apprentice._id
       }));
     });
@@ -372,8 +373,8 @@ async function filterApprentice(val, update) {
 
   update(() => {
     const needle = val.toLowerCase();
-    optionsApprentice.value = theApprentice.map(apprentice => ({
-      label: apprentice.numDocument,
+    optionsApprentice.value = filteredApprentices.map(apprentice => ({
+      label: `${apprentice.firstName} ${apprentice.lastName} - ${apprentice.numDocument}`,
       value: apprentice._id
     })).filter(option => option.label.toLowerCase().includes(needle));
   });
@@ -381,10 +382,12 @@ async function filterApprentice(val, update) {
 
 async function filterModality(val, update) {
   let modality = await getData('/modality/listallmodality');
-  let theModality = modality.listAllModalities;
+  let filteredModalities = modality.listAllModalities.filter(
+    (modality) => modality.status === 1
+  );
   if (val === '') {
     update(() => {
-      optionsModality.value = theModality.map(modality => ({
+      optionsModality.value = filteredModalities.map(modality => ({
         label: modality.name,
         value: modality._id
       }));
@@ -394,7 +397,7 @@ async function filterModality(val, update) {
 
   update(() => {
     const needle = val.toLowerCase();
-    optionsModality.value = theModality.map(modality => ({
+    optionsModality.value = filteredModalities.map(modality => ({
       label: modality.name,
       value: modality._id
     })).filter(option => option.label.toLowerCase().includes(needle));

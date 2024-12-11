@@ -136,7 +136,6 @@ async function bring() {
   loading.value = true
   try {
     let data = await getData("/modality/listallmodality");
-    console.log(data);
     rows.value = data.listAllModalities.map((item, idx) => ({
       ...item,
       index: idx + 1
@@ -185,12 +184,10 @@ async function onSubmit() {
     let url = ref();
 
     if (change.value === true) {
-      console.log("creo");
       data.data = "Creó modalidad"
       url.value = await postData(`/modality/addmodality`, data);
       notifySuccessRequest("Modalidad creada exitosamente");
     } else {
-      console.log("edito");
       data.data = "Editó modalidad"
       data.idModality = idModality.value
       url.value = await putData(
@@ -227,7 +224,6 @@ async function bringId(id) {
     let modality = await getData(`/modality/listmodalitybyid/${id}`);
     let TheModality = modality.listModalityById;
     idModality.value = id;
-    console.log(id);
     change.value = false;
     name.value = TheModality.name;
     hourInstructorFollow.value = TheModality.hourInstructorFollow;

@@ -99,7 +99,6 @@ async function bring() {
     loading.value = true;
     try {
         let url = await getData("http://89.116.49.65:4500/api/instructors");
-        console.log(url);
         rows.value = url
     } catch (error) {
         console.log(error);

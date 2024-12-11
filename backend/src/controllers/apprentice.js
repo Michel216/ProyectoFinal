@@ -46,6 +46,16 @@ const apprenticeController = {
             res.status(400).json({ error });
         }
     },
+    // Obtener aprendiz por correo
+    getListApprenticeByEmail: async (req, res) => {
+        try {
+            const institutionalEmail = req.params.institutionalEmail
+            const listApprenticeByEmail = await Apprentice.findOne({institutionalEmail}).populate({ path: 'modality' }).exec();
+            res.status(200).json({ listApprenticeByEmail });
+        } catch (error) {
+            res.status(400).json({ error });
+        }
+    },
     // Obtener aprendices por ficha
     getListApprenticesByFiche: async (req, res) => {
         try {

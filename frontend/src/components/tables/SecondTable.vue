@@ -165,7 +165,6 @@ let title = ref(props.title);
 
 const emits = defineEmits(['update:loading']);
 let localLoading = ref(props.loading);
-console.log(localLoading.value);
 
 
 // Sincronizar `loading` local con prop externa

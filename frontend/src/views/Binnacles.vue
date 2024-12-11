@@ -1,11 +1,10 @@
 <template>
   <div class="q-pa-md q-gutter-md">
-    <Header title="Bitácoras"></Header>
-    <div
-      style="display: flex; flex-direction: row; align-items: flex-start; justify-content: flex-end; margin: -30px 0px">
+    <!-- Encabezado -->
+    <Header title="Bitácoras" />
+    <!-- Filtro -->
+    <div style="display: flex; flex-direction: row; align-items: flex-start; justify-content: flex-end; margin: -30px 0px">
       <div class="q-pa-md q-gutter-sm" style="display: flex; flex-direction: column; align-items: flex-start;">
-        <!-- <div class="text-primary" style="margin-bottom: -30px;">Realizar filtro por</div> -->
-        <!-- Contenedor de los radio buttons y el input, alineados en una fila -->
         <div style="display: flex; flex-direction: row; align-items: center; justify-content: flex-start; width: 100%;">
           <!-- Radio buttons -->
           <!-- <div style="display: flex; flex-direction: row; align-items: flex-start; margin-right: 10px;">
@@ -22,15 +21,19 @@
                 :disable="!selectedValue" />
             </div>
           </div>
-
         </div>
       </div>
     </div>
-    <Btn :icon="icons" :label="btnLabel" :onClickFunction="openModalCreate" :loading="loading" v-if="role === 'INSTRUCTOR'" />
+    <!-- Botón crear -->
+    <Btn :icon="icons" :label="btnLabel" :onClickFunction="openModalCreate" :loading="loading"
+      v-if="role === 'INSTRUCTOR'" />
+      <!-- Tabla -->
     <binnacleTable :title="title" :columns="columns" :rows="filteredRows" :options="options"
-      :onUpdateStatus="handleUpdateStatus" :val="true" :onClickFunction="openModalObservations"  @update:loading="(val) => (loading = val)" :loading="loading"/>
+      :onUpdateStatus="handleUpdateStatus" :val="true" :onClickFunction="openModalObservations"
+      @update:loading="(val) => (loading = val)" :loading="loading" />
+      <!-- Modal "crear bitácora" -->
     <Modal :onClickFunction="onReset" :isVisible="showModalCreate" @update:isVisible="showModalCreate = $event"
-      :label="'DILIGENCIA LA INFORMACION'">
+      label="DILIGENCIA LA INFORMACION">
       <div class="q-pa-md" style="max-width: 400px">
         <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
           <q-select outlined v-model="assignment" label="Seleccione una asignación" :options="optionsAssignment"
@@ -41,18 +44,9 @@
                 <q-item-section class="text-grey"> No results </q-item-section>
               </q-item>
             </template>
-          </q-select>
-          <q-select outlined v-model="instructor" label="Seleccione un instructor" :options="optionsInstructor"
-            emit-value map-options clearable lazy-rules
-            :rules="[(val) => (val.trim() && val.length > 0) || 'Por favor, seleccione un instructor']">
-
-            <template v-slot:no-option>
-              <q-item>
-                <q-item-section class="text-grey"> No results </q-item-section>
-              </q-item>
+            <template v-slot:prepend>
+              <font-awesome-icon icon="fa-solid fa-hand-pointer" />
             </template>
-
-
           </q-select>
 
           <q-input outlined type="number" v-model="numBinnacle" label="N° Bitacora" lazy-rules
@@ -68,44 +62,33 @@
               <q-icon name="description" />
             </template>
           </q-input>
-          <!-- <q-select outlined v-model="assignment" label="Seleccione un estado" :options="options" emit-value map-options
-            clearable use-input input-debounce="0" behavior="menu" lazy-rules
-            :rules="[(val) => (val.trim() && val.length > 0) || 'Por favor, seleccione un estado']">
 
-            <template v-slot:no-option>
-              <q-item>
-                <q-item-section class="text-grey"> No results </q-item-section>
-              </q-item>
-            </template>
-
-
-          </q-select> -->
           <div align="center">
             <q-btn label="Guardar" type="submit" icon="save" color="primary" :loading="loading" />
-
-            <q-btn label="Cerrar" type="reset" icon="close" v-close-popup class="q-ml-sm"/>
+            <q-btn label="Cerrar" type="reset" icon="close" v-close-popup class="q-ml-sm" />
           </div>
         </q-form>
       </div>
     </Modal>
+    <!-- Modal "observaciones" -->
     <Modal :onClickFunction="onReset" :isVisible="showModalObservations"
       @update:isVisible="showModalObservations = $event" :label="'OBSERVACIONES'">
       <div class="q-pa-md" style="max-width: 400px">
-        <q-form v-if="!change" @submit="onSubmitObservation" @reset="onReset" class="q-gutter-md" >
+        <!-- Crear observacióon -->
+        <q-form v-if="!change" @submit="onSubmitObservation" @reset="onReset" class="q-gutter-md">
           <q-input outlined type="textarea" v-model="observation" label="Observación" lazy-rules
             :rules="[(val) => (val.trim() && val.length > 0) || 'Por favor, ingrese una observación']" />
 
-
           <div align="center">
-            <q-btn label="Guardar" type="submit" icon="save" color="primary" :loading="loading"/>
-
+            <q-btn label="Guardar" type="submit" icon="save" color="primary" :loading="loading" />
             <q-btn label="Cerrar" type="reset" icon="close" class="q-ml-sm" v-close-popup />
           </div>
         </q-form>
-        <q-form v-else @submit="onSubmitObservation" @reset="onReset" >
+        <!-- Ver observaciones -->
+        <q-form v-else @submit="onSubmitObservation" @reset="onReset">
           <div v-for="(item, index) in listObservations" :key="index">
             <div v-if="listObservations.length > 0">
-              <q-chat-message v-if="item.user === user" sent>
+              <q-chat-message v-if="item.user === user" sent style="margin-left: 50px;">
                 <p style="padding: 5px;">
                   <span class="text-h7 text-primary"><strong> {{ item.user
                       }}</strong></span> <br>
@@ -115,7 +98,7 @@
                       }}</strong></span>
                 </p>
               </q-chat-message>
-              <q-chat-message v-else bg-color="green-3">
+              <q-chat-message v-else bg-color="green-3" style="margin-right: 50px;">
                 <p style="padding: 5px;">
                   <span class="text-h7 text-dark"><strong> {{ item.user
                       }}</strong></span> <br>
@@ -135,11 +118,8 @@
               </q-card-section>
             </q-card>
           </div>
-
-
           <br>
           <div align="center">
-
             <q-btn label="Cerrar" type="reset" icon="close" class="q-ml-sm full-width" v-close-popup />
           </div>
         </q-form>
@@ -155,52 +135,41 @@ import { getData, putData, postData } from "../services/apiClient.js";
 import binnacleTable from "../components/tables/SecondTable.vue";
 import Btn from "../components/buttons/Button.vue";
 import Modal from "../components/modals/Modal.vue";
-import {
-  notifyErrorRequest,
-  notifySuccessRequest,
-  notifyWarningRequest,
-} from "../composables/Notify";
+import { notifyErrorRequest, notifySuccessRequest } from "../composables/Notify";
 import { formatDate } from "../utils/formatDate.js";
 import moment from "moment-timezone"
 import { useAuthStore } from './../store/useAuth.js'
 import Header from '../components/header/Header.vue';
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { faCalendarDay, faChalkboardUser, faHandPointer } from "@fortawesome/free-solid-svg-icons";
 
+library.add(faCalendarDay, faChalkboardUser, faHandPointer);
 const authStore = useAuthStore();
 const role = computed(() => authStore.getRole());
 const user = computed(() => authStore.getEmail());
+const icons = "control_point"
+const title = "Bitácoras";
+const btnLabel = "Crear";
+const instructor = ref("67105c23bad722df0d908a25");
 let loading = ref(false);
 let change = ref()
-let icons="control_point"
-let title = "Bitácoras";
-let btnLabel = "Crear ";
 let assignment = ref("");
-let instructor = ref("");
 let numBinnacle = ref("");
 let document = ref("");
 let observation = ref("");
 let observationDate = moment().tz('America/Bogota').format('YYYY-MM-DD HH:mm:ss')
 let listObservations = ref("")
 let idBinnacle = ref("")
-const showModalCreate = ref(false);
-const showModalObservations = ref(false);
+let showModalCreate = ref(false);
+let showModalObservations = ref(false);
 let optionsAssignment = ref();
-let optionsInstructor = ref();
-const rows = ref([]);
-const submitResult = ref([]);
+let rows = ref([]);
+let submitResult = ref([]);
 let searchTerm = ref("");
 let searchLabel = ref('Buscar')
-const selectedValue = ref('');
-function radiobtn(evt) {
-  const formData = new FormData(evt.target)
-  const data = []
-
-  for (const [name, value] of formData.entries()) {
-    data.push({ name, value })
-  }
-
-  submitResult.value = data
-}
-const columns = computed(() => {
+let selectedValue = ref('');
+let columns = computed(() => {
   let baseColumns = [
     {
       name: "index",
@@ -244,25 +213,25 @@ const columns = computed(() => {
         field: "instructor"
       },)
   }
-
   return baseColumns;
 });
 
-
-
-// valida que el tipo de la bitácora sea de 1 a 4. Programado: 1, Ejecutado: 2, Pendiente: 3, Verificado: 4// valida que el tipo de la bitácora sea de 1 a 4. Programado: 1, Ejecutado: 2, Pendiente: 3, Verificado: 4, Verificado técnico: 5, Verificado proyecto: 6
 let options = ref([
   {
-    label: "Pendiente",
+    label: "Programado",
     value: 1,
   },
   {
-    label: "Ejecutada",
+    label: "Ejecutado",
     value: 2,
   },
   {
-    label: "Verificada",
+    label: "Pendiente",
     value: 3,
+  },
+  {
+    label: "Verificado",
+    value: 4,
   },
   {
     label: "Verificado técnico",
@@ -278,76 +247,50 @@ onBeforeMount(() => {
   bring();
 });
 
-const handleFilter = () => {
-  if (selectedValue.value === "assignment") {
-    searchLabel.value = "Ingrese el nombre del aprendiz";
-  } else if (selectedValue.value === "instructor") {
-    searchLabel.value = "Ingrese el nombre del instructor";
-  } else {
-    searchLabel.value = "Buscar";
-  }
-};
-console.log(rows.status)
-const filteredRows = computed(() => {
-  if (!searchTerm.value) return rows.value;  // Si no hay término de búsqueda, devolver todos los registros
-
-  return rows.value.filter(row => {
-    console.log(row); // Añadir esto para depurar
-    if (selectedValue.value === "instructor") {
-      return (
-        (row.instructor.toLowerCase().startsWith(searchTerm.value.toLowerCase()))
-      );
-    } else if (selectedValue.value === "assignment") {
-      return (
-        (row.assignment.toLowerCase().startsWith(searchTerm.value.toLowerCase()))
-      );
-    }
-    return false;  // Si no hay filtro seleccionado
-  });
-});
-
-
 async function bring() {
   loading.value = true
+  let data;
   try {
-    let data = await getData("/binnacles/listallbinnacles");
-    console.log(data);
-    // let instructors = await getData('http://89.116.49.65:4500/api/instructors');
+    if (role.value === 'ADMIN') {
+      data = await getData("/binnacles/listallbinnacles");
 
-    rows.value = data.ListAllBinnacles.map((item, idx) => ({
-      ...item,
-      assignment: (item.assignment.apprentice.firstName + ' ' + item.assignment.apprentice.lastName),
-      // instructor: instructors.find((i), i.id === item.instructor).name,
-      index: idx + 1,
-    }));
+      if (Array.isArray(data.ListAllBinnacles) && data.ListAllBinnacles.length > 0) {
+        rows.value = await Promise.all(data.ListAllBinnacles.map(async (item, idx) => {
 
-    // Verificar que la propiedad 'ListAllBinnacles' exista y sea un array
-    if (Array.isArray(data.ListAllBinnacles) && data.ListAllBinnacles.length > 0) {
-      rows.value = await Promise.all(data.ListAllBinnacles.map(async (item, idx) => {
-        // Obtener los datos del instructor desde su ID
-        const instructorId = item.instructor;  // Accedemos al 'instructor' de cada 'item'
-        let instructorData;
-        if (role.value === "ADMIN") {
-          instructorData = await getDataRepfora(`/instructors/${instructorId}`)
-        }
+          let instructorId = item.instructor;
+          let instructorData;
+          if (role.value === "ADMIN") {
+            instructorData = await getDataRepfora(`/instructors/${instructorId}`)
+          }
 
-        // Verificar que 'assignment' y 'apprentice' existen antes de acceder a ellos
+          const assignmentApprentice = item.assignment && item.assignment.apprentice
+            ? item.assignment.apprentice
+            : { firstName: 'N/A', lastName: 'N/A' };
+
+          return {
+            ...item,
+            assignment: `${assignmentApprentice.firstName} ${assignmentApprentice.lastName}`,
+            instructor: role.value === "ADMIN" ? instructorData.data.name : '',
+            index: idx + 1,
+          };
+        }));
+      } else {
+        console.log("El campo 'ListAllBinnacles' no es un array o está vacío.");
+      }
+    } else {
+      data = await getData(`/binnacles/listbinnaclesbyinstructor/${instructor.value}`);
+
+      rows.value = data.listBinnalcesByInstructor.map((item, idx) => {
         const assignmentApprentice = item.assignment && item.assignment.apprentice
-          ? item.assignment.apprentice
-          : { firstName: 'N/A', lastName: 'N/A' };  // Valores por defecto si no existen
+        ? item.assignment.apprentice
+        : { firstName: 'N/A', lastName: 'N/A' };
 
         return {
           ...item,
-          assignment: `${assignmentApprentice.firstName} ${assignmentApprentice.lastName}`,  // Concatenar nombres
-          instructor: role.value==="ADMIN"?instructorData.data.name:'',  // Nombre del instructor
-          index: idx + 1,  // Índice de la fila
-        };
-      }));
-      console.log(rows.value);
-
-    } else {
-      console.log("El campo 'ListAllBinnacles' no es un array o está vacío.");
-      // Puedes también asignar un mensaje de error a la interfaz de usuario si es necesario
+          assignment: `${assignmentApprentice.firstName} ${assignmentApprentice.lastName}`,
+          index: idx + 1,
+        }
+      })
     }
   } catch (error) {
     console.log(error);
@@ -356,24 +299,12 @@ async function bring() {
   }
 }
 
-
-
-
-async function handleUpdateStatus(status, id) {
-  try {
-    let data = await putData(`/binnacles/updatestatus/${id}/${status}`, {data: "Cambió estado bitácora", status: status, idBinnacle: id});
-    bring();
-  } catch (error) {
-    console.log(error);
-  }
-}
-
 async function onSubmit() {
   loading.value = true;
   try {
     let data = {
       assignment: assignment.value.trim(),
-      instructor: instructor.value.trim(),
+      instructor: instructor.value,
       number: numBinnacle.value.trim(),
       document: document.value.trim(),
       data: "Creó bitácora"
@@ -393,18 +324,6 @@ async function onSubmit() {
   }
 }
 
-function onReset() {
-  assignment.value = "";
-  instructor.value = "";
-  numBinnacle.value = "";
-  document.value = "";
-  observation.value = "";
-}
-
-function openModalCreate() {
-  showModalCreate.value = true;
-}
-
 async function onSubmitObservation() {
   loading.value = true
   try {
@@ -419,7 +338,6 @@ async function onSubmitObservation() {
       data: "Creó observación bitácora",
       idBinnacle: idBinnacle.value
     }
-
     let url = await putData(`/binnacles/addobservation/${idBinnacle.value}`, data)
     notifySuccessRequest("Observación guardada exitosamente");
     showModalObservations.value = false
@@ -433,31 +351,85 @@ async function onSubmitObservation() {
   }
 }
 
+function openModalCreate() {
+  showModalCreate.value = true;
+}
+
 async function openModalObservations(id, changes) {
   showModalObservations.value = true;
   idBinnacle.value = id
   change.value = changes
   try {
     let data = await getData(`/binnacles/listbinnaclesbyid/${id}`);
-    console.log(data);
     listObservations.value = data.listBinnacleById.observations
-    console.log(listObservations.value);
-
-
   } catch (error) {
     console.log(error);
   }
 }
 
+async function handleUpdateStatus(status, id) {
+  try {
+    let data = await putData(`/binnacles/updatestatus/${id}/${status}`, { data: "Cambió estado bitácora", status: status, idBinnacle: id });
+    bring();
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+function radiobtn(evt) {
+  const formData = new FormData(evt.target)
+  const data = []
+
+  for (const [name, value] of formData.entries()) {
+    data.push({ name, value })
+  }
+
+  submitResult.value = data
+}
+
+const handleFilter = () => {
+  if (selectedValue.value === "assignment") {
+    searchLabel.value = "Ingrese el nombre del aprendiz";
+  } else if (selectedValue.value === "instructor") {
+    searchLabel.value = "Ingrese el nombre del instructor";
+  } else {
+    searchLabel.value = "Buscar";
+  }
+};
+
+function onReset() {
+  assignment.value = "";
+  numBinnacle.value = "";
+  document.value = "";
+  observation.value = "";
+}
+
+const filteredRows = computed(() => {
+  if (!searchTerm.value) return rows.value;
+
+  return rows.value.filter(row => {
+    if (selectedValue.value === "instructor") {
+      return (
+        (row.instructor.toLowerCase().startsWith(searchTerm.value.toLowerCase()))
+      );
+    } else if (selectedValue.value === "assignment") {
+      return (
+        (row.assignment.toLowerCase().startsWith(searchTerm.value.toLowerCase()))
+      );
+    }
+    return false;
+  });
+});
+
 async function filterAssignment(val, update) {
   let assignment = await getData('/register/listallregister');
-  console.log(assignment);
-
-  let theAssignment = assignment.register;
+  let filteredRegisters = assignment.register.filter(
+    (regsiter) => regsiter.status === 1
+  );
   if (val === "") {
     update(() => {
-      optionsAssignment.value = theAssignment.map((assignment) => ({
-        label: assignment.apprentice.numDocument,
+      optionsAssignment.value = filteredRegisters.map((assignment) => ({
+        label: `${assignment.apprentice.firstName} ${assignment.apprentice.lastName} - ${assignment.apprentice.numDocument}`,
         value: assignment._id,
       }));
     });
@@ -466,37 +438,14 @@ async function filterAssignment(val, update) {
 
   update(() => {
     const needle = val.toLowerCase();
-    optionsAssignment.value = theAssignment
+    optionsAssignment.value = filteredRegisters
       .map((assignment) => ({
-        label: assignment.apprentice.numDocument,
+        label: `${assignment.apprentice.firstName} ${assignment.apprentice.lastName} - ${assignment.apprentice.numDocument}`,
         value: assignment._id,
       }))
       .filter((option) => option.label.toLowerCase().includes(needle));
   });
 }
-
-// async function filterInstructor(val, update) {
-//   let instructor = await getData('http://89.116.49.65:4500/api/instructors');
-//   console.log(instructor);
-//   if (val === "") {
-//     update(() => {
-//       optionsInstructor.value = instructor.map((instructor) => ({
-//         label: instructor.name,
-//         value: instructor._id,
-//       }));
-//     });
-//     return;
-//   }
-
-//   update(() => {
-//     const needle = val.toLowerCase();
-//     optionsInstructor.value = instructor.map((instructor) => ({
-//       label: instructor.name,
-//       value: instructor._id,
-//     }))
-//       .filter((option) => option.label.toLowerCase().includes(needle));
-//   });
-// }
 </script>
 
 <style scoped>

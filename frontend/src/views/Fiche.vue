@@ -92,7 +92,6 @@ function handleViewApprentices(row) {
       path: './Apprentice/:ficheId?',
       query: { ficheId: row.ficheId }
     });
-    console.log('Navigating to ficheId:', row.ficheId);
   } else {
     console.error('ID de la ficha no encontrado en la fila.');
   }

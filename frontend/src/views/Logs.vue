@@ -136,14 +136,15 @@ const handleSubmit = async () => {
         
       });
     }
-
+    
     if (!data) {
       notifyErrorRequest('No se recibió respuesta válida del servidor.')
       return;
     }
 
+    let idApprentice = data?.apprentice?._id || null
     // Almacena el token y el rol en el store
-    authStore.setToken(data.token, rol.value, data.name, data.email);
+    authStore.setToken(data.token, rol.value, data.name, data.email, idApprentice);
 
     // Redirigir a la página de inicio
     router.replace("/Home");

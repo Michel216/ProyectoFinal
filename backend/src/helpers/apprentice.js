@@ -63,6 +63,8 @@ const apprenticeHelper = {
         let exisIdModality = await Modality.findById(modality)
         if (!exisIdModality) {
             throw new Error("La modalidad no existe en la base de datos");
+        } else if (exisIdModality.status === 0) {
+            throw new Error("La modalidad no está activa");
         } return true
     },
     // válida que no se repita el número de documento
@@ -131,12 +133,6 @@ const apprenticeHelper = {
             throw new Error("El aprendiz está inactivo");
         } return true
 
-    },
-    validateModalityStatus: async (modality) => {
-        let modalityActive = await Modality.findById(modality);
-        if (modalityActive.status === 0) {
-            throw new Error("La modalidad está inactiva");
-        } return true
     },
     validateApprenticeCsv: async (apprentice) => {
         const errors = [];

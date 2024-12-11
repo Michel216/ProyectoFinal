@@ -299,12 +299,10 @@ onMounted(async () => {
   loading.value = true;
   try {
     const idFiche = route.query.ficheId
-    console.log(idFiche);
 
     if (idFiche) {
       // Si hay un ID de ficha, filtra por aprendices de esa ficha
       const response = await getData(`/apprentice/listapprenticebyfiche/${idFiche}`);
-      console.log(response);
 
       // // Filtrar los aprendices por ficha
       rows.value = await Promise.all(
@@ -340,7 +338,6 @@ async function bring() {
   loading.value = true;
   try {
     let url = await getData("/apprentice/listallapprentice");
-    console.log(url);
 
     // Usamos Promise.all para esperar a que todas las promesas se resuelvan
     rows.value = await Promise.all(
@@ -394,21 +391,17 @@ async function onSubmit() {
       modality: modality.value.trim(),
     };
     if (change.value === true) {
-      console.log("creo");
       data.data = "Creó a un aprendiz"
       url.value = await postData(`apprentice/addapprentice`, data);
-      console.log(data);
 
       notifySuccessRequest("Aprendiz creado exitosamente");
     } else {
-      console.log("edito");
       data.data = "Editó a un aprendiz"
       data.idApprentice = idApprentice.value
       url.value = await putData(
         `/apprentice/updateapprenticebyid/${idApprentice.value}`,
         data
       );
-      console.log(data);
       notifySuccessRequest("Aprendiz actualizado exitosamente");
     }
     showModal.value = false;
@@ -446,7 +439,6 @@ async function bringIdAndOpenModal(id) {
       `/modality/listmodalitybyid/${theApprentice.modality}`
     );
     let response = await getDataRepfora(`/fiches/${theApprentice.fiche}`);
-    console.log(response);
     
     idApprentice.value = id;
     change.value = false;
@@ -491,7 +483,6 @@ const uploadFile = async () => {
 
   const formData = new FormData();
   formData.append('file', file.value);
-  console.log(file.value);
 
   try {
     const response = await postData('/apprentice/upload', formData, {
@@ -554,12 +545,12 @@ async function filterFiche(val, update) {
 
 async function filterModality(val, update) {
   let modality = await getData("/modality/listallmodality");
-  let theModality = modality.listAllModalities.filter(
+  let filteredModalities = modality.listAllModalities.filter(
     (modality) => modality.status === 1
   );
   if (val === "") {
     update(() => {
-      optionsModality.value = theModality.map((modality) => ({
+      optionsModality.value = filteredModalities.map((modality) => ({
         label: modality.name,
         value: modality._id,
       }));
@@ -569,7 +560,7 @@ async function filterModality(val, update) {
 
   update(() => {
     const needle = val.toLowerCase();
-    optionsModality.value = theModality
+    optionsModality.value = filteredModalities
       .map((modality) => ({
         label: modality.name,
         value: modality._id,

@@ -40,7 +40,13 @@ const binnacleController = {
     getListBinnaclesByInstructor: async (req, res) => {
         try {
             const idInstructor = req.params.idInstructor;
-            const listBinnalcesByInstructor = await Binnacle.find({ instructor: idInstructor });
+            const listBinnalcesByInstructor = await Binnacle.find({ instructor: idInstructor }).populate({
+                path: 'assignment',
+                populate: {
+                    path: 'apprentice',
+                    select: 'firstName lastName'
+                }
+            })
             res.status(200).json({ listBinnalcesByInstructor });
         } catch (error) {
             res.status(400).json({ error });
@@ -69,6 +75,7 @@ const binnacleController = {
             res.status(400).json({ error })
         }
     },
+    // Añadir observación a una bitácora
     putAddObservation: async (req, res) => {
         try {
             const id = req.params.id;
