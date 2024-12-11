@@ -34,6 +34,14 @@ apprenticeRoute.get('/listapprenticebyid/:id', [
     validateFields
 ], apprenticeController.getListApprenticesById);
 
+// Obtener aprendiz por email
+apprenticeRoute.get('/listapprenticebyemail/:institutionalEmail',[
+    validateApprenticeJWT,
+    check('institutionalEmail','El email institucional es obligatorio').notEmpty().isEmail(),
+    check('institutionalEmail').custom(apprenticeHelper.validateNoInstitutionalEmail),
+    validateFields
+], apprenticeController.getListApprenticeByEmail);
+
 // Obtener aprendices por ficha
 apprenticeRoute.get('/listapprenticebyfiche/:idFiche', [
     validateApprenticeJWT,

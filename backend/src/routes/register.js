@@ -2,6 +2,7 @@ const express = require('express')
 const registerController = require('../controllers/register.js')
 const { validateFields } = require('../middlewares/validate-fields.js');
 const { validateRepforaJWT } = require('./../middlewares/validateJWTRepfora.js');
+const { validateApprenticeJWT } = require('./../middlewares/validateJWT.js');
 const { check } = require('express-validator');
 const {registerHelper, validateDateRange, validateAtLeastOneInstructor} = require('../helpers/register.js');
 
@@ -23,7 +24,7 @@ registerRoute.get('/listregisterbyid/:id', [
 
 //obtener registro por id del aprendiz
 registerRoute.get('/listregisterbyapprentice/:idApprentice', [
-    validateRepforaJWT,
+    validateApprenticeJWT,
     check('idApprentice', 'El ID del aprendiz debe ser un ID válido de MongoDB').notEmpty().isMongoId(),
     check('idApprentice').custom(registerHelper.validateApprentice),
     validateFields

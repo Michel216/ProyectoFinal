@@ -31,12 +31,12 @@
             <div class="info">
                 <p><strong>MODALIDAD:</strong></p>
                 <p> {{ etapaProductiva.modalidad || 'j ' }}</p>
-              
-                    <p><strong>FECHA INICIO:</strong> </p>
-                    <p>{{ etapaProductiva.fechaInicio || ' j' }}</p>
-                    <p><strong>FECHA FIN:</strong> </p>
-                    <p>{{ etapaProductiva.fechaFin || ' j' }}</p>
-                
+
+                <p><strong>FECHA INICIO:</strong> </p>
+                <p>{{ etapaProductiva.fechaInicio || ' j' }}</p>
+                <p><strong>FECHA FIN:</strong> </p>
+                <p>{{ etapaProductiva.fechaFin || ' j' }}</p>
+
                 <p><strong>INSTRUCTOR DE SEGUIMIENTO:</strong> </p>
                 <p>{{ etapaProductiva.instructor || ' j' }}</p>
                 <p><strong>ESTADO ETAPA PRODUCTIVA:</strong> </p>
@@ -62,7 +62,7 @@
                             </div>
                             <div class="info">
                                 <p><strong>VER BITÁCORAS:</strong>
-                                    <button  class="folder-button" @click="goToBitacoras">
+                                    <button class="folder-button" @click="goToBitacoras">
                                         <i class="fas fa-folder-open"></i>
                                     </button>
                                 </p>
@@ -75,7 +75,7 @@
                             </div>
                             <div class="info">
                                 <p><strong>VER SEGUIMIENTOS:</strong>
-                                    <button class="folder-button" @click="goToSeguimientos" >
+                                    <button class="folder-button" @click="goToSeguimientos">
                                         <i class="fas fa-folder-open"></i>
                                     </button>
                                 </p>
@@ -107,23 +107,22 @@
                 </div>
             </div>
         </div>
-        <Btn 
-        :label="' Historial'" 
-      :icon="'history'" 
-      :onClickFunction="goToHistory" 
-      style="  margin-left: 90%;" 
-/>
+        <Btn :label="' Historial'" :icon="'history'" :onClickFunction="goToHistory" style="  margin-left: 90%;" />
     </div>
-    
+
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onBeforeMount, computed } from "vue";
 import { useRouter } from 'vue-router';
 import Btn from "../components/buttons/Button.vue";
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faUser, faInfoCircle, faBook, faCertificate } from '@fortawesome/free-solid-svg-icons';
+import { getData } from "../services/apiClient";
+import { useAuthStore } from './../store/useAuth.js'
+import { formatDate } from "../utils/formatDate";
+import { notifyErrorRequest } from "../composables/Notify";
 
 library.add(faUser, faInfoCircle, faBook, faCertificate);
 const aprendiz = ref({
@@ -132,6 +131,10 @@ const aprendiz = ref({
     ficha: "",
     codigoFicha: "",
 });
+
+const authStore = useAuthStore();
+const role = computed(() => authStore.getRole());
+const user = computed(() => authStore.getIdApprentice());
 
 const etapaProductiva = ref({
     modalidad: "",
@@ -159,8 +162,34 @@ const certificacion = ref({
 const router = useRouter();
 
 const goToHistory = () => {
-  router.push({ path: '/History' }); 
+    router.push({ path: '/History' });
 };
+
+onBeforeMount(() => {
+    bring();
+});
+
+async function bring() {
+    try {
+        let url = await getData(`/register/listregisterbyapprentice/${user.value}`)
+        let activeRegisters = url.data.filter(item => item.register.status === 1);
+
+        console.log(activeRegisters);
+        
+        if (activeRegisters.length <= 0) {
+            notifyErrorRequest('No hay registros activos para este aprendiz')
+        }
+
+        aprendiz.value.nombre = `${activeRegisters[0].register.apprentice.firstName} ${activeRegisters[0].register.apprentice.lastName}`;
+        aprendiz.value.documento = activeRegisters[0].register.apprentice.numDocument
+        etapaProductiva.value.modalidad = activeRegisters[0].modality
+        etapaProductiva.value.fechaInicio = formatDate(activeRegisters[0].register.startDate) 
+        etapaProductiva.value.fechaFin = formatDate(activeRegisters[0].register.endDate) 
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 // const goToBitacoras = () => {
 //   router.push({ path: '/Binnacles' }); 
 // };
@@ -190,7 +219,7 @@ const goToHistory = () => {
     box-shadow: 0 2px 4px 2px rgba(0, 0, 0, 0.1);
     padding: 1rem;
     flex: 1 1 calc(48%);
-   
+
 }
 
 .full-width {
@@ -249,7 +278,7 @@ h3 {
 .card-title {
     font-size: 1.5em;
     font-weight: bold;
-margin: 0;
+    margin: 0;
     display: flex;
     align-items: center;
     gap: 8px;
